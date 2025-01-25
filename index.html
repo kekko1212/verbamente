@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -36,21 +36,36 @@
         .bounce-hint {
             animation: bounce 2s infinite;
         }
+        /* Dark mode styles */
+        .dark body {
+            background-color: #1a1a1a;
+            color: #ffffff;
+        }
+        .dark .card-light {
+            background-color: #2d2d2d;
+            color: #ffffff;
+        }
+        .dark .text-gray-600 {
+            color: #9ca3af;
+        }
     </style>
 </head>
-<body class="bg-gray-100 min-h-screen">
+<body class="bg-gray-100 dark:bg-gray-900 min-h-screen transition-colors duration-200">
     <div class="container mx-auto px-4 py-8">
         <!-- Header -->
         <div class="text-center mb-8">
             <h1 class="text-4xl font-bold text-indigo-600 mb-2">VerbeMente</h1>
-            <p class="text-gray-600">Spanish Verbs for Italian Speakers</p>
+            <p class="text-gray-600 dark:text-gray-400">Spanish Verbs for Italian Speakers</p>
         </div>
 
         <!-- Controls -->
         <div class="flex flex-wrap justify-center gap-4 mb-8">
-            <select id="categoryFilter" class="px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                <option value="all">All Categories</option>
-            </select>
+            <button id="themeToggle" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
+                🌓 Toggle Theme
+            </button>
+            <button id="languageToggle" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
+                🔄 Switch Languages
+            </button>
             <div class="flex gap-2">
                 <button id="prevBtn" class="px-4 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition-colors">
                     ← Previous
@@ -64,10 +79,10 @@
         <!-- Progress -->
         <div class="max-w-2xl mx-auto mb-8">
             <div class="flex justify-between mb-2">
-                <span id="progressText" class="text-sm text-gray-600">Card 1 of 100</span>
-                <span id="categoryText" class="text-sm text-gray-600">Category: Essential Verbs</span>
+                <span id="progressText" class="text-sm text-gray-600 dark:text-gray-400">Card 1 of 100</span>
+                <span id="languageIndicator" class="text-sm text-gray-600 dark:text-gray-400">Mode: Spanish → Italian</span>
             </div>
-            <div class="w-full bg-gray-200 rounded-full h-2.5">
+            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
                 <div id="progressBar" class="bg-indigo-600 h-2.5 rounded-full" style="width: 1%"></div>
             </div>
         </div>
@@ -76,15 +91,14 @@
         <div class="max-w-2xl mx-auto">
             <div class="flip-card cursor-pointer">
                 <div class="flip-card-inner">
-                    <div class="flip-card-front bg-white rounded-xl shadow-lg p-8 flex flex-col justify-center items-center">
-                        <span id="cardFront" class="text-4xl font-bold text-gray-800 mb-4"></span>
-                        <span class="text-sm text-gray-500 bounce-hint">Click to flip</span>
+                    <div class="flip-card-front bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 flex flex-col justify-center items-center">
+                        <span id="cardFront" class="text-4xl font-bold text-gray-800 dark:text-white mb-4"></span>
+                        <span class="text-sm text-gray-500 dark:text-gray-400 bounce-hint">Click to flip</span>
                     </div>
                     <div class="flip-card-back bg-indigo-600 text-white rounded-xl shadow-lg p-8 flex flex-col justify-center items-center">
                         <div id="cardBack" class="text-center">
                             <div class="text-3xl font-bold mb-4"></div>
                             <div class="text-xl mb-2"></div>
-                            <div class="text-sm opacity-80"></div>
                         </div>
                     </div>
                 </div>
@@ -94,35 +108,34 @@
 
     <script>
         const verbs = [
-            // Essential Being/Having
-            { spanish: "ser", italian: "essere", meaning: "to be (permanent)", category: "Essential Being/Having" },
-            { spanish: "estar", italian: "stare", meaning: "to be (temporary)", category: "Essential Being/Having" },
-            { spanish: "haber", italian: "avere", meaning: "auxiliary to have", category: "Essential Being/Having" },
-            { spanish: "tener", italian: "tenere", meaning: "to have/possess", category: "Essential Being/Having" },
-            // Common Action
-            { spanish: "hacer", italian: "fare", meaning: "to do/make", category: "Common Action" },
-            { spanish: "decir", italian: "dire", meaning: "to say/tell", category: "Common Action" },
-            { spanish: "ir", italian: "andare", meaning: "to go", category: "Common Action" },
-            { spanish: "ver", italian: "vedere", meaning: "to see", category: "Common Action" },
-            { spanish: "dar", italian: "dare", meaning: "to give", category: "Common Action" },
-            { spanish: "saber", italian: "sapere", meaning: "to know (facts)", category: "Common Action" },
-            // Daily Activities
-            { spanish: "comer", italian: "mangiare", meaning: "to eat", category: "Daily Activities" },
-            { spanish: "beber", italian: "bere", meaning: "to drink", category: "Daily Activities" },
-            { spanish: "dormir", italian: "dormire", meaning: "to sleep", category: "Daily Activities" },
-            { spanish: "trabajar", italian: "lavorare", meaning: "to work", category: "Daily Activities" },
-            { spanish: "estudiar", italian: "studiare", meaning: "to study", category: "Daily Activities" },
-            // Movement
-            { spanish: "venir", italian: "venire", meaning: "to come", category: "Movement" },
-            { spanish: "salir", italian: "uscire", meaning: "to leave", category: "Movement" },
-            { spanish: "entrar", italian: "entrare", meaning: "to enter", category: "Movement" },
-            { spanish: "poner", italian: "mettere", meaning: "to put", category: "Movement" },
-            { spanish: "seguir", italian: "seguire", meaning: "to follow", category: "Movement" }
-            // Add more verbs as needed...
+            { spanish: "ser", italian: "essere", meaning: "to be (permanent)" },
+            { spanish: "estar", italian: "stare", meaning: "to be (temporary)" },
+            { spanish: "haber", italian: "avere", meaning: "auxiliary to have" },
+            { spanish: "tener", italian: "tenere", meaning: "to have/possess" },
+            { spanish: "hacer", italian: "fare", meaning: "to do/make" },
+            { spanish: "decir", italian: "dire", meaning: "to say/tell" },
+            { spanish: "ir", italian: "andare", meaning: "to go" },
+            { spanish: "ver", italian: "vedere", meaning: "to see" },
+            { spanish: "dar", italian: "dare", meaning: "to give" },
+            { spanish: "saber", italian: "sapere", meaning: "to know (facts)" }
+            // Add all 100 verbs here...
         ];
 
         let currentIndex = 0;
-        let currentCategory = 'all';
+        let isSpanishToItalian = true;
+        let shuffledVerbs = [...verbs];
+
+        // Shuffle function
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // Initialize with shuffled verbs
+        shuffledVerbs = shuffleArray([...verbs]);
 
         // DOM elements
         const flipCard = document.querySelector('.flip-card');
@@ -132,41 +145,42 @@
         const nextBtn = document.getElementById('nextBtn');
         const progressBar = document.getElementById('progressBar');
         const progressText = document.getElementById('progressText');
-        const categoryText = document.getElementById('categoryText');
-        const categoryFilter = document.getElementById('categoryFilter');
+        const themeToggle = document.getElementById('themeToggle');
+        const languageToggle = document.getElementById('languageToggle');
+        const languageIndicator = document.getElementById('languageIndicator');
 
-        // Populate category filter
-        const categories = [...new Set(verbs.map(verb => verb.category))];
-        categories.forEach(category => {
-            const option = document.createElement('option');
-            option.value = category;
-            option.textContent = category;
-            categoryFilter.appendChild(option);
+        // Theme toggle
+        themeToggle.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
         });
 
-        // Filter verbs based on category
-        function getFilteredVerbs() {
-            return currentCategory === 'all' 
-                ? verbs 
-                : verbs.filter(verb => verb.category === currentCategory);
-        }
+        // Language toggle
+        languageToggle.addEventListener('click', () => {
+            isSpanishToItalian = !isSpanishToItalian;
+            languageIndicator.textContent = `Mode: ${isSpanishToItalian ? 'Spanish → Italian' : 'Italian → Spanish'}`;
+            updateCard();
+        });
 
         // Update card content
         function updateCard() {
-            const filteredVerbs = getFilteredVerbs();
-            const verb = filteredVerbs[currentIndex];
+            const verb = shuffledVerbs[currentIndex];
             
-            cardFront.textContent = verb.spanish;
-            const backContent = cardBack.children;
-            backContent[0].textContent = verb.italian;
-            backContent[1].textContent = verb.meaning;
-            backContent[2].textContent = `Category: ${verb.category}`;
+            if (isSpanishToItalian) {
+                cardFront.textContent = verb.spanish;
+                const backContent = cardBack.children;
+                backContent[0].textContent = verb.italian;
+                backContent[1].textContent = verb.meaning;
+            } else {
+                cardFront.textContent = verb.italian;
+                const backContent = cardBack.children;
+                backContent[0].textContent = verb.spanish;
+                backContent[1].textContent = verb.meaning;
+            }
 
             // Update progress
-            const progress = ((currentIndex + 1) / filteredVerbs.length) * 100;
+            const progress = ((currentIndex + 1) / shuffledVerbs.length) * 100;
             progressBar.style.width = `${progress}%`;
-            progressText.textContent = `Card ${currentIndex + 1} of ${filteredVerbs.length}`;
-            categoryText.textContent = `Category: ${verb.category}`;
+            progressText.textContent = `Card ${currentIndex + 1} of ${shuffledVerbs.length}`;
 
             // Reset flip
             flipCard.classList.remove('flipped');
@@ -178,20 +192,12 @@
         });
 
         prevBtn.addEventListener('click', () => {
-            const filteredVerbs = getFilteredVerbs();
-            currentIndex = (currentIndex - 1 + filteredVerbs.length) % filteredVerbs.length;
+            currentIndex = (currentIndex - 1 + shuffledVerbs.length) % shuffledVerbs.length;
             updateCard();
         });
 
         nextBtn.addEventListener('click', () => {
-            const filteredVerbs = getFilteredVerbs();
-            currentIndex = (currentIndex + 1) % filteredVerbs.length;
-            updateCard();
-        });
-
-        categoryFilter.addEventListener('change', (e) => {
-            currentCategory = e.target.value;
-            currentIndex = 0;
+            currentIndex = (currentIndex + 1) % shuffledVerbs.length;
             updateCard();
         });
 
@@ -200,6 +206,12 @@
             if (e.key === 'ArrowLeft') prevBtn.click();
             else if (e.key === 'ArrowRight') nextBtn.click();
             else if (e.key === ' ') flipCard.click();
+        });
+
+        // Shuffle on refresh
+        window.addEventListener('load', () => {
+            shuffledVerbs = shuffleArray([...verbs]);
+            updateCard();
         });
 
         // Initialize
