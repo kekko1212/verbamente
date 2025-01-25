@@ -5,19 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VerbeMente - Learn Spanish Verbs</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        .flip-card {
-            perspective: 1000px;
-            height: 300px;
+        /* Custom styles */
+        .perspective-3xl {
+            perspective: 3000px;
         }
-        .flip-card-inner {
+        .flip-card {
             position: relative;
             width: 100%;
-            height: 100%;
-            transition: transform 0.6s;
+            height: 24rem;
+            cursor: pointer;
             transform-style: preserve-3d;
+            transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .flip-card.flipped .flip-card-inner {
+        .flip-card.flipped {
             transform: rotateY(180deg);
         }
         .flip-card-front, .flip-card-back {
@@ -26,118 +28,138 @@
             height: 100%;
             backface-visibility: hidden;
             border-radius: 1rem;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            background-color: #ffffff;
-            transition: all 0.3s ease;
-        }
-        .dark .flip-card-front, .dark .flip-card-back {
-            background-color: #1f1f1f;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
         .flip-card-back {
             transform: rotateY(180deg);
         }
-        @keyframes bounce {
-            0%, 100% { transform: translateY(-5%); }
-            50% { transform: translateY(0); }
-        }
-        .bounce-hint {
-            animation: bounce 2s infinite;
-        }
         .dark body {
-            background-color: #181818;
+            background-color: rgb(17, 24, 39);
         }
-        .language-indicator {
+        .gradient-text {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .dark .gradient-text {
+            background: linear-gradient(135deg, #818cf8, #a78bfa);
+        }
+        .language-badge {
             position: absolute;
             top: 1.5rem;
             right: 1.5rem;
-            padding: 0.5rem 1rem;
-            border-radius: 0.5rem;
-            font-weight: 500;
-            font-size: 0.875rem;
-            letter-spacing: 0.05em;
-            background-color: #f3f4f6;
-            color: #4b5563;
-            transition: all 0.3s ease;
+            padding: 0.375rem 1rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
         }
-        .dark .language-indicator {
-            background-color: #2d2d2d;
-            color: #9ca3af;
+        .language-badge.es {
+            background: linear-gradient(135deg, #ef4444, #f97316);
+            color: white;
         }
-        .language-indicator::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 0.75rem;
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            transform: translateY(-50%);
+        .language-badge.it {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
         }
-        .language-indicator.es::before {
-            background-color: #ef4444;
+        .progress-bar {
+            height: 0.375rem;
+            border-radius: 9999px;
+            background: linear-gradient(to right, #6366f1, #8b5cf6);
+            transition: width 0.3s ease;
         }
-        .language-indicator.it::before {
-            background-color: #22c55e;
+        .control-button {
+            padding: 0.75rem;
+            border-radius: 9999px;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .control-button i {
+            font-size: 1.125rem;
+        }
+        .dark .flip-card-front, .dark .flip-card-back {
+            background-color: rgb(31, 41, 55);
+            box-shadow: 0 8px 32px rgba(99, 102, 241, 0.1);
+        }
+        .card-content {
+            font-size: 3.75rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #1f2937, #4b5563);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .dark .card-content {
+            background: linear-gradient(135deg, #f9fafb, #e5e7eb);
+        }
+        @keyframes bounce-subtle {
+            0%, 100% { transform: translateY(-2px); }
+            50% { transform: translateY(2px); }
+        }
+        .bounce-hint {
+            animation: bounce-subtle 2s infinite;
         }
     </style>
 </head>
-<body class="bg-gray-100 dark:bg-[#181818] min-h-screen transition-colors duration-200 font-sans">
+<body class="bg-gray-100 dark:bg-gray-900 min-h-screen transition-colors duration-200 font-sans">
     <div class="container mx-auto px-4 py-8">
         <!-- Header -->
-        <div class="text-center mb-8">
-            <h1 class="text-4xl font-bold text-indigo-600 dark:text-indigo-400 mb-2">VerbeMente</h1>
-            <p class="text-gray-400 dark:text-gray-400">Spanish Verbs for Italian Speakers</p>
+        <div class="text-center mb-12">
+            <h1 class="text-5xl font-bold gradient-text mb-3">VerbeMente</h1>
+            <p class="text-gray-500 dark:text-gray-400 text-lg">Spanish Verbs for Italian Speakers</p>
         </div>
 
         <!-- Controls -->
-        <div class="flex flex-wrap justify-center gap-4 mb-8">
-            <button id="themeToggle" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
-                🌓 Theme
+        <div class="flex flex-wrap justify-center gap-4 mb-10">
+            <button id="themeToggle" class="control-button bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700">
+                <i class="fas fa-moon dark:text-amber-500"></i>
             </button>
-            <button id="languageToggle" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
-                🔄 Language
+            <button id="languageToggle" class="control-button bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700">
+                <i class="fas fa-language text-indigo-500 dark:text-indigo-400"></i>
             </button>
             <div class="flex gap-2">
-                <button id="prevBtn" class="px-4 py-2 bg-indigo-600 dark:bg-indigo-500 text-white rounded-lg hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors">
-                    ← Prev
+                <button id="prevBtn" class="control-button bg-indigo-500 hover:bg-indigo-600 text-white">
+                    <i class="fas fa-chevron-left"></i>
                 </button>
-                <button id="nextBtn" class="px-4 py-2 bg-indigo-600 dark:bg-indigo-500 text-white rounded-lg hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors">
-                    Next →
+                <button id="nextBtn" class="control-button bg-indigo-500 hover:bg-indigo-600 text-white">
+                    <i class="fas fa-chevron-right"></i>
                 </button>
             </div>
         </div>
 
         <!-- Progress -->
-        <div class="max-w-2xl mx-auto mb-8">
-            <div class="flex justify-between mb-2">
-                <span id="progressText" class="text-sm text-gray-400 dark:text-gray-400">Card 1 of 100</span>
-                <span id="languageIndicator" class="text-sm text-gray-400 dark:text-gray-400">Mode: Spanish → Italian</span>
+        <div class="max-w-2xl mx-auto mb-10">
+            <div class="flex justify-between mb-3">
+                <span id="progressText" class="text-sm font-medium text-gray-500 dark:text-gray-400">Card 1 of 100</span>
+                <span id="languageIndicator" class="text-sm font-medium text-gray-500 dark:text-gray-400">Spanish → Italian</span>
             </div>
-            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
-                <div id="progressBar" class="bg-indigo-600 dark:bg-indigo-400 h-2.5 rounded-full transition-all duration-200" style="width: 1%"></div>
+            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                <div id="progressBar" class="progress-bar" style="width: 1%"></div>
             </div>
         </div>
 
-        <div class="max-w-2xl mx-auto">
-            <div class="flip-card" id="flipCard">
-                <div class="flip-card-inner">
-                    <div class="flip-card-front flex flex-col justify-center items-center p-8 relative">
-                        <div class="language-indicator es">ES</div>
-                        <span id="cardFront" class="text-4xl font-bold text-gray-800 dark:text-gray-100 mb-4"></span>
-                        <span class="text-sm text-gray-600 dark:text-gray-400 bounce-hint">Click to flip</span>
-                    </div>
-                    <div class="flip-card-back flex flex-col justify-center items-center p-8 relative">
-                        <div class="language-indicator it">IT</div>
-                        <div id="cardBack" class="text-center">
-                            <div class="text-3xl font-bold mb-4 text-gray-800 dark:text-gray-100"></div>
-                            <div class="text-xl mb-2 text-gray-600 dark:text-gray-400"></div>
-                        </div>
+        <!-- Flashcard -->
+        <div class="max-w-2xl mx-auto perspective-3xl">
+            <div id="flipCard" class="flip-card">
+                <div class="flip-card-front bg-white shadow-xl p-8 flex flex-col items-center justify-center">
+                    <div class="language-badge es">ES</div>
+                    <span id="cardFront" class="card-content mb-6"></span>
+                    <span class="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2 bounce-hint">
+                        <i class="fas fa-rotate text-xs"></i>
+                        Click to flip
+                    </span>
+                </div>
+                <div class="flip-card-back bg-white shadow-xl p-8 flex flex-col items-center justify-center">
+                    <div class="language-badge it">IT</div>
+                    <div id="cardBack" class="text-center">
+                        <div class="card-content mb-4"></div>
+                        <div class="text-2xl text-gray-600 dark:text-gray-400 mt-4"></div>
                     </div>
                 </div>
             </div>
         </div>
-
+    </div>
     <script>
         // Wait for DOM to load
         window.addEventListener('DOMContentLoaded', function() {
@@ -332,6 +354,13 @@
                 currentIndex = (currentIndex - 1 + shuffledCards.length) % shuffledCards.length;
                 updateCard();
             }
+
+            const themeToggle = document.getElementById('themeToggle');
+            themeToggle.addEventListener('click', () => {
+                document.documentElement.classList.toggle('dark');
+                themeToggle.querySelector('i').classList.toggle('fa-moon');
+                themeToggle.querySelector('i').classList.toggle('fa-sun');
+            });
 
             // Event listeners
             flipCard.addEventListener('click', () => flipCard.classList.toggle('flipped'));
