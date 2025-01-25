@@ -1,42 +1,30 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VerbeMente - Spanish Verbs</title>
+    <title>VerbeMente - Italian to Spanish</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
     <style>
-        /* Your existing styles */
-        :root {
-            --primary: #818cf8;
-            --primary-dark: #6366f1;
-            --surface: #1e293b;
-            --surface-dark: #0f172a;
-            --card-bg: rgba(30, 41, 59, 0.8);
-            --text-primary: #ffffff;
-            --text-secondary: rgba(255, 255, 255, 0.7);
-        }
-
-        [data-theme="light"] {
-            --surface: #f8fafc;
-            --surface-dark: #f1f5f9;
-            --card-bg: rgba(255, 255, 255, 0.8);
-            --text-primary: #1e293b;
-            --text-secondary: rgba(30, 41, 59, 0.7);
-        }
-
         body {
-            background: linear-gradient(180deg, var(--surface) 0%, var(--surface-dark) 100%);
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
             min-height: 100vh;
-            color: var(--text-primary);
-            transition: all 0.3s ease;
+            color: #ffffff;
         }
 
         .card-3d {
             perspective: 2500px;
+            height: 400px;
+            margin-bottom: 2rem;
+        }
+        
+        @media (min-height: 800px) {
+            .card-3d {
+                height: 500px;
+            }
         }
 
         .card-inner {
@@ -57,10 +45,12 @@
             height: 100%;
             backface-visibility: hidden;
             border-radius: 1.5rem;
-            background: var(--card-bg);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(129, 140, 248, 0.1);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            background: rgba(30, 41, 59, 0.95);
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .card-back {
@@ -72,13 +62,14 @@
             border-radius: 1rem;
             padding: 1.5rem;
             margin-top: 1rem;
+            border: 1px solid rgba(99, 102, 241, 0.2);
         }
 
         .conjugation-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0.5rem 0;
+            padding: 0.75rem 0;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
@@ -86,7 +77,21 @@
             border-bottom: none;
         }
 
-        /* Rest of your styles */
+        .nav-button {
+            transition: all 0.2s ease;
+        }
+
+        .nav-button:hover {
+            transform: scale(1.05);
+        }
+
+        .score-button {
+            transition: all 0.2s ease;
+        }
+
+        .score-button:hover {
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 <body>
@@ -95,7 +100,6 @@
     <script type="text/babel">
         const { useState, useEffect } = React;
 
-        // Full cards data
         const cardsData = [
             {
                 spanish: "ser",
@@ -117,10 +121,8 @@
         function App() {
             const [currentIndex, setCurrentIndex] = useState(0);
             const [isFlipped, setIsFlipped] = useState(false);
-            const [isSpanishToItalian, setIsSpanishToItalian] = useState(true);
-            const [isDarkTheme, setIsDarkTheme] = useState(true);
             const [sessionCards, setSessionCards] = useState(() => {
-                return cardsData.slice(0, 20); // Temporary: just take first 20 cards
+                return cardsData.slice(0, 20);
             });
 
             const nextCard = () => {
@@ -150,14 +152,13 @@
 
                 window.addEventListener('keydown', handleKeyPress);
                 return () => window.removeEventListener('keydown', handleKeyPress);
-            }, []);  // Empty dependency array since we don't need to recreate the handler
+            }, []);
 
-            // Handle scoring
+            // Spaced repetition scoring
             const handleScore = (score) => {
                 const cardId = sessionCards[currentIndex].spanish;
                 const now = new Date().toISOString();
                 
-                // Update local storage
                 const scores = JSON.parse(localStorage.getItem('verbeMenteScores') || '{}');
                 scores[cardId] = {
                     score: score,
@@ -166,7 +167,6 @@
                 };
                 localStorage.setItem('verbeMenteScores', JSON.stringify(scores));
                 
-                // Move to next card
                 nextCard();
             };
 
@@ -174,65 +174,50 @@
 
             return (
                 <div className="container mx-auto px-4 py-8">
-                    {/* Header */}
                     <div className="text-center mb-12">
-                        <h1 className="text-5xl font-bold mb-2">VerbeMente</h1>
-                        <p className="text-gray-400">Spanish Verbs for Italian Speakers</p>
+                        <h1 className="text-6xl font-bold mb-3 bg-gradient-to-r from-indigo-400 to-purple-400 text-transparent bg-clip-text">
+                            VerbeMente
+                        </h1>
+                        <p className="text-gray-400 text-lg">Italian to Spanish Verbs</p>
                     </div>
 
-                    {/* Controls */}
-                    <div className="flex justify-center gap-4 mb-8">
+                    <div className="flex justify-center gap-6 mb-8">
                         <button 
-                            className="p-3 rounded-full bg-gray-800 hover:bg-gray-700"
-                            onClick={() => setIsDarkTheme(!isDarkTheme)}
-                        >
-                            {isDarkTheme ? "☀️" : "🌙"}
-                        </button>
-                        <button 
-                            className="p-3 rounded-full bg-gray-800 hover:bg-gray-700"
-                            onClick={() => setIsSpanishToItalian(!isSpanishToItalian)}
-                        >
-                            🔄
-                        </button>
-                        <button 
-                            className="p-3 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white"
+                            className="nav-button p-4 rounded-full bg-gray-800 text-white shadow-lg hover:shadow-xl text-2xl"
                             onClick={prevCard}
                         >
                             ←
                         </button>
                         <button 
-                            className="p-3 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white"
+                            className="nav-button p-4 rounded-full bg-gray-800 text-white shadow-lg hover:shadow-xl text-2xl"
                             onClick={nextCard}
                         >
                             →
                         </button>
                     </div>
 
-                    {/* Flashcard */}
                     <div className="max-w-2xl mx-auto h-[32rem] card-3d" onClick={() => setIsFlipped(!isFlipped)}>
                         <div className={`card-inner h-full ${isFlipped ? 'flipped' : ''}`}>
-                            {/* Front */}
                             <div className="card-face p-8 flex items-center justify-center">
                                 <div className="text-center">
-                                    <h2 className="text-6xl font-bold mb-6">
-                                        {isSpanishToItalian ? currentCard.spanish : currentCard.italian}
+                                    <h2 className="text-6xl font-bold mb-6 text-indigo-400">
+                                        {currentCard.italian}
                                     </h2>
-                                    <p className="text-gray-400">Click to flip</p>
+                                    <p className="text-gray-400">Click to reveal Spanish translation</p>
                                 </div>
                             </div>
 
-                            {/* Back */}
                             <div className="card-face card-back p-8 overflow-y-auto">
                                 <div className="text-center">
-                                    <h2 className="text-4xl font-bold mb-2">
-                                        {isSpanishToItalian ? currentCard.italian : currentCard.spanish}
+                                    <h2 className="text-4xl font-bold mb-2 text-indigo-400">
+                                        {currentCard.spanish}
                                     </h2>
-                                    <p className="text-xl text-gray-400 mb-4">{currentCard.meaning}</p>
+                                    <p className="text-xl text-gray-300 mb-4">{currentCard.meaning}</p>
                                     
                                     {currentCard.irregular && (
                                         <div className="conjugation-table">
                                             <div className="flex justify-center mb-4">
-                                                <span className="px-3 py-1 bg-red-500 text-white text-sm rounded-full">
+                                                <span className="px-4 py-1 bg-red-500 text-white text-sm rounded-full font-medium">
                                                     Irregular Verb
                                                 </span>
                                             </div>
@@ -240,43 +225,42 @@
                                                 <div>
                                                     <div className="conjugation-row">
                                                         <span className="text-gray-400">yo</span>
-                                                        <span className="text-xl">{currentCard.conjugation.yo}</span>
+                                                        <span className="text-xl font-medium">{currentCard.conjugation.yo}</span>
                                                     </div>
                                                     <div className="conjugation-row">
                                                         <span className="text-gray-400">tú</span>
-                                                        <span className="text-xl">{currentCard.conjugation.tú}</span>
+                                                        <span className="text-xl font-medium">{currentCard.conjugation.tú}</span>
                                                     </div>
                                                     <div className="conjugation-row">
                                                         <span className="text-gray-400">él/ella</span>
-                                                        <span className="text-xl">{currentCard.conjugation.él_ella}</span>
+                                                        <span className="text-xl font-medium">{currentCard.conjugation.él_ella}</span>
                                                     </div>
                                                 </div>
                                                 <div>
                                                     <div className="conjugation-row">
                                                         <span className="text-gray-400">nosotros</span>
-                                                        <span className="text-xl">{currentCard.conjugation.nosotros}</span>
+                                                        <span className="text-xl font-medium">{currentCard.conjugation.nosotros}</span>
                                                     </div>
                                                     <div className="conjugation-row">
                                                         <span className="text-gray-400">vosotros</span>
-                                                        <span className="text-xl">{currentCard.conjugation.vosotros}</span>
+                                                        <span className="text-xl font-medium">{currentCard.conjugation.vosotros}</span>
                                                     </div>
                                                     <div className="conjugation-row">
                                                         <span className="text-gray-400">ellos/ellas</span>
-                                                        <span className="text-xl">{currentCard.conjugation.ellos_ellas}</span>
+                                                        <span className="text-xl font-medium">{currentCard.conjugation.ellos_ellas}</span>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     )}
 
-                                    {/* Score buttons */}
                                     <div className="flex gap-3 mt-6 justify-center">
                                         <button 
                                             onClick={(e) => {
                                                 e.stopPropagation();
                                                 handleScore(1);
                                             }}
-                                            className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg"
+                                            className="score-button px-6 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium shadow-md"
                                         >
                                             Again
                                         </button>
@@ -285,7 +269,7 @@
                                                 e.stopPropagation();
                                                 handleScore(2);
                                             }}
-                                            className="px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-white rounded-lg"
+                                            className="score-button px-6 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg font-medium shadow-md"
                                         >
                                             Hard
                                         </button>
@@ -294,7 +278,7 @@
                                                 e.stopPropagation();
                                                 handleScore(3);
                                             }}
-                                            className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg"
+                                            className="score-button px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-medium shadow-md"
                                         >
                                             Good
                                         </button>
@@ -303,7 +287,7 @@
                                                 e.stopPropagation();
                                                 handleScore(4);
                                             }}
-                                            className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg"
+                                            className="score-button px-6 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg font-medium shadow-md"
                                         >
                                             Easy
                                         </button>
