@@ -62,7 +62,7 @@
         <!-- Header -->
         <div class="text-center mb-8">
             <h1 class="text-4xl font-bold text-indigo-600 dark:text-indigo-400 mb-2">VerbeMente</h1>
-            <p class="text-gray-600 dark:text-gray-400">Spanish Verbs for Italian Speakers</p>
+            <p class="text-gray-400 dark:text-gray-400">Spanish Verbs for Italian Speakers</p>
         </div>
 
         <!-- Controls -->
@@ -159,14 +159,14 @@
                 if (spanishToItalian) {
                     cardFront.textContent = card.spanish;
                     cardBack.innerHTML = `
-                        <div class="text-3xl font-bold mb-4 text-gray-800 dark:text-gray-200">${card.italian}</div>
-                        <div class="text-xl mb-2 text-gray-600 dark:text-gray-400">${card.meaning}</div>
+                        <div class="text-3xl font-bold mb-4 text-gray-100 dark:text-gray-200">${card.italian}</div>
+                        <div class="text-xl mb-2 text-gray-400 dark:text-gray-400">${card.meaning}</div>
                     `;
                 } else {
                     cardFront.textContent = card.italian;
                     cardBack.innerHTML = `
-                        <div class="text-3xl font-bold mb-4 text-gray-800 dark:text-gray-200">${card.spanish}</div>
-                        <div class="text-xl mb-2 text-gray-600 dark:text-gray-400">${card.meaning}</div>
+                        <div class="text-3xl font-bold mb-4 text-gray-100 dark:text-gray-200">${card.spanish}</div>
+                        <div class="text-xl mb-2 text-gray-400 dark:text-gray-400">${card.meaning}</div>
                     `;
                 }
             
