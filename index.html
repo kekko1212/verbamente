@@ -1,390 +1,406 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VerbeMente - Learn Spanish Verbs</title>
+    <title>VerbeMente - Spanish Verbs</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* Custom styles */
-        .perspective-3xl {
-            perspective: 3000px;
+        :root {
+            --primary: #818cf8;
+            --primary-dark: #6366f1;
+            --surface: #1e293b;
+            --surface-dark: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.8);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
         }
-        .flip-card {
+
+        [data-theme="light"] {
+            --surface: #f8fafc;
+            --surface-dark: #f1f5f9;
+            --card-bg: rgba(255, 255, 255, 0.8);
+            --text-primary: #1e293b;
+            --text-secondary: rgba(30, 41, 59, 0.7);
+        }
+
+        body {
+            background: linear-gradient(180deg, var(--surface) 0%, var(--surface-dark) 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        .card-3d {
+            perspective: 2500px;
+            perspective-origin: 50% 50%;
+            transform-style: preserve-3d;
+        }
+
+        .card-inner {
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
             position: relative;
             width: 100%;
-            height: 24rem;
-            cursor: pointer;
-            transform-style: preserve-3d;
-            transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+            height: 100%;
         }
-        .flip-card.flipped {
+
+        .card-inner.flipped {
             transform: rotateY(180deg);
         }
-        .flip-card-front, .flip-card-back {
+
+        .card-face {
             position: absolute;
             width: 100%;
             height: 100%;
             backface-visibility: hidden;
-            border-radius: 1rem;
+            border-radius: 1.5rem;
+            padding: 2rem;
+            background: var(--card-bg);
+            border: 1px solid rgba(129, 140, 248, 0.1);
+            box-shadow: 
+                0 4px 6px -1px rgba(0, 0, 0, 0.1),
+                0 2px 4px -1px rgba(0, 0, 0, 0.06),
+                0 0 0 1px rgba(129, 140, 248, 0.1);
+            backdrop-filter: blur(10px);
         }
-        .flip-card-back {
+
+        .card-back {
             transform: rotateY(180deg);
         }
-        .dark body {
-            background-color: rgb(17, 24, 39);
-        }
-        .gradient-text {
-            background: linear-gradient(135deg, #6366f1, #8b5cf6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .dark .gradient-text {
-            background: linear-gradient(135deg, #818cf8, #a78bfa);
-        }
+
         .language-badge {
             position: absolute;
-            top: 1.5rem;
-            right: 1.5rem;
-            padding: 0.375rem 1rem;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.5rem 1rem;
             border-radius: 9999px;
-            font-weight: 600;
             font-size: 0.75rem;
+            font-weight: 600;
             letter-spacing: 0.1em;
             text-transform: uppercase;
+            transition: all 0.3s ease;
         }
-        .language-badge.es {
-            background: linear-gradient(135deg, #ef4444, #f97316);
+
+        .badge-es {
+            background: linear-gradient(135deg, #ef4444 0%, #f97316 100%);
             color: white;
         }
-        .language-badge.it {
-            background: linear-gradient(135deg, #10b981, #059669);
+
+        .badge-it {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             color: white;
         }
+
         .progress-bar {
-            height: 0.375rem;
-            border-radius: 9999px;
-            background: linear-gradient(to right, #6366f1, #8b5cf6);
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--primary-dark) 100%);
             transition: width 0.3s ease;
+            border-radius: 2px;
         }
-        .control-button {
-            padding: 0.75rem;
-            border-radius: 9999px;
-            transition: all 0.2s;
-            display: inline-flex;
+
+        .control-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
             align-items: center;
             justify-content: center;
+            transition: all 0.2s;
+            background: rgba(129, 140, 248, 0.1);
+            border: 1px solid rgba(129, 140, 248, 0.2);
+            color: var(--text-primary);
         }
-        .control-button i {
-            font-size: 1.125rem;
+
+        .control-btn:hover {
+            background: rgba(129, 140, 248, 0.2);
+            transform: translateY(-1px);
         }
-        .dark .flip-card-front, .dark .flip-card-back {
-            background-color: rgb(31, 41, 55);
-            box-shadow: 0 8px 32px rgba(99, 102, 241, 0.1);
+
+        .nav-btn {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
         }
-        .card-content {
-            font-size: 3.75rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #1f2937, #4b5563);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+
+        .nav-btn:hover {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
         }
-        .dark .card-content {
-            background: linear-gradient(135deg, #f9fafb, #e5e7eb);
+
+        @keyframes gentle-bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-2px); }
         }
-        @keyframes bounce-subtle {
-            0%, 100% { transform: translateY(-2px); }
-            50% { transform: translateY(2px); }
+
+        .flip-hint {
+            animation: gentle-bounce 2s infinite;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
         }
-        .bounce-hint {
-            animation: bounce-subtle 2s infinite;
+
+        .flip-hint:hover {
+            opacity: 1;
         }
     </style>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 min-h-screen transition-colors duration-200 font-sans">
-    <div class="container mx-auto px-4 py-8">
-        <!-- Header -->
-        <div class="text-center mb-12">
-            <h1 class="text-5xl font-bold gradient-text mb-3">VerbeMente</h1>
-            <p class="text-gray-500 dark:text-gray-400 text-lg">Spanish Verbs for Italian Speakers</p>
-        </div>
+<body>
+    <div id="root"></div>
 
-        <!-- Controls -->
-        <div class="flex flex-wrap justify-center gap-4 mb-10">
-            <button id="themeToggle" class="control-button bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700">
-                <i class="fas fa-moon dark:text-amber-500"></i>
-            </button>
-            <button id="languageToggle" class="control-button bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700">
-                <i class="fas fa-language text-indigo-500 dark:text-indigo-400"></i>
-            </button>
-            <div class="flex gap-2">
-                <button id="prevBtn" class="control-button bg-indigo-500 hover:bg-indigo-600 text-white">
-                    <i class="fas fa-chevron-left"></i>
-                </button>
-                <button id="nextBtn" class="control-button bg-indigo-500 hover:bg-indigo-600 text-white">
-                    <i class="fas fa-chevron-right"></i>
-                </button>
-            </div>
-        </div>
+    <script type="text/babel">
+        const { useState, useEffect } = React;
 
-        <!-- Progress -->
-        <div class="max-w-2xl mx-auto mb-10">
-            <div class="flex justify-between mb-3">
-                <span id="progressText" class="text-sm font-medium text-gray-500 dark:text-gray-400">Card 1 of 100</span>
-                <span id="languageIndicator" class="text-sm font-medium text-gray-500 dark:text-gray-400">Spanish → Italian</span>
-            </div>
-            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                <div id="progressBar" class="progress-bar" style="width: 1%"></div>
-            </div>
-        </div>
+        function App() {
+            const [currentIndex, setCurrentIndex] = useState(0);
+            const [isFlipped, setIsFlipped] = useState(false);
+            const [isSpanishToItalian, setIsSpanishToItalian] = useState(true);
+            const [isDarkTheme, setIsDarkTheme] = useState(true);
 
-        <!-- Flashcard -->
-        <div class="max-w-2xl mx-auto perspective-3xl">
-            <div id="flipCard" class="flip-card">
-                <div class="flip-card-front bg-white shadow-xl p-8 flex flex-col items-center justify-center">
-                    <div class="language-badge es">ES</div>
-                    <span id="cardFront" class="card-content mb-6"></span>
-                    <span class="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2 bounce-hint">
-                        <i class="fas fa-rotate text-xs"></i>
-                        Click to flip
-                    </span>
-                </div>
-                <div class="flip-card-back bg-white shadow-xl p-8 flex flex-col items-center justify-center">
-                    <div class="language-badge it">IT</div>
-                    <div id="cardBack" class="text-center">
-                        <div class="card-content mb-4"></div>
-                        <div class="text-2xl text-gray-600 dark:text-gray-400 mt-4"></div>
+            // Theme toggling effect
+            useEffect(() => {
+                document.documentElement.setAttribute('data-theme', isDarkTheme ? 'dark' : 'light');
+            }, [isDarkTheme]);
+
+            const toggleTheme = () => {
+                setIsDarkTheme(!isDarkTheme);
+            };
+
+            // Sample cards data
+            const cardsData = [
+                { spanish: "ser", italian: "essere", meaning: "to be (permanent)" },
+                { spanish: "estar", italian: "essere / stare", meaning: "to be (temporary/location)" },
+                { spanish: "haber", italian: "avere", meaning: "to have (auxiliary)" },
+                { spanish: "tener", italian: "avere / tenere", meaning: "to have/possess" },
+                { spanish: "hacer", italian: "fare", meaning: "to do/make" },
+                { spanish: "decir", italian: "dire", meaning: "to say/tell" },
+                { spanish: "ir", italian: "andare", meaning: "to go" },
+                { spanish: "ver", italian: "vedere", meaning: "to see" },
+                { spanish: "dar", italian: "dare", meaning: "to give" },
+                { spanish: "saber", italian: "sapere", meaning: "to know (facts)" },
+                { spanish: "querer", italian: "volere", meaning: "to want" },
+                { spanish: "poder", italian: "potere", meaning: "can/to be able to" },
+                { spanish: "deber", italian: "dovere", meaning: "must/should" },
+                { spanish: "esperar", italian: "sperare / aspettare", meaning: "to hope / to wait" },
+                { spanish: "quedar", italian: "restare / rimanere / appuntarsi", meaning: "to stay / to remain / to meet up" },
+                { spanish: "dejar", italian: "lasciare / permettere", meaning: "to leave / to let" },
+                { spanish: "tocar", italian: "toccare / suonare", meaning: "to touch / to play (instrument)" },
+                { spanish: "pedir", italian: "chiedere / ordinare", meaning: "to ask for / to order" },
+                { spanish: "sentir", italian: "sentire / dispiacere", meaning: "to feel / to be sorry" },
+                { spanish: "parecer", italian: "sembrare / apparire", meaning: "to seem / to appear" },
+                { spanish: "hablar", italian: "parlare", meaning: "to speak" },
+                { spanish: "comer", italian: "mangiare", meaning: "to eat" },
+                { spanish: "vivir", italian: "vivere", meaning: "to live" },
+                { spanish: "beber", italian: "bere", meaning: "to drink" },
+                { spanish: "trabajar", italian: "lavorare", meaning: "to work" },
+                { spanish: "estudiar", italian: "studiare", meaning: "to study" },
+                { spanish: "escribir", italian: "scrivere", meaning: "to write" },
+                { spanish: "leer", italian: "leggere", meaning: "to read" },
+                { spanish: "dormir", italian: "dormire", meaning: "to sleep" },
+                { spanish: "pensar", italian: "pensare", meaning: "to think" },
+                { spanish: "venir", italian: "venire", meaning: "to come" },
+                { spanish: "salir", italian: "uscire", meaning: "to leave/go out" },
+                { spanish: "entrar", italian: "entrare", meaning: "to enter" },
+                { spanish: "subir", italian: "salire", meaning: "to go up" },
+                { spanish: "bajar", italian: "scendere", meaning: "to go down" },
+                { spanish: "caminar", italian: "camminare", meaning: "to walk" },
+                { spanish: "amar", italian: "amare", meaning: "to love" },
+                { spanish: "creer", italian: "credere", meaning: "to believe" },
+                { spanish: "recordar", italian: "ricordare", meaning: "to remember" },
+                { spanish: "olvidar", italian: "dimenticare", meaning: "to forget" },
+                { spanish: "necesitar", italian: "necessitare", meaning: "to need" },
+                { spanish: "preferir", italian: "preferire", meaning: "to prefer" },
+                { spanish: "llamar", italian: "chiamare", meaning: "to call" },
+                { spanish: "preguntar", italian: "domandare", meaning: "to ask" },
+                { spanish: "responder", italian: "rispondere", meaning: "to answer" },
+                { spanish: "explicar", italian: "spiegare", meaning: "to explain" },
+                { spanish: "escuchar", italian: "ascoltare", meaning: "to listen" },
+                { spanish: "abrir", italian: "aprire", meaning: "to open" },
+                { spanish: "cerrar", italian: "chiudere", meaning: "to close" },
+                { spanish: "comprar", italian: "comprare", meaning: "to buy" },
+                { spanish: "vender", italian: "vendere", meaning: "to sell" },
+                { spanish: "pagar", italian: "pagare", meaning: "to pay" },
+                { spanish: "buscar", italian: "cercare / trovare", meaning: "to look for / to find" },
+                { spanish: "encontrar", italian: "trovare", meaning: "to find" },
+                { spanish: "perder", italian: "perdere", meaning: "to lose" },
+                { spanish: "ganar", italian: "guadagnare / vincere", meaning: "to win/earn" },
+                { spanish: "usar", italian: "usare", meaning: "to use" },
+                { spanish: "empezar", italian: "cominciare", meaning: "to begin" },
+                { spanish: "terminar", italian: "terminare", meaning: "to end/finish" },
+                { spanish: "continuar", italian: "continuare", meaning: "to continue" },
+                { spanish: "durar", italian: "durare", meaning: "to last" },
+                { spanish: "cambiar", italian: "cambiare", meaning: "to change" },
+                { spanish: "aprender", italian: "apprendere", meaning: "to learn" },
+                { spanish: "enseñar", italian: "insegnare", meaning: "to teach" },
+                { spanish: "entender", italian: "capire / intendere", meaning: "to understand" },
+                { spanish: "conocer", italian: "conoscere / sapere", meaning: "to know (people/places)" },
+                { spanish: "decidir", italian: "decidere", meaning: "to decide" },
+                { spanish: "mover", italian: "muovere", meaning: "to move" },
+                { spanish: "llevar", italian: "portare / indossare", meaning: "to carry/wear" },
+                { spanish: "traer", italian: "portare", meaning: "to bring" },
+                { spanish: "crear", italian: "creare", meaning: "to create" },
+                { spanish: "construir", italian: "costruire", meaning: "to build" },
+                { spanish: "destruir", italian: "distruggere", meaning: "to destroy" },
+                { spanish: "romper", italian: "rompere", meaning: "to break" },
+                { spanish: "lavar", italian: "lavare", meaning: "to wash" },
+                { spanish: "bañar", italian: "fare il bagno", meaning: "to bathe" },
+                { spanish: "vestir", italian: "vestire", meaning: "to dress" },
+                { spanish: "peinar", italian: "pettinare", meaning: "to comb" },
+                { spanish: "maquillar", italian: "truccare", meaning: "to put on makeup" },
+                { spanish: "ayudar", italian: "aiutare", meaning: "to help" },
+                { spanish: "ofrecer", italian: "offrire", meaning: "to offer" },
+                { spanish: "recibir", italian: "ricevere", meaning: "to receive" },
+                { spanish: "invitar", italian: "invitare", meaning: "to invite" },
+                { spanish: "jugar", italian: "giocare", meaning: "to play" },
+                { spanish: "cantar", italian: "cantare", meaning: "to sing" },
+                { spanish: "bailar", italian: "ballare", meaning: "to dance" },
+                { spanish: "cocinar", italian: "cucinare", meaning: "to cook" },
+                { spanish: "pintar", italian: "dipingere", meaning: "to paint" },
+                { spanish: "dibujar", italian: "disegnare", meaning: "to draw" },
+                { spanish: "conducir", italian: "guidare", meaning: "to drive" },
+                { spanish: "viajar", italian: "viaggiare", meaning: "to travel" },
+                { spanish: "nadar", italian: "nuotare", meaning: "to swim" },
+                { spanish: "correr", italian: "correre", meaning: "to run" },
+                { spanish: "saltar", italian: "saltare", meaning: "to jump" },
+                { spanish: "mirar", italian: "guardare", meaning: "to look/watch" },
+                { spanish: "seguir", italian: "seguire", meaning: "to follow" },
+                { spanish: "soñar", italian: "sognare", meaning: "to dream" },
+                { spanish: "intentar", italian: "tentare / provare", meaning: "to try" },
+                { spanish: "conseguir", italian: "ottenere / riuscire", meaning: "to get/achieve" }
+            ];
+
+            return (
+                <div className="container mx-auto px-4 py-8">
+                    <div className="text-center mb-12">
+                        <h1 className="text-5xl font-bold mb-2" style={{ color: 'var(--text-primary)' }}>
+                            VerbeMente
+                        </h1>
+                        <p style={{ color: 'var(--text-secondary)' }}>
+                            Spanish Verbs for Italian Speakers
+                        </p>
+                    </div>
+
+                    {/* Controls */}
+                    <div className="flex justify-center gap-4 mb-8">
+                        {/* Theme Toggle */}
+                        <button 
+                            className="control-btn"
+                            onClick={toggleTheme}
+                            title={isDarkTheme ? "Switch to light mode" : "Switch to dark mode"}
+                        >
+                            {isDarkTheme ? (
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
+                                        d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+                                    />
+                                </svg>
+                            ) : (
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
+                                        d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+                                    />
+                                </svg>
+                            )}
+                        </button>
+
+                        {/* Language Toggle */}
+                        <button 
+                            className="control-btn"
+                            onClick={() => setIsSpanishToItalian(!isSpanishToItalian)}
+                            title="Switch languages"
+                        >
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
+                                    d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"
+                                />
+                            </svg>
+                        </button>
+
+                        {/* Navigation */}
+                        <button 
+                            className="control-btn nav-btn"
+                            onClick={() => setCurrentIndex((prev) => (prev - 1 + cardsData.length) % cardsData.length)}
+                        >
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                            </svg>
+                        </button>
+                        <button 
+                            className="control-btn nav-btn"
+                            onClick={() => setCurrentIndex((prev) => (prev + 1) % cardsData.length)}
+                        >
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    {/* Progress bar */}
+                    <div className="max-w-2xl mx-auto mb-8">
+                        <div className="flex justify-between mb-2">
+                            <span style={{ color: 'var(--text-secondary)' }}>
+                                Card {currentIndex + 1} of {cardsData.length}
+                            </span>
+                            <span style={{ color: 'var(--text-secondary)' }}>
+                                {isSpanishToItalian ? 'Spanish → Italian' : 'Italian → Spanish'}
+                            </span>
+                        </div>
+                        <div className="w-full bg-gray-700/20 rounded-full h-1">
+                            <div 
+                                className="progress-bar"
+                                style={{ width: `${((currentIndex + 1) / cardsData.length) * 100}%` }}
+                            />
+                        </div>
+                    </div>
+
+                    {/* Flashcard */}
+                    <div className="max-w-2xl mx-auto h-96 card-3d">
+                        <div 
+                            className={`card-inner h-full ${isFlipped ? 'flipped' : ''}`}
+                            onClick={() => setIsFlipped(!isFlipped)}
+                        >
+                            <div className="card-face flex items-center justify-center">
+                                <div className={`language-badge ${isSpanishToItalian ? 'badge-es' : 'badge-it'}`}>
+                                    {isSpanishToItalian ? 'ES' : 'IT'}
+                                </div>
+                                <div className="text-center">
+                                    <h2 className="text-6xl font-bold mb-6">
+                                        {isSpanishToItalian 
+                                            ? cardsData[currentIndex].spanish 
+                                            : cardsData[currentIndex].italian}
+                                    </h2>
+                                    <div className="flip-hint flex items-center justify-center gap-2">
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
+                                                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                                            />
+                                        </svg>
+                                        <span>Tap to reveal</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="card-face card-back flex items-center justify-center">
+                                <div className={`language-badge ${!isSpanishToItalian ? 'badge-es' : 'badge-it'}`}>
+                                    {!isSpanishToItalian ? 'ES' : 'IT'}
+                                </div>
+                                <div className="text-center">
+                                    <h2 className="text-5xl font-bold mb-4">
+                                        {isSpanishToItalian 
+                                            ? cardsData[currentIndex].italian 
+                                            : cardsData[currentIndex].spanish}
+                                    </h2>
+                                    <p className="text-xl" style={{ color: 'var(--text-secondary)' }}>
+                                        {cardsData[currentIndex].meaning}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-    <script>
-        // Wait for DOM to load
-        window.addEventListener('DOMContentLoaded', function() {
-            // Card data
-        const cardsData = [
-            // Essential verbs
-            { spanish: "ser", italian: "essere", meaning: "to be (permanent)" },
-            { spanish: "estar", italian: "essere / stare", meaning: "to be (temporary/location)" },
-            { spanish: "haber", italian: "avere", meaning: "to have (auxiliary)" },
-            { spanish: "tener", italian: "avere / tenere", meaning: "to have/possess" },
-            // Common verbs
-            { spanish: "hacer", italian: "fare", meaning: "to do/make" },
-            { spanish: "decir", italian: "dire", meaning: "to say/tell" },
-            { spanish: "ir", italian: "andare", meaning: "to go" },
-            { spanish: "ver", italian: "vedere", meaning: "to see" },
-            { spanish: "dar", italian: "dare", meaning: "to give" },
-            { spanish: "saber", italian: "sapere", meaning: "to know (facts)" },
-            { spanish: "querer", italian: "volere", meaning: "to want" },
-            { spanish: "poder", italian: "potere", meaning: "can/to be able to" },
-            { spanish: "deber", italian: "dovere", meaning: "must/should" },
-            // Multiple meaning verbs
-            { spanish: "esperar", italian: "sperare / aspettare", meaning: "to hope / to wait" },
-            { spanish: "quedar", italian: "restare / rimanere / appuntarsi", meaning: "to stay / to remain / to meet up" },
-            { spanish: "dejar", italian: "lasciare / permettere", meaning: "to leave / to let" },
-            { spanish: "tocar", italian: "toccare / suonare", meaning: "to touch / to play (instrument)" },
-            { spanish: "pedir", italian: "chiedere / ordinare", meaning: "to ask for / to order" },
-            { spanish: "sentir", italian: "sentire / dispiacere", meaning: "to feel / to be sorry" },
-            { spanish: "parecer", italian: "sembrare / apparire", meaning: "to seem / to appear" },
-            // Regular verbs
-            { spanish: "hablar", italian: "parlare", meaning: "to speak" },
-            { spanish: "comer", italian: "mangiare", meaning: "to eat" },
-            { spanish: "vivir", italian: "vivere", meaning: "to live" },
-            { spanish: "beber", italian: "bere", meaning: "to drink" },
-            { spanish: "trabajar", italian: "lavorare", meaning: "to work" },
-            { spanish: "estudiar", italian: "studiare", meaning: "to study" },
-            { spanish: "escribir", italian: "scrivere", meaning: "to write" },
-            { spanish: "leer", italian: "leggere", meaning: "to read" },
-            { spanish: "dormir", italian: "dormire", meaning: "to sleep" },
-            { spanish: "pensar", italian: "pensare", meaning: "to think" },
-            // Movement verbs
-            { spanish: "venir", italian: "venire", meaning: "to come" },
-            { spanish: "salir", italian: "uscire", meaning: "to leave/go out" },
-            { spanish: "entrar", italian: "entrare", meaning: "to enter" },
-            { spanish: "subir", italian: "salire", meaning: "to go up" },
-            { spanish: "bajar", italian: "scendere", meaning: "to go down" },
-            { spanish: "caminar", italian: "camminare", meaning: "to walk" },
-            // Emotional/Mental verbs
-            { spanish: "amar", italian: "amare", meaning: "to love" },
-            { spanish: "creer", italian: "credere", meaning: "to believe" },
-            { spanish: "recordar", italian: "ricordare", meaning: "to remember" },
-            { spanish: "olvidar", italian: "dimenticare", meaning: "to forget" },
-            { spanish: "necesitar", italian: "necessitare", meaning: "to need" },
-            { spanish: "preferir", italian: "preferire", meaning: "to prefer" },
-            // Communication
-            { spanish: "llamar", italian: "chiamare", meaning: "to call" },
-            { spanish: "preguntar", italian: "domandare", meaning: "to ask" },
-            { spanish: "responder", italian: "rispondere", meaning: "to answer" },
-            { spanish: "explicar", italian: "spiegare", meaning: "to explain" },
-            { spanish: "escuchar", italian: "ascoltare", meaning: "to listen" },
-            // Daily actions
-            { spanish: "abrir", italian: "aprire", meaning: "to open" },
-            { spanish: "cerrar", italian: "chiudere", meaning: "to close" },
-            { spanish: "comprar", italian: "comprare", meaning: "to buy" },
-            { spanish: "vender", italian: "vendere", meaning: "to sell" },
-            { spanish: "pagar", italian: "pagare", meaning: "to pay" },
-            { spanish: "buscar", italian: "cercare / trovare", meaning: "to look for / to find" },
-            { spanish: "encontrar", italian: "trovare", meaning: "to find" },
-            { spanish: "perder", italian: "perdere", meaning: "to lose" },
-            { spanish: "ganar", italian: "guadagnare / vincere", meaning: "to win/earn" },
-            { spanish: "usar", italian: "usare", meaning: "to use" },
-            // Time-related
-            { spanish: "empezar", italian: "cominciare", meaning: "to begin" },
-            { spanish: "terminar", italian: "terminare", meaning: "to end/finish" },
-            { spanish: "continuar", italian: "continuare", meaning: "to continue" },
-            { spanish: "durar", italian: "durare", meaning: "to last" },
-            { spanish: "cambiar", italian: "cambiare", meaning: "to change" },
-            // Learning/Knowledge
-            { spanish: "aprender", italian: "apprendere", meaning: "to learn" },
-            { spanish: "enseñar", italian: "insegnare", meaning: "to teach" },
-            { spanish: "entender", italian: "capire / intendere", meaning: "to understand" },
-            { spanish: "conocer", italian: "conoscere / sapere", meaning: "to know (people/places)" },
-            { spanish: "decidir", italian: "decidere", meaning: "to decide" },
-            // Movement and Change
-            { spanish: "mover", italian: "muovere", meaning: "to move" },
-            { spanish: "llevar", italian: "portare / indossare", meaning: "to carry/wear" },
-            { spanish: "traer", italian: "portare", meaning: "to bring" },
-            // Creation and Destruction
-            { spanish: "crear", italian: "creare", meaning: "to create" },
-            { spanish: "construir", italian: "costruire", meaning: "to build" },
-            { spanish: "destruir", italian: "distruggere", meaning: "to destroy" },
-            { spanish: "romper", italian: "rompere", meaning: "to break" },
-            // Personal Care
-            { spanish: "lavar", italian: "lavare", meaning: "to wash" },
-            { spanish: "bañar", italian: "fare il bagno", meaning: "to bathe" },
-            { spanish: "vestir", italian: "vestire", meaning: "to dress" },
-            { spanish: "peinar", italian: "pettinare", meaning: "to comb" },
-            { spanish: "maquillar", italian: "truccare", meaning: "to put on makeup" },
-            // Social Interactions
-            { spanish: "ayudar", italian: "aiutare", meaning: "to help" },
-            { spanish: "ofrecer", italian: "offrire", meaning: "to offer" },
-            { spanish: "recibir", italian: "ricevere", meaning: "to receive" },
-            { spanish: "invitar", italian: "invitare", meaning: "to invite" },
-            // Recreation
-            { spanish: "jugar", italian: "giocare", meaning: "to play" },
-            { spanish: "cantar", italian: "cantare", meaning: "to sing" },
-            { spanish: "bailar", italian: "ballare", meaning: "to dance" },
-            { spanish: "cocinar", italian: "cucinare", meaning: "to cook" },
-            { spanish: "pintar", italian: "dipingere", meaning: "to paint" },
-            { spanish: "dibujar", italian: "disegnare", meaning: "to draw" },
-            // Travel and Movement
-            { spanish: "conducir", italian: "guidare", meaning: "to drive" },
-            { spanish: "viajar", italian: "viaggiare", meaning: "to travel" },
-            { spanish: "nadar", italian: "nuotare", meaning: "to swim" },
-            { spanish: "correr", italian: "correre", meaning: "to run" },
-            { spanish: "saltar", italian: "saltare", meaning: "to jump" },
-            // Additional Common Verbs
-            { spanish: "mirar", italian: "guardare", meaning: "to look/watch" },
-            { spanish: "seguir", italian: "seguire", meaning: "to follow" },
-            { spanish: "soñar", italian: "sognare", meaning: "to dream" },
-            { spanish: "intentar", italian: "tentare / provare", meaning: "to try" },
-            { spanish: "conseguir", italian: "ottenere / riuscire", meaning: "to get/achieve" }
-        ];
+            );
+        }
 
-            // Initialize variables
-            let shuffledCards = [];
-            let currentIndex = 0;
-            let spanishToItalian = true;
-
-            // Get DOM elements
-            const flipCard = document.getElementById('flipCard');
-            const cardFront = document.getElementById('cardFront');
-            const cardBack = document.getElementById('cardBack');
-            const prevBtn = document.getElementById('prevBtn');
-            const nextBtn = document.getElementById('nextBtn');
-            const progressBar = document.getElementById('progressBar');
-            const progressText = document.getElementById('progressText');
-            const languageToggle = document.getElementById('languageToggle');
-            const languageIndicator = document.getElementById('languageIndicator');
-            const themeToggle = document.getElementById('themeToggle');
-
-            // Shuffle function
-            function shuffleArray(array) {
-                let shuffled = [...array];
-                for (let i = shuffled.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-                }
-                return shuffled;
-            }
-
-            // Update card content
-            function updateCard() {
-                const card = shuffledCards[currentIndex];
-                if (spanishToItalian) {
-                    cardFront.textContent = card.spanish;
-                    cardBack.innerHTML = `
-                        <div class="text-3xl font-bold mb-4 text-gray-800 dark:text-gray-100">${card.italian}</div>
-                        <div class="text-xl mb-2 text-gray-600 dark:text-gray-400">${card.meaning}</div>
-                    `;
-                    document.querySelector('.flip-card-front .language-indicator').className = 'language-indicator es';
-                    document.querySelector('.flip-card-front .language-indicator').textContent = 'ES';
-                    document.querySelector('.flip-card-back .language-indicator').className = 'language-indicator it';
-                    document.querySelector('.flip-card-back .language-indicator').textContent = 'IT';
-                } else {
-                    cardFront.textContent = card.italian;
-                    cardBack.innerHTML = `
-                        <div class="text-3xl font-bold mb-4 text-gray-800 dark:text-gray-100">${card.spanish}</div>
-                        <div class="text-xl mb-2 text-gray-600 dark:text-gray-400">${card.meaning}</div>
-                    `;
-                    document.querySelector('.flip-card-front .language-indicator').className = 'language-indicator it';
-                    document.querySelector('.flip-card-front .language-indicator').textContent = 'IT';
-                    document.querySelector('.flip-card-back .language-indicator').className = 'language-indicator es';
-                    document.querySelector('.flip-card-back .language-indicator').textContent = 'ES';
-                }
-            
-                // Update progress
-                progressText.textContent = `Card ${currentIndex + 1} of ${shuffledCards.length}`;
-                const progress = ((currentIndex + 1) / shuffledCards.length) * 100;
-                progressBar.style.width = `${progress}%`;
-                
-                // Reset flip
-                flipCard.classList.remove('flipped');
-            }
-
-            // Navigation functions
-            function nextCard() {
-                currentIndex = (currentIndex + 1) % shuffledCards.length;
-                updateCard();
-            }
-
-            function prevCard() {
-                currentIndex = (currentIndex - 1 + shuffledCards.length) % shuffledCards.length;
-                updateCard();
-            }
-
-            themeToggle.addEventListener('click', () => {
-                document.documentElement.classList.toggle('dark');
-                themeToggle.querySelector('i').classList.toggle('fa-moon');
-                themeToggle.querySelector('i').classList.toggle('fa-sun');
-            });
-
-            // Event listeners
-            flipCard.addEventListener('click', () => flipCard.classList.toggle('flipped'));
-            nextBtn.addEventListener('click', nextCard);
-            prevBtn.addEventListener('click', prevCard);
-            
-            languageToggle.addEventListener('click', () => {
-                spanishToItalian = !spanishToItalian;
-                updateCard();
-            });
-
-            // Keyboard navigation
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'ArrowLeft') prevCard();
-                else if (e.key === 'ArrowRight') nextCard();
-                else if (e.key === ' ') {
-                    e.preventDefault();
-                    flipCard.click();
-                }
-            });
-
-            // Initialize
-            shuffledCards = shuffleArray(cardsData);
-            updateCard();
-        });
+        ReactDOM.render(<App />, document.getElementById('root'));
     </script>
 </body>
 </html>
