@@ -157,18 +157,48 @@
             const [isSpanishToItalian, setIsSpanishToItalian] = useState(true);
             const [isDarkTheme, setIsDarkTheme] = useState(true);
             const [cardScores, setCardScores] = useState(() => {
-                // Initialize from localStorage or empty object if none exists
                 const saved = localStorage.getItem('verbeMenteScores');
                 return saved ? JSON.parse(saved) : {};
             });
+            const [sessionCards, setSessionCards] = useState(() => {
+                // Initialize session cards when component mounts
+                return selectCardsForSession(cardsData, cardScores);
+            });
 
-            // Save scores to localStorage whenever they change
+            // Function to calculate card priority
+            const calculatePriority = (card, scores) => {
+                const score = scores[card.spanish];
+                if (!score) return 1; // Highest priority for never-seen cards
+                
+                const msPerDay = 86400000;
+                const daysSinceLastSeen = (new Date() - new Date(score.lastSeen)) / msPerDay;
+                
+                // Priority formula: lower scores and longer time since last seen = higher priority
+                // Priority = (5 - score) * (days since last seen + 1)
+                return (5 - score.score) * (daysSinceLastSeen + 1);
+            };
+
+            // Function to select cards for a session
+            function selectCardsForSession(allCards, scores) {
+                // Calculate priority for each card
+                const cardsWithPriority = allCards.map(card => ({
+                    ...card,
+                    priority: calculatePriority(card, scores)
+                }));
+
+                // Sort by priority (highest first)
+                cardsWithPriority.sort((a, b) => b.priority - a.priority);
+
+                // Take top 20 cards
+                return cardsWithPriority.slice(0, 20);
+            }
+
             useEffect(() => {
                 localStorage.setItem('verbeMenteScores', JSON.stringify(cardScores));
             }, [cardScores]);
 
             const handleScore = (score) => {
-                const cardId = cardsData[currentIndex].spanish; // Using Spanish word as unique identifier
+                const cardId = sessionCards[currentIndex].spanish;
                 setCardScores(prev => ({
                     ...prev,
                     [cardId]: {
@@ -182,12 +212,20 @@
 
             const nextCard = () => {
                 setIsFlipped(false);
-                setCurrentIndex((prev) => (prev + 1) % cardsData.length);
+                if (currentIndex < sessionCards.length - 1) {
+                    setCurrentIndex(prev => prev + 1);
+                } else {
+                    // End of session, reshuffle cards
+                    setSessionCards(selectCardsForSession(cardsData, cardScores));
+                    setCurrentIndex(0);
+                }
             };
 
             const prevCard = () => {
                 setIsFlipped(false);
-                setCurrentIndex((prev) => (prev - 1 + cardsData.length) % cardsData.length);
+                if (currentIndex > 0) {
+                    setCurrentIndex(prev => prev - 1);
+                }
             };
 
             // Keyboard navigation
@@ -295,7 +333,7 @@
                     <div className="max-w-2xl mx-auto mb-8">
                         <div className="flex justify-between mb-2">
                             <span style={{ color: 'var(--text-secondary)' }}>
-                                Card {currentIndex + 1} of {cardsData.length}
+                                Card {currentIndex + 1} of {sessionCards.length}
                             </span>
                             <span style={{ color: 'var(--text-secondary)' }}>
                                 {isSpanishToItalian ? 'Spanish → Italian' : 'Italian → Spanish'}
@@ -322,8 +360,8 @@
                                 <div className="text-center">
                                     <h2 className="text-6xl font-bold mb-6">
                                         {isSpanishToItalian 
-                                            ? cardsData[currentIndex].spanish 
-                                            : cardsData[currentIndex].italian}
+                                            ? sessionCards[currentIndex].spanish 
+                                            : sessionCards[currentIndex].italian}
                                     </h2>
                                     <div className="flip-hint flex items-center justify-center gap-2">
                                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -342,11 +380,11 @@
                                 <div className="text-center">
                                     <h2 className="text-5xl font-bold mb-4">
                                         {isSpanishToItalian 
-                                            ? cardsData[currentIndex].italian 
-                                            : cardsData[currentIndex].spanish}
+                                            ? sessionCards[currentIndex].italian 
+                                            : sessionCards[currentIndex].spanish}
                                     </h2>
                                     <p className="text-xl mb-8" style={{ color: 'var(--text-secondary)' }}>
-                                        {cardsData[currentIndex].meaning}
+                                        {sessionCards[currentIndex].meaning}
                                     </p>
                                     <div className="flex gap-3 mt-4">
                                         <button 
