@@ -27,21 +27,17 @@
             backface-visibility: hidden;
             border-radius: 1rem;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            background-color: #ffffff;
         }
         .flip-card-front {
             background-color: #ffffff;
         }
-        .dark .flip-card-front {
+        .dark .flip-card-front, .dark .flip-card-back {
             background-color: #1f1f1f;
+            color: #eaeaea;
         }
         .flip-card-back {
             transform: rotateY(180deg);
-            background-color: #4f46e5;
-            color: #ffffff;
-        }
-        .dark .flip-card-back {
-            background-color: #2d2d2d;
-            color: #eaeaea;
         }
         @keyframes bounce {
             0%, 100% { transform: translateY(-5%); }
@@ -52,6 +48,12 @@
         }
         .dark body {
             background-color: #181818;
+        }
+        .language-indicator {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            opacity: 0.6;
         }
     </style>
 </head>
@@ -92,18 +94,19 @@
             </div>
         </div>
 
-        <!-- Flashcard -->
         <div class="max-w-2xl mx-auto">
             <div class="flip-card" id="flipCard">
                 <div class="flip-card-inner">
-                    <div class="flip-card-front flex flex-col justify-center items-center p-8">
+                    <div class="flip-card-front flex flex-col justify-center items-center p-8 relative">
+                        <div class="language-indicator text-sm">🇪🇸</div>
                         <span id="cardFront" class="text-4xl font-bold text-gray-800 dark:text-gray-200 mb-4"></span>
                         <span class="text-sm text-gray-500 dark:text-gray-400 bounce-hint">Click to flip</span>
                     </div>
-                    <div class="flip-card-back flex flex-col justify-center items-center p-8">
+                    <div class="flip-card-back flex flex-col justify-center items-center p-8 relative">
+                        <div class="language-indicator text-sm">🇮🇹</div>
                         <div id="cardBack" class="text-center">
-                            <div class="text-3xl font-bold mb-4"></div>
-                            <div class="text-xl mb-2"></div>
+                            <div class="text-3xl font-bold mb-4 text-gray-800 dark:text-gray-200"></div>
+                            <div class="text-xl mb-2 text-gray-600 dark:text-gray-400"></div>
                         </div>
                     </div>
                 </div>
@@ -156,19 +159,23 @@
                 if (spanishToItalian) {
                     cardFront.textContent = card.spanish;
                     cardBack.innerHTML = `
-                        <div class="text-3xl font-bold mb-4">${card.italian}</div>
-                        <div class="text-xl mb-2">${card.meaning}</div>
+                        <div class="text-3xl font-bold mb-4 text-gray-800 dark:text-gray-200">${card.italian}</div>
+                        <div class="text-xl mb-2 text-gray-600 dark:text-gray-400">${card.meaning}</div>
                     `;
-                    languageIndicator.textContent = "Mode: Spanish → Italian";
                 } else {
                     cardFront.textContent = card.italian;
                     cardBack.innerHTML = `
-                        <div class="text-3xl font-bold mb-4">${card.spanish}</div>
-                        <div class="text-xl mb-2">${card.meaning}</div>
+                        <div class="text-3xl font-bold mb-4 text-gray-800 dark:text-gray-200">${card.spanish}</div>
+                        <div class="text-xl mb-2 text-gray-600 dark:text-gray-400">${card.meaning}</div>
                     `;
-                    languageIndicator.textContent = "Mode: Italian → Spanish";
                 }
-
+            
+                // Update flag indicators
+                document.querySelector('.flip-card-front .language-indicator').textContent = 
+                    spanishToItalian ? '🇪🇸' : '🇮🇹';
+                document.querySelector('.flip-card-back .language-indicator').textContent = 
+                    spanishToItalian ? '🇮🇹' : '🇪🇸';
+            
                 // Update progress
                 progressText.textContent = `Card ${currentIndex + 1} of ${shuffledCards.length}`;
                 const progress = ((currentIndex + 1) / shuffledCards.length) * 100;
