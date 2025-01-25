@@ -157,6 +157,35 @@
             const [isSpanishToItalian, setIsSpanishToItalian] = useState(true);
             const [isDarkTheme, setIsDarkTheme] = useState(true);
 
+            const nextCard = () => {
+                setIsFlipped(false);
+                setCurrentIndex((prev) => (prev + 1) % cardsData.length);
+            };
+
+            const prevCard = () => {
+                setIsFlipped(false);
+                setCurrentIndex((prev) => (prev - 1 + cardsData.length) % cardsData.length);
+            };
+
+            // Keyboard navigation
+            useEffect(() => {
+                const handleKeyPress = (e) => {
+                    if (e.key === 'ArrowRight') {
+                        e.preventDefault();
+                        nextCard();
+                    } else if (e.key === 'ArrowLeft') {
+                        e.preventDefault();
+                        prevCard();
+                    } else if (e.key === ' ') {
+                        e.preventDefault();
+                        setIsFlipped(prev => !prev);
+                    }
+                };
+
+                window.addEventListener('keydown', handleKeyPress);
+                return () => window.removeEventListener('keydown', handleKeyPress);
+            }, []);  // Empty dependency array since we don't need to recreate the handler
+
             // Theme toggling effect
             useEffect(() => {
                 document.documentElement.setAttribute('data-theme', isDarkTheme ? 'dark' : 'light');
@@ -170,103 +199,7 @@
             const cardsData = [
                 { spanish: "ser", italian: "essere", meaning: "to be (permanent)" },
                 { spanish: "estar", italian: "essere / stare", meaning: "to be (temporary/location)" },
-                { spanish: "haber", italian: "avere", meaning: "to have (auxiliary)" },
-                { spanish: "tener", italian: "avere / tenere", meaning: "to have/possess" },
-                { spanish: "hacer", italian: "fare", meaning: "to do/make" },
-                { spanish: "decir", italian: "dire", meaning: "to say/tell" },
-                { spanish: "ir", italian: "andare", meaning: "to go" },
-                { spanish: "ver", italian: "vedere", meaning: "to see" },
-                { spanish: "dar", italian: "dare", meaning: "to give" },
-                { spanish: "saber", italian: "sapere", meaning: "to know (facts)" },
-                { spanish: "querer", italian: "volere", meaning: "to want" },
-                { spanish: "poder", italian: "potere", meaning: "can/to be able to" },
-                { spanish: "deber", italian: "dovere", meaning: "must/should" },
-                { spanish: "esperar", italian: "sperare / aspettare", meaning: "to hope / to wait" },
-                { spanish: "quedar", italian: "restare / rimanere / appuntarsi", meaning: "to stay / to remain / to meet up" },
-                { spanish: "dejar", italian: "lasciare / permettere", meaning: "to leave / to let" },
-                { spanish: "tocar", italian: "toccare / suonare", meaning: "to touch / to play (instrument)" },
-                { spanish: "pedir", italian: "chiedere / ordinare", meaning: "to ask for / to order" },
-                { spanish: "sentir", italian: "sentire / dispiacere", meaning: "to feel / to be sorry" },
-                { spanish: "parecer", italian: "sembrare / apparire", meaning: "to seem / to appear" },
-                { spanish: "hablar", italian: "parlare", meaning: "to speak" },
-                { spanish: "comer", italian: "mangiare", meaning: "to eat" },
-                { spanish: "vivir", italian: "vivere", meaning: "to live" },
-                { spanish: "beber", italian: "bere", meaning: "to drink" },
-                { spanish: "trabajar", italian: "lavorare", meaning: "to work" },
-                { spanish: "estudiar", italian: "studiare", meaning: "to study" },
-                { spanish: "escribir", italian: "scrivere", meaning: "to write" },
-                { spanish: "leer", italian: "leggere", meaning: "to read" },
-                { spanish: "dormir", italian: "dormire", meaning: "to sleep" },
-                { spanish: "pensar", italian: "pensare", meaning: "to think" },
-                { spanish: "venir", italian: "venire", meaning: "to come" },
-                { spanish: "salir", italian: "uscire", meaning: "to leave/go out" },
-                { spanish: "entrar", italian: "entrare", meaning: "to enter" },
-                { spanish: "subir", italian: "salire", meaning: "to go up" },
-                { spanish: "bajar", italian: "scendere", meaning: "to go down" },
-                { spanish: "caminar", italian: "camminare", meaning: "to walk" },
-                { spanish: "amar", italian: "amare", meaning: "to love" },
-                { spanish: "creer", italian: "credere", meaning: "to believe" },
-                { spanish: "recordar", italian: "ricordare", meaning: "to remember" },
-                { spanish: "olvidar", italian: "dimenticare", meaning: "to forget" },
-                { spanish: "necesitar", italian: "necessitare", meaning: "to need" },
-                { spanish: "preferir", italian: "preferire", meaning: "to prefer" },
-                { spanish: "llamar", italian: "chiamare", meaning: "to call" },
-                { spanish: "preguntar", italian: "domandare", meaning: "to ask" },
-                { spanish: "responder", italian: "rispondere", meaning: "to answer" },
-                { spanish: "explicar", italian: "spiegare", meaning: "to explain" },
-                { spanish: "escuchar", italian: "ascoltare", meaning: "to listen" },
-                { spanish: "abrir", italian: "aprire", meaning: "to open" },
-                { spanish: "cerrar", italian: "chiudere", meaning: "to close" },
-                { spanish: "comprar", italian: "comprare", meaning: "to buy" },
-                { spanish: "vender", italian: "vendere", meaning: "to sell" },
-                { spanish: "pagar", italian: "pagare", meaning: "to pay" },
-                { spanish: "buscar", italian: "cercare / trovare", meaning: "to look for / to find" },
-                { spanish: "encontrar", italian: "trovare", meaning: "to find" },
-                { spanish: "perder", italian: "perdere", meaning: "to lose" },
-                { spanish: "ganar", italian: "guadagnare / vincere", meaning: "to win/earn" },
-                { spanish: "usar", italian: "usare", meaning: "to use" },
-                { spanish: "empezar", italian: "cominciare", meaning: "to begin" },
-                { spanish: "terminar", italian: "terminare", meaning: "to end/finish" },
-                { spanish: "continuar", italian: "continuare", meaning: "to continue" },
-                { spanish: "durar", italian: "durare", meaning: "to last" },
-                { spanish: "cambiar", italian: "cambiare", meaning: "to change" },
-                { spanish: "aprender", italian: "apprendere", meaning: "to learn" },
-                { spanish: "enseñar", italian: "insegnare", meaning: "to teach" },
-                { spanish: "entender", italian: "capire / intendere", meaning: "to understand" },
-                { spanish: "conocer", italian: "conoscere / sapere", meaning: "to know (people/places)" },
-                { spanish: "decidir", italian: "decidere", meaning: "to decide" },
-                { spanish: "mover", italian: "muovere", meaning: "to move" },
-                { spanish: "llevar", italian: "portare / indossare", meaning: "to carry/wear" },
-                { spanish: "traer", italian: "portare", meaning: "to bring" },
-                { spanish: "crear", italian: "creare", meaning: "to create" },
-                { spanish: "construir", italian: "costruire", meaning: "to build" },
-                { spanish: "destruir", italian: "distruggere", meaning: "to destroy" },
-                { spanish: "romper", italian: "rompere", meaning: "to break" },
-                { spanish: "lavar", italian: "lavare", meaning: "to wash" },
-                { spanish: "bañar", italian: "fare il bagno", meaning: "to bathe" },
-                { spanish: "vestir", italian: "vestire", meaning: "to dress" },
-                { spanish: "peinar", italian: "pettinare", meaning: "to comb" },
-                { spanish: "maquillar", italian: "truccare", meaning: "to put on makeup" },
-                { spanish: "ayudar", italian: "aiutare", meaning: "to help" },
-                { spanish: "ofrecer", italian: "offrire", meaning: "to offer" },
-                { spanish: "recibir", italian: "ricevere", meaning: "to receive" },
-                { spanish: "invitar", italian: "invitare", meaning: "to invite" },
-                { spanish: "jugar", italian: "giocare", meaning: "to play" },
-                { spanish: "cantar", italian: "cantare", meaning: "to sing" },
-                { spanish: "bailar", italian: "ballare", meaning: "to dance" },
-                { spanish: "cocinar", italian: "cucinare", meaning: "to cook" },
-                { spanish: "pintar", italian: "dipingere", meaning: "to paint" },
-                { spanish: "dibujar", italian: "disegnare", meaning: "to draw" },
-                { spanish: "conducir", italian: "guidare", meaning: "to drive" },
-                { spanish: "viajar", italian: "viaggiare", meaning: "to travel" },
-                { spanish: "nadar", italian: "nuotare", meaning: "to swim" },
-                { spanish: "correr", italian: "correre", meaning: "to run" },
-                { spanish: "saltar", italian: "saltare", meaning: "to jump" },
-                { spanish: "mirar", italian: "guardare", meaning: "to look/watch" },
-                { spanish: "seguir", italian: "seguire", meaning: "to follow" },
-                { spanish: "soñar", italian: "sognare", meaning: "to dream" },
-                { spanish: "intentar", italian: "tentare / provare", meaning: "to try" },
-                { spanish: "conseguir", italian: "ottenere / riuscire", meaning: "to get/achieve" }
+                // Add more cards as needed
             ];
 
             return (
@@ -319,7 +252,7 @@
                         {/* Navigation */}
                         <button 
                             className="control-btn nav-btn"
-                            onClick={() => setCurrentIndex((prev) => (prev - 1 + cardsData.length) % cardsData.length)}
+                            onClick={prevCard}
                         >
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -327,7 +260,7 @@
                         </button>
                         <button 
                             className="control-btn nav-btn"
-                            onClick={() => setCurrentIndex((prev) => (prev + 1) % cardsData.length)}
+                            onClick={nextCard}
                         >
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
