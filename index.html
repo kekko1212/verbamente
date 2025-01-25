@@ -151,6 +151,22 @@
     <script type="text/babel">
         const { useState, useEffect } = React;
 
+        // Card data array - defined before the App component
+        const cardsData = [
+            { spanish: "ser", italian: "essere", meaning: "to be (permanent)" },
+            { spanish: "estar", italian: "essere / stare", meaning: "to be (temporary/location)" },
+            { spanish: "hacer", italian: "fare", meaning: "to do/make" },
+            { spanish: "decir", italian: "dire", meaning: "to say/tell" },
+            { spanish: "ir", italian: "andare", meaning: "to go" },
+            { spanish: "ver", italian: "vedere", meaning: "to see" },
+            { spanish: "dar", italian: "dare", meaning: "to give" },
+            { spanish: "saber", italian: "sapere", meaning: "to know (facts)" },
+            { spanish: "querer", italian: "volere", meaning: "to want" },
+            { spanish: "poder", italian: "potere", meaning: "can/to be able to" },
+            { spanish: "deber", italian: "dovere", meaning: "must/should" },
+            // Add more cards as needed
+        ];
+
         function App() {
             const [currentIndex, setCurrentIndex] = useState(0);
             const [isFlipped, setIsFlipped] = useState(false);
