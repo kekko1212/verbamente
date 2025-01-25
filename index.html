@@ -102,7 +102,189 @@
     </div>
 
     <script>
-        // [Previous JavaScript code remains unchanged]
+        const verbs = [
+    { spanish: "ser", italian: "essere", meaning: "to be (permanent)" },
+    { spanish: "estar", italian: "stare", meaning: "to be (temporary)" },
+    { spanish: "haber", italian: "avere", meaning: "auxiliary to have" },
+    { spanish: "tener", italian: "tenere", meaning: "to have/possess" },
+    { spanish: "hacer", italian: "fare", meaning: "to do/make" },
+    { spanish: "decir", italian: "dire", meaning: "to say/tell" },
+    { spanish: "ir", italian: "andare", meaning: "to go" },
+    { spanish: "ver", italian: "vedere", meaning: "to see" },
+    { spanish: "dar", italian: "dare", meaning: "to give" },
+    { spanish: "saber", italian: "sapere", meaning: "to know (facts)" },
+    { spanish: "querer", italian: "volere", meaning: "to want" },
+    { spanish: "llegar", italian: "arrivare", meaning: "to arrive" },
+    { spanish: "pasar", italian: "passare", meaning: "to pass/spend time" },
+    { spanish: "deber", italian: "dovere", meaning: "must/should" },
+    { spanish: "poder", italian: "potere", meaning: "can/to be able to" },
+    { spanish: "comer", italian: "mangiare", meaning: "to eat" },
+    { spanish: "beber", italian: "bere", meaning: "to drink" },
+    { spanish: "dormir", italian: "dormire", meaning: "to sleep" },
+    { spanish: "trabajar", italian: "lavorare", meaning: "to work" },
+    { spanish: "estudiar", italian: "studiare", meaning: "to study" },
+    { spanish: "vivir", italian: "vivere", meaning: "to live" },
+    { spanish: "pensar", italian: "pensare", meaning: "to think" },
+    { spanish: "escribir", italian: "scrivere", meaning: "to write" },
+    { spanish: "leer", italian: "leggere", meaning: "to read" },
+    { spanish: "hablar", italian: "parlare", meaning: "to speak/talk" },
+    { spanish: "venir", italian: "venire", meaning: "to come" },
+    { spanish: "salir", italian: "uscire", meaning: "to leave/go out" },
+    { spanish: "entrar", italian: "entrare", meaning: "to enter" },
+    { spanish: "poner", italian: "mettere", meaning: "to put/place" },
+    { spanish: "seguir", italian: "seguire", meaning: "to follow/continue" },
+    { spanish: "volver", italian: "tornare", meaning: "to return" },
+    { spanish: "caer", italian: "cadere", meaning: "to fall" },
+    { spanish: "subir", italian: "salire", meaning: "to go up" },
+    { spanish: "bajar", italian: "scendere", meaning: "to go down" },
+    { spanish: "caminar", italian: "camminare", meaning: "to walk" },
+    { spanish: "gustar", italian: "piacere", meaning: "to like" },
+    { spanish: "amar", italian: "amare", meaning: "to love" },
+    { spanish: "sentir", italian: "sentire", meaning: "to feel" },
+    { spanish: "creer", italian: "credere", meaning: "to believe" },
+    { spanish: "parecer", italian: "parere", meaning: "to seem/appear" },
+    { spanish: "esperar", italian: "sperare", meaning: "to hope/wait" },
+    { spanish: "recordar", italian: "ricordare", meaning: "to remember" },
+    { spanish: "olvidar", italian: "dimenticare", meaning: "to forget" },
+    { spanish: "necesitar", italian: "necessitare", meaning: "to need" },
+    { spanish: "preferir", italian: "preferire", meaning: "to prefer" },
+    { spanish: "llamar", italian: "chiamare", meaning: "to call" },
+    { spanish: "preguntar", italian: "domandare", meaning: "to ask" },
+    { spanish: "responder", italian: "rispondere", meaning: "to answer" },
+    { spanish: "explicar", italian: "spiegare", meaning: "to explain" },
+    { spanish: "escuchar", italian: "ascoltare", meaning: "to listen" },
+    { spanish: "abrir", italian: "aprire", meaning: "to open" },
+    { spanish: "cerrar", italian: "chiudere", meaning: "to close" },
+    { spanish: "comprar", italian: "comprare", meaning: "to buy" },
+    { spanish: "vender", italian: "vendere", meaning: "to sell" },
+    { spanish: "pagar", italian: "pagare", meaning: "to pay" },
+    { spanish: "buscar", italian: "cercare", meaning: "to look for" },
+    { spanish: "encontrar", italian: "trovare", meaning: "to find" },
+    { spanish: "perder", italian: "perdere", meaning: "to lose" },
+    { spanish: "ganar", italian: "guadagnare", meaning: "to win/earn" },
+    { spanish: "usar", italian: "usare", meaning: "to use" },
+    { spanish: "empezar", italian: "cominciare", meaning: "to begin" },
+    { spanish: "terminar", italian: "terminare", meaning: "to end/finish" },
+    { spanish: "continuar", italian: "continuare", meaning: "to continue" },
+    { spanish: "durar", italian: "durare", meaning: "to last" },
+    { spanish: "cambiar", italian: "cambiare", meaning: "to change" },
+    { spanish: "aprender", italian: "apprendere", meaning: "to learn" },
+    { spanish: "enseñar", italian: "insegnare", meaning: "to teach" },
+    { spanish: "entender", italian: "intendere", meaning: "to understand" },
+    { spanish: "conocer", italian: "conoscere", meaning: "to know (people/places)" },
+    { spanish: "decidir", italian: "decidere", meaning: "to decide" },
+    { spanish: "mover", italian: "muovere", meaning: "to move" },
+    { spanish: "llevar", italian: "portare", meaning: "to carry/wear" },
+    { spanish: "traer", italian: "portare", meaning: "to bring" },
+    { spanish: "dejar", italian: "lasciare", meaning: "to leave/let" },
+    { spanish: "quedar", italian: "restare", meaning: "to stay/remain" },
+    { spanish: "mostrar", italian: "mostrare", meaning: "to show" },
+    { spanish: "crear", italian: "creare", meaning: "to create" },
+    { spanish: "construir", italian: "costruire", meaning: "to build" },
+    { spanish: "destruir", italian: "distruggere", meaning: "to destroy" },
+    { spanish: "romper", italian: "rompere", meaning: "to break" },
+    { spanish: "lavar", italian: "lavare", meaning: "to wash" },
+    { spanish: "bañar", italian: "fare il bagno", meaning: "to bathe" },
+    { spanish: "vestir", italian: "vestire", meaning: "to dress" },
+    { spanish: "peinar", italian: "pettinare", meaning: "to comb" },
+    { spanish: "maquillar", italian: "truccare", meaning: "to put on makeup" },
+    { spanish: "ayudar", italian: "aiutare", meaning: "to help" },
+    { spanish: "pedir", italian: "chiedere", meaning: "to ask for" },
+    { spanish: "ofrecer", italian: "offrire", meaning: "to offer" },
+    { spanish: "recibir", italian: "ricevere", meaning: "to receive" },
+    { spanish: "invitar", italian: "invitare", meaning: "to invite" },
+    { spanish: "jugar", italian: "giocare", meaning: "to play" },
+    { spanish: "tocar", italian: "toccare", meaning: "to touch/play (instrument)" },
+    { spanish: "cantar", italian: "cantare", meaning: "to sing" },
+    { spanish: "bailar", italian: "ballare", meaning: "to dance" },
+    { spanish: "cocinar", italian: "cucinare", meaning: "to cook" },
+    { spanish: "conducir", italian: "guidare", meaning: "to drive" },
+    { spanish: "viajar", italian: "viaggiare", meaning: "to travel" },
+    { spanish: "dibujar", italian: "disegnare", meaning: "to draw" },
+    { spanish: "pintar", italian: "dipingere", meaning: "to paint" },
+    { spanish: "soñar", italian: "sognare", meaning: "to dream" }
+];
+        let currentIndex = 0;
+        let isSpanishToItalian = true;
+        let shuffledVerbs = [...verbs];
+        // Shuffle function
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+        // Initialize with shuffled verbs
+        shuffledVerbs = shuffleArray([...verbs]);
+        // DOM elements
+        const flipCard = document.querySelector('.flip-card');
+        const cardFront = document.getElementById('cardFront');
+        const cardBack = document.getElementById('cardBack');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+        const themeToggle = document.getElementById('themeToggle');
+        const languageToggle = document.getElementById('languageToggle');
+        const languageIndicator = document.getElementById('languageIndicator');
+        // Theme toggle
+        themeToggle.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+        });
+        // Language toggle
+        languageToggle.addEventListener('click', () => {
+            isSpanishToItalian = !isSpanishToItalian;
+            languageIndicator.textContent = `Mode: ${isSpanishToItalian ? 'Spanish → Italian' : 'Italian → Spanish'}`;
+            updateCard();
+        });
+        // Update card content
+        function updateCard() {
+            const verb = shuffledVerbs[currentIndex];
+            
+            if (isSpanishToItalian) {
+                cardFront.textContent = verb.spanish;
+                const backContent = cardBack.children;
+                backContent[0].textContent = verb.italian;
+                backContent[1].textContent = verb.meaning;
+            } else {
+                cardFront.textContent = verb.italian;
+                const backContent = cardBack.children;
+                backContent[0].textContent = verb.spanish;
+                backContent[1].textContent = verb.meaning;
+            }
+            // Update progress
+            const progress = ((currentIndex + 1) / shuffledVerbs.length) * 100;
+            progressBar.style.width = `${progress}%`;
+            progressText.textContent = `Card ${currentIndex + 1} of ${shuffledVerbs.length}`;
+            // Reset flip
+            flipCard.classList.remove('flipped');
+        }
+        // Event listeners
+        flipCard.addEventListener('click', () => {
+            flipCard.classList.toggle('flipped');
+        });
+        prevBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex - 1 + shuffledVerbs.length) % shuffledVerbs.length;
+            updateCard();
+        });
+        nextBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex + 1) % shuffledVerbs.length;
+            updateCard();
+        });
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') prevBtn.click();
+            else if (e.key === 'ArrowRight') nextBtn.click();
+            else if (e.key === ' ') flipCard.click();
+        });
+        // Shuffle on refresh
+        window.addEventListener('load', () => {
+            shuffledVerbs = shuffleArray([...verbs]);
+            updateCard();
+        });
+        // Initialize
+        updateCard();
     </script>
 </body>
 </html>
