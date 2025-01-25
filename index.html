@@ -156,6 +156,29 @@
             const [isFlipped, setIsFlipped] = useState(false);
             const [isSpanishToItalian, setIsSpanishToItalian] = useState(true);
             const [isDarkTheme, setIsDarkTheme] = useState(true);
+            const [cardScores, setCardScores] = useState(() => {
+                // Initialize from localStorage or empty object if none exists
+                const saved = localStorage.getItem('verbeMenteScores');
+                return saved ? JSON.parse(saved) : {};
+            });
+
+            // Save scores to localStorage whenever they change
+            useEffect(() => {
+                localStorage.setItem('verbeMenteScores', JSON.stringify(cardScores));
+            }, [cardScores]);
+
+            const handleScore = (score) => {
+                const cardId = cardsData[currentIndex].spanish; // Using Spanish word as unique identifier
+                setCardScores(prev => ({
+                    ...prev,
+                    [cardId]: {
+                        score: score,
+                        lastSeen: new Date().toISOString(),
+                        timesReviewed: (prev[cardId]?.timesReviewed || 0) + 1
+                    }
+                }));
+                nextCard();
+            };
 
             const nextCard = () => {
                 setIsFlipped(false);
@@ -322,9 +345,47 @@
                                             ? cardsData[currentIndex].italian 
                                             : cardsData[currentIndex].spanish}
                                     </h2>
-                                    <p className="text-xl" style={{ color: 'var(--text-secondary)' }}>
+                                    <p className="text-xl mb-8" style={{ color: 'var(--text-secondary)' }}>
                                         {cardsData[currentIndex].meaning}
                                     </p>
+                                    <div className="flex gap-3 mt-4">
+                                        <button 
+                                            onClick={(e) => {
+                                                e.stopPropagation(); // Prevent card flip
+                                                handleScore(1);
+                                            }}
+                                            className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors"
+                                        >
+                                            Again
+                                        </button>
+                                        <button 
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleScore(2);
+                                            }}
+                                            className="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors"
+                                        >
+                                            Hard
+                                        </button>
+                                        <button 
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleScore(3);
+                                            }}
+                                            className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors"
+                                        >
+                                            Good
+                                        </button>
+                                        <button 
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleScore(4);
+                                            }}
+                                            className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-colors"
+                                        >
+                                            Easy
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
