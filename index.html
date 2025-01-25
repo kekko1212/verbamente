@@ -81,25 +81,6 @@
             background-color: #22c55e;
         }
     </style>
-
-<div class="max-w-2xl mx-auto">
-    <div class="flip-card" id="flipCard">
-        <div class="flip-card-inner">
-            <div class="flip-card-front flex flex-col justify-center items-center p-8 relative">
-                <div class="language-indicator es">ES</div>
-                <span id="cardFront" class="text-4xl font-bold text-gray-800 dark:text-gray-100 mb-4"></span>
-                <span class="text-sm text-gray-600 dark:text-gray-400 bounce-hint">Click to flip</span>
-            </div>
-            <div class="flip-card-back flex flex-col justify-center items-center p-8 relative">
-                <div class="language-indicator it">IT</div>
-                <div id="cardBack" class="text-center">
-                    <div class="text-3xl font-bold mb-4 text-gray-800 dark:text-gray-100"></div>
-                    <div class="text-xl mb-2 text-gray-600 dark:text-gray-400"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 </head>
 <body class="bg-gray-100 dark:bg-[#181818] min-h-screen transition-colors duration-200 font-sans">
     <div class="container mx-auto px-4 py-8">
@@ -142,33 +123,32 @@
             <div class="flip-card" id="flipCard">
                 <div class="flip-card-inner">
                     <div class="flip-card-front flex flex-col justify-center items-center p-8 relative">
-                        <div class="language-indicator text-xl">🇪🇸</div>
-                        <span id="cardFront" class="text-4xl font-bold text-gray-100 dark:text-gray-200 mb-4"></span>
-                        <span class="text-sm text-gray-500 dark:text-gray-400 bounce-hint">Click to flip</span>
+                        <div class="language-indicator es">ES</div>
+                        <span id="cardFront" class="text-4xl font-bold text-gray-800 dark:text-gray-100 mb-4"></span>
+                        <span class="text-sm text-gray-600 dark:text-gray-400 bounce-hint">Click to flip</span>
                     </div>
                     <div class="flip-card-back flex flex-col justify-center items-center p-8 relative">
-                        <div class="language-indicator text-xl">🇮🇹</div>
+                        <div class="language-indicator it">IT</div>
                         <div id="cardBack" class="text-center">
-                            <div class="text-3xl font-bold mb-4 text-gray-100 dark:text-gray-200"></div>
+                            <div class="text-3xl font-bold mb-4 text-gray-800 dark:text-gray-100"></div>
                             <div class="text-xl mb-2 text-gray-600 dark:text-gray-400"></div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
     <script>
         // Wait for DOM to load
         window.addEventListener('DOMContentLoaded', function() {
             // Card data
         const cardsData = [
-            // Essential verbs with their variations
+            // Essential verbs
             { spanish: "ser", italian: "essere", meaning: "to be (permanent)" },
             { spanish: "estar", italian: "essere / stare", meaning: "to be (temporary/location)" },
             { spanish: "haber", italian: "avere", meaning: "to have (auxiliary)" },
             { spanish: "tener", italian: "avere / tenere", meaning: "to have/possess" },
-            // Common verbs with multiple meanings
+            // Common verbs
             { spanish: "hacer", italian: "fare", meaning: "to do/make" },
             { spanish: "decir", italian: "dire", meaning: "to say/tell" },
             { spanish: "ir", italian: "andare", meaning: "to go" },
