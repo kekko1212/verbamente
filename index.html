@@ -355,7 +355,6 @@
                 updateCard();
             }
 
-            const themeToggle = document.getElementById('themeToggle');
             themeToggle.addEventListener('click', () => {
                 document.documentElement.classList.toggle('dark');
                 themeToggle.querySelector('i').classList.toggle('fa-moon');
@@ -370,10 +369,6 @@
             languageToggle.addEventListener('click', () => {
                 spanishToItalian = !spanishToItalian;
                 updateCard();
-            });
-
-            themeToggle.addEventListener('click', () => {
-                document.documentElement.classList.toggle('dark');
             });
 
             // Keyboard navigation
