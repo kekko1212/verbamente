@@ -1071,7 +1071,7 @@
             const [currentIndex, setCurrentIndex] = useState(0);
             const [isFlipped, setIsFlipped] = useState(false);
             const [scores, setScores] = useState(() => 
-                JSON.parse(localStorage.getItem('verbeMenteScores') || '{}')
+                JSON.parse(localStorage.getItem('verbeMenteScores') || '{}'))
             const [sessionCards, setSessionCards] = useState(() => {
                 const now = new Date();
                 return cardsData
