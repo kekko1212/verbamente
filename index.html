@@ -1067,6 +1067,7 @@
         ];
 
         function App() {
+            const [showDebug, setShowDebug] = useState(false);
             const [showStats, setShowStats] = useState(false);
             const [currentIndex, setCurrentIndex] = useState(0);
             const [isFlipped, setIsFlipped] = useState(false);
@@ -1168,30 +1169,41 @@
                     lastReviewed: now.toISOString()
                 };
             };
-
             const handleScore = (score) => {
-                const cardId = sessionCards[currentIndex].spanish;
-                const currentData = scores[cardId] || {};
-                
-                const srsData = SM2({
-                    ease: currentData.ease,
-                    interval: currentData.interval,
-                    repetitions: currentData.repetitions
-                }, score);
-    
-                const newScores = {
-                    ...scores,
-                    [cardId]: {
-                        ...currentData,
-                        ...srsData,
-                        score,
-                        timesReviewed: (currentData.timesReviewed || 0) + 1
-                    }
-                };
-    
-                setScores(newScores);
-                localStorage.setItem('verbeMenteScores', JSON.stringify(newScores));
-                nextCard();
+              setIsFlipped(false);
+              setIsTransitioning(true);
+              
+              setTimeout(() => {
+                  // Update scores after animation
+                  const cardId = sessionCards[currentIndex].spanish;
+                  const currentData = scores[cardId] || {};
+                  
+                  const srsData = SM2({
+                      ease: currentData.ease,
+                      interval: currentData.interval,
+                      repetitions: currentData.repetitions
+                  }, score);
+
+                  const newScores = {
+                      ...scores,
+                      [cardId]: {
+                          ...currentData,
+                          ...srsData,
+                          score,
+                          timesReviewed: (currentData.timesReviewed || 0) + 1
+                      }
+                  };
+
+                  setScores(newScores);
+                  localStorage.setItem('verbeMenteScores', JSON.stringify(newScores));
+                  
+                  // Move to next card after 300ms (match flip duration)
+                  setTimeout(() => {
+                      setCurrentIndex(prev => (prev + 1) % sessionCards.length);
+                      setIsTransitioning(false);
+                  }, 300);
+                  
+              }, 300); // Wait for flip animation
             };
 
             useEffect(() => {
@@ -1357,15 +1369,40 @@
                         {showStats ? '×' : '📊'}
                     </button>
                     <div className="fixed top-4 right-4 bg-gray-800 p-4 rounded-lg text-xs">
-                        <h3 className="text-indigo-400 mb-2">SRS Debug</h3>
-                        {currentCard && scores[currentCard.spanish] && (
-                            <>
-                                <div>Ease: {scores[currentCard.spanish].ease}</div>
-                                <div>Interval: {scores[currentCard.spanish].interval} days</div>
-                                <div>Repetitions: {scores[currentCard.spanish].repetitions}</div>
-                                <div>Next Review: {new Date(scores[currentCard.spanish].nextReview).toLocaleDateString()}</div>
-                            </>
-                        )}
+                      {showDebug && (
+                        <div className="fixed top-4 right-4 bg-gray-800 p-4 rounded-lg text-xs">
+                            <h3 className="text-indigo-400 mb-2 flex justify-between items-center">
+                                SRS Debug
+                                <button 
+                                    onClick={() => setShowDebug(false)}
+                                    className="text-gray-400 hover:text-white ml-4"
+                                >
+                                    ×
+                                </button>
+                            </h3>
+                            {currentCard && scores[currentCard.spanish] ? (
+                                <>
+                                    <div>Ease: {scores[currentCard.spanish].ease}</div>
+                                    <div>Interval: {scores[currentCard.spanish].interval} days</div>
+                                    <div>Repetitions: {scores[currentCard.spanish].repetitions}</div>
+                                    <div>Next Review: {new Date(scores[currentCard.spanish].nextReview).toLocaleDateString()}</div>
+                                </>
+                            ) : (
+                                <div className="text-gray-400">No SRS data for this card</div>
+                            )}
+                            <button 
+                                onClick={() => {
+                                    if(window.confirm('Are you sure you want to reset all progress?')) {
+                                        localStorage.removeItem('verbeMenteScores');
+                                        window.location.reload();
+                                    }
+                                }}
+                                className="mt-2 px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded-md text-sm transition-colors"
+                            >
+                                Reset All Progress
+                            </button>
+                        </div>
+                      )}
                         <button 
                           onClick={() => {
                               if(window.confirm('Are you sure you want to reset all progress?')) {
