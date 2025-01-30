@@ -1070,10 +1070,10 @@
             const [showStats, setShowStats] = useState(false);
             const [currentIndex, setCurrentIndex] = useState(0);
             const [isFlipped, setIsFlipped] = useState(false);
+            const [scores, setScores] = useState(() => 
+                JSON.parse(localStorage.getItem('verbeMenteScores') || '{}')
             const [sessionCards, setSessionCards] = useState(() => {
-                const scores = JSON.parse(localStorage.getItem('verbeMenteScores') || '{}');
                 const now = new Date();
-                
                 return cardsData
                     .sort((a, b) => {
                         const aScore = scores[a.spanish] || { nextReview: new Date(0) };
@@ -1082,7 +1082,7 @@
                     })
                     .filter(c => {
                         const cardData = scores[c.spanish];
-                        if (!cardData) return true; // Include new cards
+                        if (!cardData) return true;
                         return new Date(cardData.nextReview) <= now;
                     })
                     .slice(0, 20);
@@ -1171,7 +1171,6 @@
 
             const handleScore = (score) => {
                 const cardId = sessionCards[currentIndex].spanish;
-                const scores = JSON.parse(localStorage.getItem('verbeMenteScores') || '{}');
                 const currentData = scores[cardId] || {};
                 
                 const srsData = SM2({
@@ -1179,17 +1178,39 @@
                     interval: currentData.interval,
                     repetitions: currentData.repetitions
                 }, score);
-        
-                scores[cardId] = {
-                    ...currentData,
-                    ...srsData,
-                    score,
-                    timesReviewed: (currentData.timesReviewed || 0) + 1
+    
+                const newScores = {
+                    ...scores,
+                    [cardId]: {
+                        ...currentData,
+                        ...srsData,
+                        score,
+                        timesReviewed: (currentData.timesReviewed || 0) + 1
+                    }
                 };
-        
-                localStorage.setItem('verbeMenteScores', JSON.stringify(scores));
+    
+                setScores(newScores);
+                localStorage.setItem('verbeMenteScores', JSON.stringify(newScores));
                 nextCard();
             };
+
+            useEffect(() => {
+                const now = new Date();
+                const updatedSessionCards = cardsData
+                    .sort((a, b) => {
+                        const aScore = scores[a.spanish] || { nextReview: new Date(0) };
+                        const bScore = scores[b.spanish] || { nextReview: new Date(0) };
+                        return new Date(aScore.nextReview) - new Date(bScore.nextReview);
+                    })
+                    .filter(c => {
+                        const cardData = scores[c.spanish];
+                        if (!cardData) return true;
+                        return new Date(cardData.nextReview) <= now;
+                    })
+                    .slice(0, 20);
+                
+                setSessionCards(updatedSessionCards);
+            }, [scores]);
 
             const currentCard = sessionCards[currentIndex];
             const progress = ((currentIndex + 1) / sessionCards.length) * 100;
