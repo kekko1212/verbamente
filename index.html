@@ -1071,9 +1071,21 @@
             const [currentIndex, setCurrentIndex] = useState(0);
             const [isFlipped, setIsFlipped] = useState(false);
             const [sessionCards, setSessionCards] = useState(() => {
-                // Shuffle and select 20 cards for the session
-                const shuffled = [...cardsData].sort(() => Math.random() - 0.5);
-                return shuffled.slice(0, 20);
+                const scores = JSON.parse(localStorage.getItem('verbeMenteScores') || '{}');
+                const now = new Date();
+                
+                return cardsData
+                    .sort((a, b) => {
+                        const aScore = scores[a.spanish] || { nextReview: new Date(0) };
+                        const bScore = scores[b.spanish] || { nextReview: new Date(0) };
+                        return new Date(aScore.nextReview) - new Date(bScore.nextReview);
+                    })
+                    .filter(c => {
+                        const cardData = scores[c.spanish];
+                        if (!cardData) return true; // Include new cards
+                        return new Date(cardData.nextReview) <= now;
+                    })
+                    .slice(0, 20);
             });
             const [isTransitioning, setIsTransitioning] = useState(false);
 
@@ -1123,19 +1135,58 @@
                 return () => window.removeEventListener('keydown', handleKeyPress);
             }, [isTransitioning]);
 
+            const SM2 = (card, score) => {
+                const now = new Date();
+                let { ease, interval, repetitions } = card;
+                
+
+                ease = ease || 2.5;
+                interval = interval || 0;
+                repetitions = repetitions || 0;
+        
+                if (score >= 3) {
+                    ease = Math.max(1.3, ease + 0.1 - (5 - score) * (0.08 + (5 - score) * 0.02));
+                    
+                    if (repetitions === 0) interval = 1;
+                    else if (repetitions === 1) interval = 6;
+                    else interval = Math.round(interval * ease);
+                    
+                    repetitions++;
+                } else {
+                    repetitions = 0;
+                    interval = 1;
+                    ease = Math.max(1.3, ease - 0.2);
+                }
+        
+                const nextReview = new Date(now.getTime() + interval * 86400000); // Days to ms
+        
+                return {
+                    ease: Number(ease.toFixed(2)),
+                    interval,
+                    repetitions,
+                    nextReview: nextReview.toISOString(),
+                    lastReviewed: now.toISOString()
+                };
+            };
+
             const handleScore = (score) => {
                 const cardId = sessionCards[currentIndex].spanish;
-                const now = new Date().toISOString();
-                
                 const scores = JSON.parse(localStorage.getItem('verbeMenteScores') || '{}');
-                const currentScore = scores[cardId] || {};
+                const currentData = scores[cardId] || {};
                 
+                const srsData = SM2({
+                    ease: currentData.ease,
+                    interval: currentData.interval,
+                    repetitions: currentData.repetitions
+                }, score);
+        
                 scores[cardId] = {
-                    score: score,
-                    lastSeen: now,
-                    timesReviewed: (currentScore.timesReviewed || 0) + 1
+                    ...currentData,
+                    ...srsData,
+                    score,
+                    timesReviewed: (currentData.timesReviewed || 0) + 1
                 };
-                
+        
                 localStorage.setItem('verbeMenteScores', JSON.stringify(scores));
                 nextCard();
             };
@@ -1284,6 +1335,23 @@
                     >
                         {showStats ? '×' : '📊'}
                     </button>
+                    <div className="fixed top-4 right-4 bg-gray-800 p-4 rounded-lg text-xs">
+                        <h3 className="text-indigo-400 mb-2">SRS Debug</h3>
+                        {currentCard && scores[currentCard.spanish] && (
+                            <>
+                                <div>Ease: {scores[currentCard.spanish].ease}</div>
+                                <div>Interval: {scores[currentCard.spanish].interval} days</div>
+                                <div>Repetitions: {scores[currentCard.spanish].repetitions}</div>
+                                <div>Next Review: {new Date(scores[currentCard.spanish].nextReview).toLocaleDateString()}</div>
+                            </>
+                        )}
+                        <button 
+                            onClick={() => localStorage.removeItem('verbeMenteScores')}
+                            className="mt-2 text-red-400 hover:text-red-300"
+                        >
+                            Reset SRS Data
+                        </button>
+                    </div>
                 </div>
             );
         }
