@@ -113,6 +113,42 @@
             font-family: monospace;
             color: #818cf8;
         }
+        .stats-panel {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(15, 23, 42, 0.95);
+        padding: 1rem;
+        max-height: 50vh;
+        overflow-y: auto;
+        border-top: 2px solid #818cf8;
+        z-index: 1000;
+    }
+
+    .stats-category {
+        margin-bottom: 1.5rem;
+    }
+
+    .stats-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.25rem 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .stats-header {
+        color: #818cf8;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+
+    .toggle-stats {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 1001;
+    }
     </style>
 </head>
 <body>
@@ -1031,6 +1067,7 @@
         ];
 
         function App() {
+            const [showStats, setShowStats] = useState(false);
             const [currentIndex, setCurrentIndex] = useState(0);
             const [isFlipped, setIsFlipped] = useState(false);
             const [sessionCards, setSessionCards] = useState(() => {
@@ -1087,13 +1124,15 @@
                 const now = new Date().toISOString();
                 
                 const scores = JSON.parse(localStorage.getItem('verbeMenteScores') || '{}');
+                const currentScore = scores[cardId] || {};
+                
                 scores[cardId] = {
                     score: score,
                     lastSeen: now,
-                    timesReviewed: (scores[cardId]?.timesReviewed || 0) + 1
+                    timesReviewed: (currentScore.timesReviewed || 0) + 1
                 };
-                localStorage.setItem('verbeMenteScores', JSON.stringify(scores));
                 
+                localStorage.setItem('verbeMenteScores', JSON.stringify(scores));
                 nextCard();
             };
 
@@ -1234,10 +1273,91 @@
                             </div>
                         </div>
                     </div>
+                    {showStats && <StatisticsPanel />}
+                    <button 
+                        className="toggle-stats nav-button p-3 rounded-full text-white shadow-lg hover:shadow-xl"
+                        onClick={() => setShowStats(!showStats)}
+                    >
+                        {showStats ? '×' : '📊'}
+                    </button>
                 </div>
             );
         }
-
+        function StatisticsPanel({ onClose }) {
+            const [stats, setStats] = useState({
+                again: [],
+                hard: [],
+                good: [],
+                easy: [],
+                unrated: []
+            });
+    
+            useEffect(() => {
+                const scores = JSON.parse(localStorage.getItem('verbeMenteScores') || '{}');
+                const ratedVerbs = new Set(Object.keys(scores));
+                
+                // Categorize rated verbs
+                const categorized = Object.entries(scores).reduce((acc, [verb, data]) => {
+                    const category = 
+                        data.score === 1 ? 'again' :
+                        data.score === 2 ? 'hard' :
+                        data.score === 3 ? 'good' : 'easy';
+                    
+                    const verbData = cardsData.find(c => c.spanish === verb);
+                    acc[category].push({
+                        ...verbData,
+                        timesReviewed: data.timesReviewed || 0
+                    });
+                    return acc;
+                }, { again: [], hard: [], good: [], easy: [] });
+    
+                // Find unrated verbs
+                const unrated = cardsData.filter(c => !ratedVerbs.has(c.spanish));
+    
+                setStats({
+                    ...categorized,
+                    unrated
+                });
+            }, []);
+    
+            return (
+                <div className="stats-panel">
+                    <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+                        {/* Categories */}
+                        {['again', 'hard', 'good', 'easy'].map(category => (
+                            <div key={category} className="stats-category">
+                                <div className="stats-header">
+                                    {category.charAt(0).toUpperCase() + category.slice(1)} ({stats[category].length})
+                                </div>
+                                {stats[category].map(verb => (
+                                    <div key={verb.spanish} className="stats-item">
+                                        <span>{verb.italian}</span>
+                                        <span className="text-indigo-400">
+                                            {verb.timesReviewed}x
+                                        </span>
+                                    </div>
+                                ))}
+                            </div>
+                        ))}
+                        
+                        {/* Unrated Verbs */}
+                        <div className="stats-category">
+                            <div className="stats-header">
+                                Unrated ({stats.unrated.length})
+                            </div>
+                            {stats.unrated.map(verb => (
+                                <div key={verb.spanish} className="stats-item">
+                                    <span>{verb.italian}</span>
+                                    <span className="text-gray-400">
+                                        {verb.spanish}
+                                    </span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            );
+        }
         ReactDOM.render(<App />, document.getElementById('root'));
     </script>
 </body>
