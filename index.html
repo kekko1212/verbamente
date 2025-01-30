@@ -1080,25 +1080,29 @@
             const nextCard = () => {
                 if (isTransitioning) return;
                 setIsTransitioning(true);
-                setIsFlipped(false);
                 
-                // Wait for flip animation to complete before changing card
+                // Immediately flip back if needed and change card
+                setIsFlipped(false);
                 setTimeout(() => {
                     setCurrentIndex((prev) => (prev + 1) % sessionCards.length);
                     setIsTransitioning(false);
-                }, 800); // Match the CSS transition duration
+                }, 300); // Reduced timeout to match flip animation
             };
-
+            
             const prevCard = () => {
                 if (isTransitioning) return;
                 setIsTransitioning(true);
-                setIsFlipped(false);
                 
+                setIsFlipped(false);
                 setTimeout(() => {
                     setCurrentIndex((prev) => (prev - 1 + sessionCards.length) % sessionCards.length);
                     setIsTransitioning(false);
-                }, 800);
+                }, 300);
             };
+
+            useEffect(() => {
+                setIsFlipped(false);
+            }, [currentIndex]);
 
             useEffect(() => {
                 const handleKeyPress = (e) => {
