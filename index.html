@@ -160,7 +160,6 @@
         fetch('cards_data.json')
             .then(response => response.json())
             .then(data => {
-                console.log('Words loaded:', data);
                 ReactDOM.render(<App cardsData={data} />, document.getElementById('root'));
             })
             .catch(error => console.error('Error loading words:', error));
@@ -308,27 +307,18 @@
                     </div>
 
                     <div className="max-w-2xl mx-auto card-3d"
-                        onClick={(e) => {
-                            // When clicking anywhere on the card container (except on the buttons), toggle the flip.
-                            if (e.target === e.currentTarget) {
-                                setIsFlipped(!isFlipped);
-                            }
-                        }}>
+                        onClick={() => setIsFlipped(!isFlipped)}>
                         <div className={`card-inner h-full ${isFlipped ? 'flipped' : ''}`}>
                             <div className="card-face p-8">
                                 <div className="text-center">
-                                    <h2 className="text-6xl font-bold mb-6 text-indigo-400">
-                                        {currentCard.italian}
-                                    </h2>
+                                    <h2 className="text-6xl font-bold mb-6 text-indigo-400">{currentCard.italian}</h2>
                                     <p className="text-gray-400">Click to reveal Spanish translation</p>
                                 </div>
                             </div>
 
                             <div className="card-face card-back p-8">
                                 <div className="text-center">
-                                    <h2 className="text-4xl font-bold mb-2 text-indigo-400">
-                                        {currentCard.spanish}
-                                    </h2>
+                                    <h2 className="text-4xl font-bold mb-2 text-indigo-400">{currentCard.spanish}</h2>
                                     <p className="text-xl text-gray-300 mb-4">{currentCard.meaning}</p>
                                     {currentCard.irregular && (
                                         <div className="conjugation-table">
@@ -371,35 +361,22 @@
                                     )}
                                     <div className="flex gap-3 mt-6 justify-center">
                                         <button
-                                            onClick={(e) => {
-                                                // Stop propagation so that the card click does not trigger
-                                                e.stopPropagation();
-                                                handleScore(1);
-                                            }}
+                                            onClick={(e) => { e.stopPropagation(); handleScore(1); }}
                                             className="score-button px-6 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium shadow-md">
                                             Again
                                         </button>
                                         <button
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                handleScore(2);
-                                            }}
+                                            onClick={(e) => { e.stopPropagation(); handleScore(2); }}
                                             className="score-button px-6 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg font-medium shadow-md">
                                             Hard
                                         </button>
                                         <button
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                handleScore(3);
-                                            }}
+                                            onClick={(e) => { e.stopPropagation(); handleScore(3); }}
                                             className="score-button px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-medium shadow-md">
                                             Good
                                         </button>
                                         <button
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                handleScore(4);
-                                            }}
+                                            onClick={(e) => { e.stopPropagation(); handleScore(4); }}
                                             className="score-button px-6 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg font-medium shadow-md">
                                             Easy
                                         </button>
