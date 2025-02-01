@@ -1068,9 +1068,7 @@
                 }
             }
         ];
-
         function App() {
-            const [showDebug, setShowDebug] = useState(false);
             const [showStats, setShowStats] = useState(false);
             const [currentIndex, setCurrentIndex] = useState(0);
             const [isFlipped, setIsFlipped] = useState(false);
@@ -1365,96 +1363,27 @@
                         </div>
                     </div>
                     {showStats && <StatisticsPanel />}
-                    <button
-                        className="toggle-stats nav-button p-3 rounded-full text-white shadow-lg hover:shadow-xl"
-                        onClick={() => setShowStats(!showStats)}
-                    >
-                        {showStats ? '×' : '📊'}
-                    </button>
-                    <button
-                        onClick={() => setShowDebug(!showDebug)}
-                        className="toggle-debug nav-button p-3 rounded-full text-white shadow-lg hover:shadow-xl fixed bottom-20 right-20"
-                    >
-                        {showDebug ? 'Hide Debug' : 'Show Debug'}
-                    </button>
-                    <div className="fixed top-4 right-4 flex flex-col items-end space-y-2">
+                    <div className="fixed top-4 right-4 flex items-center space-x-2">
                         <button
-                            onClick={() => setShowDebug(!showDebug)}
-                            className="toggle-debug nav-button p-3 rounded-full text-white shadow-lg hover:shadow-xl"
+                            className="toggle-stats nav-button p-3 rounded-full text-white shadow-lg hover:shadow-xl"
+                            onClick={() => setShowStats(!showStats)}
                         >
-                            {showDebug ? 'Hide Debug' : 'Show Debug'}
+                            {showStats ? '×' : '📊'}
                         </button>
-                        {showDebug && (
-                            <div className="bg-gray-800 p-4 rounded-lg text-xs">
-                                <h3 className="text-indigo-400 mb-2 flex justify-between items-center">
-                                    SRS Debug
-                                    <button
-                                        onClick={() => setShowDebug(false)}
-                                        className="text-gray-400 hover:text-white ml-4"
-                                    >
-                                        ×
-                                    </button>
-                                </h3>
-                                {currentCard && scores[currentCard.spanish] ? (
-                                    <>
-                                        <div>Ease: {scores[currentCard.spanish].ease}</div>
-                                        <div>Interval: {scores[currentCard.spanish].interval} days</div>
-                                        <div>Repetitions: {scores[currentCard.spanish].repetitions}</div>
-                                        <div>Next Review: {new Date(scores[currentCard.spanish].nextReview).toLocaleDateString()}</div>
-                                    </>
-                                ) : (
-                                    <div className="text-gray-400">No SRS data for this card</div>
-                                )}
-                                <button
-                                    onClick={() => {
-                                        if (window.confirm('Are you sure you want to reset all progress?')) {
-                                            localStorage.removeItem('verbeMenteScores');
-                                            window.location.reload();
-                                        }
-                                    }}
-                                    className="mt-2 px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded-md text-sm transition-colors"
-                                >
-                                    Reset All Progress
-                                </button>
-                            </div>
-                        )}
+                        <button
+                            onClick={() => {
+                                if (window.confirm('Are you sure you want to reset all progress?')) {
+                                    localStorage.removeItem('verbeMenteScores');
+                                    window.location.reload();
+                                }
+                            }}
+                            className="nav-button p-3 rounded-full text-white shadow-lg hover:shadow-xl"
+                        >
+                            Reset All Progress
+                        </button>
                     </div>
-                    {showDebug && (
-                        <div className="fixed top-4 right-4 bg-gray-800 p-4 rounded-lg text-xs">
-                            <h3 className="text-indigo-400 mb-2 flex justify-between items-center">
-                                SRS Debug
-                                <button
-                                    onClick={() => setShowDebug(false)}
-                                    className="text-gray-400 hover:text-white ml-4"
-                                >
-                                    ×
-                                </button>
-                            </h3>
-                            {currentCard && scores[currentCard.spanish] ? (
-                                <>
-                                    <div>Ease: {scores[currentCard.spanish].ease}</div>
-                                    <div>Interval: {scores[currentCard.spanish].interval} days</div>
-                                    <div>Repetitions: {scores[currentCard.spanish].repetitions}</div>
-                                    <div>Next Review: {new Date(scores[currentCard.spanish].nextReview).toLocaleDateString()}</div>
-                                </>
-                            ) : (
-                                <div className="text-gray-400">No SRS data for this card</div>
-                            )}
-                            <button
-                                onClick={() => {
-                                    if (window.confirm('Are you sure you want to reset all progress?')) {
-                                        localStorage.removeItem('verbeMenteScores');
-                                        window.location.reload();
-                                    }
-                                }}
-                                className="mt-2 px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded-md text-sm transition-colors"
-                            >
-                                Reset All Progress
-                            </button>
-                        </div>
-                    )}
                 </div>
-            );
+            )
         }
         function StatisticsPanel({ onClose }) {
             const [stats, setStats] = useState({
