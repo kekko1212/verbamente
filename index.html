@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -72,7 +73,7 @@
             margin-top: 1rem;
             font-size: 1.25rem;
         }
-        
+
         .conjugation-row {
             display: grid;
             grid-template-columns: 100px 1fr;
@@ -113,44 +114,46 @@
             font-family: monospace;
             color: #818cf8;
         }
+
         .stats-panel {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background: rgba(15, 23, 42, 0.95);
-        padding: 1rem;
-        max-height: 50vh;
-        overflow-y: auto;
-        border-top: 2px solid #818cf8;
-        z-index: 1000;
-    }
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(15, 23, 42, 0.95);
+            padding: 1rem;
+            max-height: 50vh;
+            overflow-y: auto;
+            border-top: 2px solid #818cf8;
+            z-index: 1000;
+        }
 
-    .stats-category {
-        margin-bottom: 1.5rem;
-    }
+        .stats-category {
+            margin-bottom: 1.5rem;
+        }
 
-    .stats-item {
-        display: flex;
-        justify-content: space-between;
-        padding: 0.25rem 0;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
+        .stats-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.25rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
 
-    .stats-header {
-        color: #818cf8;
-        font-weight: bold;
-        margin-bottom: 0.5rem;
-    }
+        .stats-header {
+            color: #818cf8;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
 
-    .toggle-stats {
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        z-index: 1001;
-    }
+        .toggle-stats {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1001;
+        }
     </style>
 </head>
+
 <body>
     <div id="root"></div>
 
@@ -158,912 +161,912 @@
         const { useState, useEffect } = React;
 
         const cardsData = [
-          {
-            spanish: "ser",
-            italian: "essere",
-            meaning: "to be (permanent)",
-            irregular: true,
-            conjugation: {
-              yo: "soy",
-              tú: "eres",
-              él_ella: "es",
-              nosotros: "somos",
-              vosotros: "sois",
-              ellos_ellas: "son"
+            {
+                spanish: "ser",
+                italian: "essere",
+                meaning: "to be (permanent)",
+                irregular: true,
+                conjugation: {
+                    yo: "soy",
+                    tú: "eres",
+                    él_ella: "es",
+                    nosotros: "somos",
+                    vosotros: "sois",
+                    ellos_ellas: "son"
+                }
+            },
+            {
+                spanish: "estar",
+                italian: "essere / stare",
+                meaning: "to be (temporary/location)",
+                irregular: true,
+                conjugation: {
+                    yo: "estoy",
+                    tú: "estás",
+                    él_ella: "está",
+                    nosotros: "estamos",
+                    vosotros: "estáis",
+                    ellos_ellas: "están"
+                }
+            },
+            {
+                spanish: "haber",
+                italian: "avere",
+                meaning: "to have (auxiliary)",
+                irregular: true,
+                conjugation: {
+                    yo: "he",
+                    tú: "has",
+                    él_ella: "ha",
+                    nosotros: "hemos",
+                    vosotros: "habéis",
+                    ellos_ellas: "han"
+                }
+            },
+            {
+                spanish: "tener",
+                italian: "avere / tenere",
+                meaning: "to have/possess",
+                irregular: true,
+                conjugation: {
+                    yo: "tengo",
+                    tú: "tienes",
+                    él_ella: "tiene",
+                    nosotros: "tenemos",
+                    vosotros: "tenéis",
+                    ellos_ellas: "tienen"
+                }
+            },
+            {
+                spanish: "hacer",
+                italian: "fare",
+                meaning: "to do/make",
+                irregular: true,
+                conjugation: {
+                    yo: "hago",
+                    tú: "haces",
+                    él_ella: "hace",
+                    nosotros: "hacemos",
+                    vosotros: "hacéis",
+                    ellos_ellas: "hacen"
+                }
+            },
+            {
+                spanish: "decir",
+                italian: "dire",
+                meaning: "to say/tell",
+                irregular: true,
+                conjugation: {
+                    yo: "digo",
+                    tú: "dices",
+                    él_ella: "dice",
+                    nosotros: "decimos",
+                    vosotros: "decís",
+                    ellos_ellas: "dicen"
+                }
+            },
+            {
+                spanish: "ir",
+                italian: "andare",
+                meaning: "to go",
+                irregular: true,
+                conjugation: {
+                    yo: "voy",
+                    tú: "vas",
+                    él_ella: "va",
+                    nosotros: "vamos",
+                    vosotros: "vais",
+                    ellos_ellas: "van"
+                }
+            },
+            {
+                spanish: "ver",
+                italian: "vedere",
+                meaning: "to see",
+                irregular: true,
+                conjugation: {
+                    yo: "veo",
+                    tú: "ves",
+                    él_ella: "ve",
+                    nosotros: "vemos",
+                    vosotros: "veis",
+                    ellos_ellas: "ven"
+                }
+            },
+            {
+                spanish: "dar",
+                italian: "dare",
+                meaning: "to give",
+                irregular: true,
+                conjugation: {
+                    yo: "doy",
+                    tú: "das",
+                    él_ella: "da",
+                    nosotros: "damos",
+                    vosotros: "dais",
+                    ellos_ellas: "dan"
+                }
+            },
+            {
+                spanish: "saber",
+                italian: "sapere",
+                meaning: "to know (facts)",
+                irregular: true,
+                conjugation: {
+                    yo: "sé",
+                    tú: "sabes",
+                    él_ella: "sabe",
+                    nosotros: "sabemos",
+                    vosotros: "sabéis",
+                    ellos_ellas: "saben"
+                }
+            },
+            {
+                spanish: "querer",
+                italian: "volere",
+                meaning: "to want",
+                irregular: true,
+                conjugation: {
+                    yo: "quiero",
+                    tú: "quieres",
+                    él_ella: "quiere",
+                    nosotros: "queremos",
+                    vosotros: "queréis",
+                    ellos_ellas: "quieren"
+                }
+            },
+            {
+                spanish: "poder",
+                italian: "potere",
+                meaning: "can/to be able to",
+                irregular: true,
+                conjugation: {
+                    yo: "puedo",
+                    tú: "puedes",
+                    él_ella: "puede",
+                    nosotros: "podemos",
+                    vosotros: "podéis",
+                    ellos_ellas: "pueden"
+                }
+            },
+            {
+                spanish: "deber",
+                italian: "dovere",
+                meaning: "must/should",
+                irregular: false
+            },
+            {
+                spanish: "esperar",
+                italian: "sperare / aspettare",
+                meaning: "to hope / to wait",
+                irregular: false
+            },
+            {
+                spanish: "quedar",
+                italian: "restare / rimanere / appuntarsi",
+                meaning: "to stay / to remain / to meet up",
+                irregular: false
+            },
+            {
+                spanish: "dejar",
+                italian: "lasciare / permettere",
+                meaning: "to leave / to let",
+                irregular: false
+            },
+            {
+                spanish: "tocar",
+                italian: "toccare / suonare",
+                meaning: "to touch / to play (instrument)",
+                irregular: false
+            },
+            {
+                spanish: "pedir",
+                italian: "chiedere / ordinare",
+                meaning: "to ask for / to order",
+                irregular: true,
+                conjugation: {
+                    yo: "pido",
+                    tú: "pides",
+                    él_ella: "pide",
+                    nosotros: "pedimos",
+                    vosotros: "pedís",
+                    ellos_ellas: "piden"
+                }
+            },
+            {
+                spanish: "sentir",
+                italian: "sentire / dispiacere",
+                meaning: "to feel / to be sorry",
+                irregular: true,
+                conjugation: {
+                    yo: "siento",
+                    tú: "sientes",
+                    él_ella: "siente",
+                    nosotros: "sentimos",
+                    vosotros: "sentís",
+                    ellos_ellas: "sienten"
+                }
+            },
+            {
+                spanish: "parecer",
+                italian: "sembrare / apparire",
+                meaning: "to seem / to appear",
+                irregular: true,
+                conjugation: {
+                    yo: "parezco",
+                    tú: "pareces",
+                    él_ella: "parece",
+                    nosotros: "parecemos",
+                    vosotros: "parecéis",
+                    ellos_ellas: "parecen"
+                }
+            },
+            {
+                spanish: "hablar",
+                italian: "parlare",
+                meaning: "to speak",
+                irregular: false
+            },
+            {
+                spanish: "comer",
+                italian: "mangiare",
+                meaning: "to eat",
+                irregular: false
+            },
+            {
+                spanish: "vivir",
+                italian: "vivere",
+                meaning: "to live",
+                irregular: false
+            },
+            {
+                spanish: "beber",
+                italian: "bere",
+                meaning: "to drink",
+                irregular: false
+            },
+            {
+                spanish: "trabajar",
+                italian: "lavorare",
+                meaning: "to work",
+                irregular: false
+            },
+            {
+                spanish: "estudiar",
+                italian: "studiare",
+                meaning: "to study",
+                irregular: false
+            },
+            {
+                spanish: "escribir",
+                italian: "scrivere",
+                meaning: "to write",
+                irregular: false
+            },
+            {
+                spanish: "leer",
+                italian: "leggere",
+                meaning: "to read",
+                irregular: false
+            },
+            {
+                spanish: "dormir",
+                italian: "dormire",
+                meaning: "to sleep",
+                irregular: true,
+                conjugation: {
+                    yo: "duermo",
+                    tú: "duermes",
+                    él_ella: "duerme",
+                    nosotros: "dormimos",
+                    vosotros: "dormís",
+                    ellos_ellas: "duermen"
+                }
+            },
+            {
+                spanish: "pensar",
+                italian: "pensare",
+                meaning: "to think",
+                irregular: true,
+                conjugation: {
+                    yo: "pienso",
+                    tú: "piensas",
+                    él_ella: "piensa",
+                    nosotros: "pensamos",
+                    vosotros: "pensáis",
+                    ellos_ellas: "piensan"
+                }
+            },
+            {
+                spanish: "venir",
+                italian: "venire",
+                meaning: "to come",
+                irregular: true,
+                conjugation: {
+                    yo: "vengo",
+                    tú: "vienes",
+                    él_ella: "viene",
+                    nosotros: "venimos",
+                    vosotros: "venís",
+                    ellos_ellas: "vienen"
+                }
+            },
+            {
+                spanish: "salir",
+                italian: "uscire",
+                meaning: "to leave/go out",
+                irregular: true,
+                conjugation: {
+                    yo: "salgo",
+                    tú: "sales",
+                    él_ella: "sale",
+                    nosotros: "salimos",
+                    vosotros: "salís",
+                    ellos_ellas: "salen"
+                }
+            },
+            {
+                spanish: "entrar",
+                italian: "entrare",
+                meaning: "to enter",
+                irregular: false
+            },
+            {
+                spanish: "subir",
+                italian: "salire",
+                meaning: "to go up",
+                irregular: false
+            },
+            {
+                spanish: "bajar",
+                italian: "scendere",
+                meaning: "to go down",
+                irregular: false
+            },
+            {
+                spanish: "caminar",
+                italian: "camminare",
+                meaning: "to walk",
+                irregular: false
+            },
+            {
+                spanish: "amar",
+                italian: "amare",
+                meaning: "to love",
+                irregular: false
+            },
+            {
+                spanish: "creer",
+                italian: "credere",
+                meaning: "to believe",
+                irregular: false
+            },
+            {
+                spanish: "recordar",
+                italian: "ricordare",
+                meaning: "to remember",
+                irregular: true,
+                conjugation: {
+                    yo: "recuerdo",
+                    tú: "recuerdas",
+                    él_ella: "recuerda",
+                    nosotros: "recordamos",
+                    vosotros: "recordáis",
+                    ellos_ellas: "recuerdan"
+                }
+            },
+            {
+                spanish: "olvidar",
+                italian: "dimenticare",
+                meaning: "to forget",
+                irregular: false
+            },
+            {
+                spanish: "necesitar",
+                italian: "necessitare",
+                meaning: "to need",
+                irregular: false
+            },
+            {
+                spanish: "preferir",
+                italian: "preferire",
+                meaning: "to prefer",
+                irregular: true,
+                conjugation: {
+                    yo: "prefiero",
+                    tú: "prefieres",
+                    él_ella: "prefiere",
+                    nosotros: "preferimos",
+                    vosotros: "preferís",
+                    ellos_ellas: "prefieren"
+                }
+            },
+            {
+                spanish: "llamar",
+                italian: "chiamare",
+                meaning: "to call",
+                irregular: false
+            },
+            {
+                spanish: "preguntar",
+                italian: "domandare",
+                meaning: "to ask",
+                irregular: false
+            },
+            {
+                spanish: "responder",
+                italian: "rispondere",
+                meaning: "to answer",
+                irregular: false
+            },
+            {
+                spanish: "explicar",
+                italian: "spiegare",
+                meaning: "to explain",
+                irregular: false
+            },
+            {
+                spanish: "escuchar",
+                italian: "ascoltare",
+                meaning: "to listen",
+                irregular: false
+            },
+            {
+                spanish: "abrir",
+                italian: "aprire",
+                meaning: "to open",
+                irregular: false
+            },
+            {
+                spanish: "cerrar",
+                italian: "chiudere",
+                meaning: "to close",
+                irregular: true,
+                conjugation: {
+                    yo: "cierro",
+                    tú: "cierras",
+                    él_ella: "cierra",
+                    nosotros: "cerramos",
+                    vosotros: "cerráis",
+                    ellos_ellas: "cierran"
+                }
+            },
+            {
+                spanish: "comprar",
+                italian: "comprare",
+                meaning: "to buy",
+                irregular: false
+            },
+            {
+                spanish: "vender",
+                italian: "vendere",
+                meaning: "to sell",
+                irregular: false
+            },
+            {
+                spanish: "pagar",
+                italian: "pagare",
+                meaning: "to pay",
+                irregular: false
+            },
+            {
+                spanish: "buscar",
+                italian: "cercare / trovare",
+                meaning: "to look for / to find",
+                irregular: false
+            },
+            {
+                spanish: "encontrar",
+                italian: "trovare",
+                meaning: "to find",
+                irregular: true,
+                conjugation: {
+                    yo: "encuentro",
+                    tú: "encuentras",
+                    él_ella: "encuentra",
+                    nosotros: "encontramos",
+                    vosotros: "encontráis",
+                    ellos_ellas: "encuentran"
+                }
+            },
+            {
+                spanish: "perder",
+                italian: "perdere",
+                meaning: "to lose",
+                irregular: true,
+                conjugation: {
+                    yo: "pierdo",
+                    tú: "pierdes",
+                    él_ella: "pierde",
+                    nosotros: "perdemos",
+                    vosotros: "perdéis",
+                    ellos_ellas: "pierden"
+                }
+            },
+            {
+                spanish: "ganar",
+                italian: "guadagnare / vincere",
+                meaning: "to win/earn",
+                irregular: false
+            },
+            {
+                spanish: "usar",
+                italian: "usare",
+                meaning: "to use",
+                irregular: false
+            },
+            {
+                spanish: "empezar",
+                italian: "cominciare",
+                meaning: "to begin",
+                irregular: true,
+                conjugation: {
+                    yo: "empiezo",
+                    tú: "empiezas",
+                    él_ella: "empieza",
+                    nosotros: "empezamos",
+                    vosotros: "empezáis",
+                    ellos_ellas: "empiezan"
+                }
+            },
+            {
+                spanish: "terminar",
+                italian: "terminare",
+                meaning: "to end/finish",
+                irregular: false
+            },
+            {
+                spanish: "continuar",
+                italian: "continuare",
+                meaning: "to continue",
+                irregular: true,
+                conjugation: {
+                    yo: "continúo",
+                    tú: "continúas",
+                    él_ella: "continúa",
+                    nosotros: "continuamos",
+                    vosotros: "continuáis",
+                    ellos_ellas: "continúan"
+                }
+            },
+            {
+                spanish: "durar",
+                italian: "durare",
+                meaning: "to last",
+                irregular: false
+            },
+            {
+                spanish: "cambiar",
+                italian: "cambiare",
+                meaning: "to change",
+                irregular: false
+            },
+            {
+                spanish: "aprender",
+                italian: "apprendere",
+                meaning: "to learn",
+                irregular: false
+            },
+            {
+                spanish: "enseñar",
+                italian: "insegnare",
+                meaning: "to teach",
+                irregular: false
+            },
+            {
+                spanish: "entender",
+                italian: "capire / intendere",
+                meaning: "to understand",
+                irregular: true,
+                conjugation: {
+                    yo: "entiendo",
+                    tú: "entiendes",
+                    él_ella: "entiende",
+                    nosotros: "entendemos",
+                    vosotros: "entendéis",
+                    ellos_ellas: "entienden"
+                }
+            },
+            {
+                spanish: "conocer",
+                italian: "conoscere / sapere",
+                meaning: "to know (people/places)",
+                irregular: true,
+                conjugation: {
+                    yo: "conozco",
+                    tú: "conoces",
+                    él_ella: "conoce",
+                    nosotros: "conocemos",
+                    vosotros: "conocéis",
+                    ellos_ellas: "conocen"
+                }
+            },
+            {
+                spanish: "decidir",
+                italian: "decidere",
+                meaning: "to decide",
+                irregular: false
+            },
+            {
+                spanish: "mover",
+                italian: "muovere",
+                meaning: "to move",
+                irregular: true,
+                conjugation: {
+                    yo: "muevo",
+                    tú: "mueves",
+                    él_ella: "mueve",
+                    nosotros: "movemos",
+                    vosotros: "movéis",
+                    ellos_ellas: "mueven"
+                }
+            },
+            {
+                spanish: "llevar",
+                italian: "portare / indossare",
+                meaning: "to carry/wear",
+                irregular: false
+            },
+            {
+                spanish: "traer",
+                italian: "portare",
+                meaning: "to bring",
+                irregular: true,
+                conjugation: {
+                    yo: "traigo",
+                    tú: "traes",
+                    él_ella: "trae",
+                    nosotros: "traemos",
+                    vosotros: "traéis",
+                    ellos_ellas: "traen"
+                }
+            },
+            {
+                spanish: "crear",
+                italian: "creare",
+                meaning: "to create",
+                irregular: false
+            },
+            {
+                spanish: "construir",
+                italian: "costruire",
+                meaning: "to build",
+                irregular: true,
+                conjugation: {
+                    yo: "construyo",
+                    tú: "construyes",
+                    él_ella: "construye",
+                    nosotros: "construimos",
+                    vosotros: "construís",
+                    ellos_ellas: "construyen"
+                }
+            },
+            {
+                spanish: "destruir",
+                italian: "distruggere",
+                meaning: "to destroy",
+                irregular: true,
+                conjugation: {
+                    yo: "destruyo",
+                    tú: "destruyes",
+                    él_ella: "destruye",
+                    nosotros: "destruimos",
+                    vosotros: "destruís",
+                    ellos_ellas: "destruyen"
+                }
+            },
+            {
+                spanish: "romper",
+                italian: "rompere",
+                meaning: "to break",
+                irregular: false
+            },
+            {
+                spanish: "lavar",
+                italian: "lavare",
+                meaning: "to wash",
+                irregular: false
+            },
+            {
+                spanish: "bañar",
+                italian: "fare il bagno",
+                meaning: "to bathe",
+                irregular: false
+            },
+            {
+                spanish: "vestir",
+                italian: "vestire",
+                meaning: "to dress",
+                irregular: true,
+                conjugation: {
+                    yo: "visto",
+                    tú: "vistes",
+                    él_ella: "viste",
+                    nosotros: "vestimos",
+                    vosotros: "vestís",
+                    ellos_ellas: "visten"
+                }
+            },
+            {
+                spanish: "peinar",
+                italian: "pettinare",
+                meaning: "to comb",
+                irregular: false
+            },
+            {
+                spanish: "maquillar",
+                italian: "truccare",
+                meaning: "to put on makeup",
+                irregular: false
+            },
+            {
+                spanish: "ayudar",
+                italian: "aiutare",
+                meaning: "to help",
+                irregular: false
+            },
+            {
+                spanish: "ofrecer",
+                italian: "offrire",
+                meaning: "to offer",
+                irregular: true,
+                conjugation: {
+                    yo: "ofrezco",
+                    tú: "ofreces",
+                    él_ella: "ofrece",
+                    nosotros: "ofrecemos",
+                    vosotros: "ofrecéis",
+                    ellos_ellas: "ofrecen"
+                }
+            },
+            {
+                spanish: "recibir",
+                italian: "ricevere",
+                meaning: "to receive",
+                irregular: false
+            },
+            {
+                spanish: "invitar",
+                italian: "invitare",
+                meaning: "to invite",
+                irregular: false
+            },
+            {
+                spanish: "jugar",
+                italian: "giocare",
+                meaning: "to play",
+                irregular: true,
+                conjugation: {
+                    yo: "juego",
+                    tú: "juegas",
+                    él_ella: "juega",
+                    nosotros: "jugamos",
+                    vosotros: "jugáis",
+                    ellos_ellas: "juegan"
+                }
+            },
+            {
+                spanish: "cantar",
+                italian: "cantare",
+                meaning: "to sing",
+                irregular: false
+            },
+            {
+                spanish: "bailar",
+                italian: "ballare",
+                meaning: "to dance",
+                irregular: false
+            },
+            {
+                spanish: "cocinar",
+                italian: "cucinare",
+                meaning: "to cook",
+                irregular: false
+            },
+            {
+                spanish: "pintar",
+                italian: "dipingere",
+                meaning: "to paint",
+                irregular: false
+            },
+            {
+                spanish: "dibujar",
+                italian: "disegnare",
+                meaning: "to draw",
+                irregular: false
+            },
+            {
+                spanish: "conducir",
+                italian: "guidare",
+                meaning: "to drive",
+                irregular: true,
+                conjugation: {
+                    yo: "conduzco",
+                    tú: "conduces",
+                    él_ella: "conduce",
+                    nosotros: "conducimos",
+                    vosotros: "conducís",
+                    ellos_ellas: "conducen"
+                }
+            },
+            {
+                spanish: "viajar",
+                italian: "viaggiare",
+                meaning: "to travel",
+                irregular: false
+            },
+            {
+                spanish: "nadar",
+                italian: "nuotare",
+                meaning: "to swim",
+                irregular: false
+            },
+            {
+                spanish: "correr",
+                italian: "correre",
+                meaning: "to run",
+                irregular: false
+            },
+            {
+                spanish: "saltar",
+                italian: "saltare",
+                meaning: "to jump",
+                irregular: false
+            },
+            {
+                spanish: "mirar",
+                italian: "guardare",
+                meaning: "to look/watch",
+                irregular: false
+            },
+            {
+                spanish: "seguir",
+                italian: "seguire",
+                meaning: "to follow",
+                irregular: true,
+                conjugation: {
+                    yo: "sigo",
+                    tú: "sigues",
+                    él_ella: "sigue",
+                    nosotros: "seguimos",
+                    vosotros: "seguís",
+                    ellos_ellas: "siguen"
+                }
+            },
+            {
+                spanish: "soñar",
+                italian: "sognare",
+                meaning: "to dream",
+                irregular: true,
+                conjugation: {
+                    yo: "sueño",
+                    tú: "sueñas",
+                    él_ella: "sueña",
+                    nosotros: "soñamos",
+                    vosotros: "soñáis",
+                    ellos_ellas: "sueñan"
+                }
+            },
+            {
+                spanish: "intentar",
+                italian: "tentare / provare",
+                meaning: "to try",
+                irregular: false
+            },
+            {
+                spanish: "conseguir",
+                italian: "ottenere / riuscire",
+                meaning: "to get/achieve",
+                irregular: true,
+                conjugation: {
+                    yo: "consigo",
+                    tú: "consigues",
+                    él_ella: "consigue",
+                    nosotros: "conseguimos",
+                    vosotros: "conseguís",
+                    ellos_ellas: "consiguen"
+                }
             }
-          },
-          {
-            spanish: "estar",
-            italian: "essere / stare",
-            meaning: "to be (temporary/location)",
-            irregular: true,
-            conjugation: {
-              yo: "estoy",
-              tú: "estás",
-              él_ella: "está",
-              nosotros: "estamos",
-              vosotros: "estáis",
-              ellos_ellas: "están"
-            }
-          },
-          {
-            spanish: "haber",
-            italian: "avere",
-            meaning: "to have (auxiliary)",
-            irregular: true,
-            conjugation: {
-              yo: "he",
-              tú: "has",
-              él_ella: "ha",
-              nosotros: "hemos",
-              vosotros: "habéis",
-              ellos_ellas: "han"
-            }
-          },
-          {
-            spanish: "tener",
-            italian: "avere / tenere",
-            meaning: "to have/possess",
-            irregular: true,
-            conjugation: {
-              yo: "tengo",
-              tú: "tienes",
-              él_ella: "tiene",
-              nosotros: "tenemos",
-              vosotros: "tenéis",
-              ellos_ellas: "tienen"
-            }
-          },
-          {
-            spanish: "hacer",
-            italian: "fare",
-            meaning: "to do/make",
-            irregular: true,
-            conjugation: {
-              yo: "hago",
-              tú: "haces",
-              él_ella: "hace",
-              nosotros: "hacemos",
-              vosotros: "hacéis",
-              ellos_ellas: "hacen"
-            }
-          },
-          {
-            spanish: "decir",
-            italian: "dire",
-            meaning: "to say/tell",
-            irregular: true,
-            conjugation: {
-              yo: "digo",
-              tú: "dices",
-              él_ella: "dice",
-              nosotros: "decimos",
-              vosotros: "decís",
-              ellos_ellas: "dicen"
-            }
-          },
-          {
-            spanish: "ir",
-            italian: "andare",
-            meaning: "to go",
-            irregular: true,
-            conjugation: {
-              yo: "voy",
-              tú: "vas",
-              él_ella: "va",
-              nosotros: "vamos",
-              vosotros: "vais",
-              ellos_ellas: "van"
-            }
-          },
-          {
-            spanish: "ver",
-            italian: "vedere",
-            meaning: "to see",
-            irregular: true,
-            conjugation: {
-              yo: "veo",
-              tú: "ves",
-              él_ella: "ve",
-              nosotros: "vemos",
-              vosotros: "veis",
-              ellos_ellas: "ven"
-            }
-          },
-          {
-            spanish: "dar",
-            italian: "dare",
-            meaning: "to give",
-            irregular: true,
-            conjugation: {
-              yo: "doy",
-              tú: "das",
-              él_ella: "da",
-              nosotros: "damos",
-              vosotros: "dais",
-              ellos_ellas: "dan"
-            }
-          },
-          {
-            spanish: "saber",
-            italian: "sapere",
-            meaning: "to know (facts)",
-            irregular: true,
-            conjugation: {
-              yo: "sé",
-              tú: "sabes",
-              él_ella: "sabe",
-              nosotros: "sabemos",
-              vosotros: "sabéis",
-              ellos_ellas: "saben"
-            }
-          },
-          {
-            spanish: "querer",
-            italian: "volere",
-            meaning: "to want",
-            irregular: true,
-            conjugation: {
-              yo: "quiero",
-              tú: "quieres",
-              él_ella: "quiere",
-              nosotros: "queremos",
-              vosotros: "queréis",
-              ellos_ellas: "quieren"
-            }
-          },
-          {
-            spanish: "poder",
-            italian: "potere",
-            meaning: "can/to be able to",
-            irregular: true,
-            conjugation: {
-              yo: "puedo",
-              tú: "puedes",
-              él_ella: "puede",
-              nosotros: "podemos",
-              vosotros: "podéis",
-              ellos_ellas: "pueden"
-            }
-          },
-          {
-            spanish: "deber",
-            italian: "dovere",
-            meaning: "must/should",
-            irregular: false
-          },
-          {
-            spanish: "esperar",
-            italian: "sperare / aspettare",
-            meaning: "to hope / to wait",
-            irregular: false
-          },
-          {
-            spanish: "quedar",
-            italian: "restare / rimanere / appuntarsi",
-            meaning: "to stay / to remain / to meet up",
-            irregular: false
-          },
-          {
-            spanish: "dejar",
-            italian: "lasciare / permettere",
-            meaning: "to leave / to let",
-            irregular: false
-          },
-          {
-            spanish: "tocar",
-            italian: "toccare / suonare",
-            meaning: "to touch / to play (instrument)",
-            irregular: false
-          },
-          {
-            spanish: "pedir",
-            italian: "chiedere / ordinare",
-            meaning: "to ask for / to order",
-            irregular: true,
-            conjugation: {
-              yo: "pido",
-              tú: "pides",
-              él_ella: "pide",
-              nosotros: "pedimos",
-              vosotros: "pedís",
-              ellos_ellas: "piden"
-            }
-          },
-          {
-            spanish: "sentir",
-            italian: "sentire / dispiacere",
-            meaning: "to feel / to be sorry",
-            irregular: true,
-            conjugation: {
-              yo: "siento",
-              tú: "sientes",
-              él_ella: "siente",
-              nosotros: "sentimos",
-              vosotros: "sentís",
-              ellos_ellas: "sienten"
-            }
-          },
-          {
-            spanish: "parecer",
-            italian: "sembrare / apparire",
-            meaning: "to seem / to appear",
-            irregular: true,
-            conjugation: {
-              yo: "parezco",
-              tú: "pareces",
-              él_ella: "parece",
-              nosotros: "parecemos",
-              vosotros: "parecéis",
-              ellos_ellas: "parecen"
-            }
-          },
-          {
-            spanish: "hablar",
-            italian: "parlare",
-            meaning: "to speak",
-            irregular: false
-          },
-          {
-            spanish: "comer",
-            italian: "mangiare",
-            meaning: "to eat",
-            irregular: false
-          },
-          {
-            spanish: "vivir",
-            italian: "vivere",
-            meaning: "to live",
-            irregular: false
-          },
-          {
-            spanish: "beber",
-            italian: "bere",
-            meaning: "to drink",
-            irregular: false
-          },
-          {
-            spanish: "trabajar",
-            italian: "lavorare",
-            meaning: "to work",
-            irregular: false
-          },
-          {
-            spanish: "estudiar",
-            italian: "studiare",
-            meaning: "to study",
-            irregular: false
-          },
-          {
-            spanish: "escribir",
-            italian: "scrivere",
-            meaning: "to write",
-            irregular: false
-          },
-          {
-            spanish: "leer",
-            italian: "leggere",
-            meaning: "to read",
-            irregular: false
-          },
-          {
-            spanish: "dormir",
-            italian: "dormire",
-            meaning: "to sleep",
-            irregular: true,
-            conjugation: {
-              yo: "duermo",
-              tú: "duermes",
-              él_ella: "duerme",
-              nosotros: "dormimos",
-              vosotros: "dormís",
-              ellos_ellas: "duermen"
-            }
-          },
-          {
-            spanish: "pensar",
-            italian: "pensare",
-            meaning: "to think",
-            irregular: true,
-            conjugation: {
-              yo: "pienso",
-              tú: "piensas",
-              él_ella: "piensa",
-              nosotros: "pensamos",
-              vosotros: "pensáis",
-              ellos_ellas: "piensan"
-            }
-          },
-          {
-            spanish: "venir",
-            italian: "venire",
-            meaning: "to come",
-            irregular: true,
-            conjugation: {
-              yo: "vengo",
-              tú: "vienes",
-              él_ella: "viene",
-              nosotros: "venimos",
-              vosotros: "venís",
-              ellos_ellas: "vienen"
-            }
-          },
-          {
-            spanish: "salir",
-            italian: "uscire",
-            meaning: "to leave/go out",
-            irregular: true,
-            conjugation: {
-              yo: "salgo",
-              tú: "sales",
-              él_ella: "sale",
-              nosotros: "salimos",
-              vosotros: "salís",
-              ellos_ellas: "salen"
-            }
-          },
-          {
-            spanish: "entrar",
-            italian: "entrare",
-            meaning: "to enter",
-            irregular: false
-          },
-          {
-            spanish: "subir",
-            italian: "salire",
-            meaning: "to go up",
-            irregular: false
-          },
-          {
-            spanish: "bajar",
-            italian: "scendere",
-            meaning: "to go down",
-            irregular: false
-          },
-          {
-            spanish: "caminar",
-            italian: "camminare",
-            meaning: "to walk",
-            irregular: false
-          },
-          {
-            spanish: "amar",
-            italian: "amare",
-            meaning: "to love",
-            irregular: false
-          },
-          {
-            spanish: "creer",
-            italian: "credere",
-            meaning: "to believe",
-            irregular: false
-          },
-          {
-            spanish: "recordar",
-            italian: "ricordare",
-            meaning: "to remember",
-            irregular: true,
-            conjugation: {
-              yo: "recuerdo",
-              tú: "recuerdas",
-              él_ella: "recuerda",
-              nosotros: "recordamos",
-              vosotros: "recordáis",
-              ellos_ellas: "recuerdan"
-            }
-          },
-          {
-            spanish: "olvidar",
-            italian: "dimenticare",
-            meaning: "to forget",
-            irregular: false
-          },
-          {
-            spanish: "necesitar",
-            italian: "necessitare",
-            meaning: "to need",
-            irregular: false
-          },
-          {
-            spanish: "preferir",
-            italian: "preferire",
-            meaning: "to prefer",
-            irregular: true,
-            conjugation: {
-              yo: "prefiero",
-              tú: "prefieres",
-              él_ella: "prefiere",
-              nosotros: "preferimos",
-              vosotros: "preferís",
-              ellos_ellas: "prefieren"
-            }
-          },
-          {
-            spanish: "llamar",
-            italian: "chiamare",
-            meaning: "to call",
-            irregular: false
-          },
-          {
-            spanish: "preguntar",
-            italian: "domandare",
-            meaning: "to ask",
-            irregular: false
-          },
-          {
-            spanish: "responder",
-            italian: "rispondere",
-            meaning: "to answer",
-            irregular: false
-          },
-          {
-            spanish: "explicar",
-            italian: "spiegare",
-            meaning: "to explain",
-            irregular: false
-          },
-          {
-            spanish: "escuchar",
-            italian: "ascoltare",
-            meaning: "to listen",
-            irregular: false
-          },
-          {
-            spanish: "abrir",
-            italian: "aprire",
-            meaning: "to open",
-            irregular: false
-          },
-          {
-            spanish: "cerrar",
-            italian: "chiudere",
-            meaning: "to close",
-            irregular: true,
-            conjugation: {
-              yo: "cierro",
-              tú: "cierras",
-              él_ella: "cierra",
-              nosotros: "cerramos",
-              vosotros: "cerráis",
-              ellos_ellas: "cierran"
-            }
-          },
-          {
-            spanish: "comprar",
-            italian: "comprare",
-            meaning: "to buy",
-            irregular: false
-          },
-          {
-            spanish: "vender",
-            italian: "vendere",
-            meaning: "to sell",
-            irregular: false
-          },
-          {
-            spanish: "pagar",
-            italian: "pagare",
-            meaning: "to pay",
-            irregular: false
-          },
-          {
-            spanish: "buscar",
-            italian: "cercare / trovare",
-            meaning: "to look for / to find",
-            irregular: false
-          },
-          {
-            spanish: "encontrar",
-            italian: "trovare",
-            meaning: "to find",
-            irregular: true,
-            conjugation: {
-              yo: "encuentro",
-              tú: "encuentras",
-              él_ella: "encuentra",
-              nosotros: "encontramos",
-              vosotros: "encontráis",
-              ellos_ellas: "encuentran"
-            }
-          },
-          {
-            spanish: "perder",
-            italian: "perdere",
-            meaning: "to lose",
-            irregular: true,
-            conjugation: {
-              yo: "pierdo",
-              tú: "pierdes",
-              él_ella: "pierde",
-              nosotros: "perdemos",
-              vosotros: "perdéis",
-              ellos_ellas: "pierden"
-            }
-          },
-          {
-            spanish: "ganar",
-            italian: "guadagnare / vincere",
-            meaning: "to win/earn",
-            irregular: false
-          },
-          {
-            spanish: "usar",
-            italian: "usare",
-            meaning: "to use",
-            irregular: false
-          },
-          {
-            spanish: "empezar",
-            italian: "cominciare",
-            meaning: "to begin",
-            irregular: true,
-            conjugation: {
-              yo: "empiezo",
-              tú: "empiezas",
-              él_ella: "empieza",
-              nosotros: "empezamos",
-              vosotros: "empezáis",
-              ellos_ellas: "empiezan"
-            }
-          },
-          {
-            spanish: "terminar",
-            italian: "terminare",
-            meaning: "to end/finish",
-            irregular: false
-          },
-          {
-            spanish: "continuar",
-            italian: "continuare",
-            meaning: "to continue",
-            irregular: true,
-            conjugation: {
-              yo: "continúo",
-              tú: "continúas",
-              él_ella: "continúa",
-              nosotros: "continuamos",
-              vosotros: "continuáis",
-              ellos_ellas: "continúan"
-            }
-          },
-          {
-            spanish: "durar",
-            italian: "durare",
-            meaning: "to last",
-            irregular: false
-          },
-          {
-            spanish: "cambiar",
-            italian: "cambiare",
-            meaning: "to change",
-            irregular: false
-          },
-          {
-            spanish: "aprender",
-            italian: "apprendere",
-            meaning: "to learn",
-            irregular: false
-          },
-          {
-            spanish: "enseñar",
-            italian: "insegnare",
-            meaning: "to teach",
-            irregular: false
-          },
-          {
-            spanish: "entender",
-            italian: "capire / intendere",
-            meaning: "to understand",
-            irregular: true,
-            conjugation: {
-              yo: "entiendo",
-              tú: "entiendes",
-              él_ella: "entiende",
-              nosotros: "entendemos",
-              vosotros: "entendéis",
-              ellos_ellas: "entienden"
-            }
-          },
-          {
-            spanish: "conocer",
-            italian: "conoscere / sapere",
-            meaning: "to know (people/places)",
-            irregular: true,
-            conjugation: {
-              yo: "conozco",
-              tú: "conoces",
-              él_ella: "conoce",
-              nosotros: "conocemos",
-              vosotros: "conocéis",
-              ellos_ellas: "conocen"
-            }
-          },
-          {
-            spanish: "decidir",
-            italian: "decidere",
-            meaning: "to decide",
-            irregular: false
-          },
-          {
-            spanish: "mover",
-            italian: "muovere",
-            meaning: "to move",
-            irregular: true,
-            conjugation: {
-              yo: "muevo",
-              tú: "mueves",
-              él_ella: "mueve",
-              nosotros: "movemos",
-              vosotros: "movéis",
-              ellos_ellas: "mueven"
-            }
-          },
-          {
-            spanish: "llevar",
-            italian: "portare / indossare",
-            meaning: "to carry/wear",
-            irregular: false
-          },
-          {
-            spanish: "traer",
-            italian: "portare",
-            meaning: "to bring",
-            irregular: true,
-            conjugation: {
-              yo: "traigo",
-              tú: "traes",
-              él_ella: "trae",
-              nosotros: "traemos",
-              vosotros: "traéis",
-              ellos_ellas: "traen"
-            }
-          },
-          {
-            spanish: "crear",
-            italian: "creare",
-            meaning: "to create",
-            irregular: false
-          },
-          {
-            spanish: "construir",
-            italian: "costruire",
-            meaning: "to build",
-            irregular: true,
-            conjugation: {
-              yo: "construyo",
-              tú: "construyes",
-              él_ella: "construye",
-              nosotros: "construimos",
-              vosotros: "construís",
-              ellos_ellas: "construyen"
-            }
-          },
-          {
-            spanish: "destruir",
-            italian: "distruggere",
-            meaning: "to destroy",
-            irregular: true,
-            conjugation: {
-              yo: "destruyo",
-              tú: "destruyes",
-              él_ella: "destruye",
-              nosotros: "destruimos",
-              vosotros: "destruís",
-              ellos_ellas: "destruyen"
-            }
-          },
-          {
-            spanish: "romper",
-            italian: "rompere",
-            meaning: "to break",
-            irregular: false
-          },
-          {
-            spanish: "lavar",
-            italian: "lavare",
-            meaning: "to wash",
-            irregular: false
-          },
-          {
-            spanish: "bañar",
-            italian: "fare il bagno",
-            meaning: "to bathe",
-            irregular: false
-          },
-          {
-            spanish: "vestir",
-            italian: "vestire",
-            meaning: "to dress",
-            irregular: true,
-            conjugation: {
-              yo: "visto",
-              tú: "vistes",
-              él_ella: "viste",
-              nosotros: "vestimos",
-              vosotros: "vestís",
-              ellos_ellas: "visten"
-            }
-          },
-          {
-            spanish: "peinar",
-            italian: "pettinare",
-            meaning: "to comb",
-            irregular: false
-          },
-          {
-            spanish: "maquillar",
-            italian: "truccare",
-            meaning: "to put on makeup",
-            irregular: false
-          },
-          {
-            spanish: "ayudar",
-            italian: "aiutare",
-            meaning: "to help",
-            irregular: false
-          },
-          {
-            spanish: "ofrecer",
-            italian: "offrire",
-            meaning: "to offer",
-            irregular: true,
-            conjugation: {
-              yo: "ofrezco",
-              tú: "ofreces",
-              él_ella: "ofrece",
-              nosotros: "ofrecemos",
-              vosotros: "ofrecéis",
-              ellos_ellas: "ofrecen"
-            }
-          },
-          {
-            spanish: "recibir",
-            italian: "ricevere",
-            meaning: "to receive",
-            irregular: false
-          },
-          {
-            spanish: "invitar",
-            italian: "invitare",
-            meaning: "to invite",
-            irregular: false
-          },
-          {
-            spanish: "jugar",
-            italian: "giocare",
-            meaning: "to play",
-            irregular: true,
-            conjugation: {
-              yo: "juego",
-              tú: "juegas",
-              él_ella: "juega",
-              nosotros: "jugamos",
-              vosotros: "jugáis",
-              ellos_ellas: "juegan"
-            }
-          },
-          {
-            spanish: "cantar",
-            italian: "cantare",
-            meaning: "to sing",
-            irregular: false
-          },
-          {
-            spanish: "bailar",
-            italian: "ballare",
-            meaning: "to dance",
-            irregular: false
-          },
-          {
-            spanish: "cocinar",
-            italian: "cucinare",
-            meaning: "to cook",
-            irregular: false
-          },
-          {
-            spanish: "pintar",
-            italian: "dipingere",
-            meaning: "to paint",
-            irregular: false
-          },
-          {
-            spanish: "dibujar",
-            italian: "disegnare",
-            meaning: "to draw",
-            irregular: false
-          },
-          {
-            spanish: "conducir",
-            italian: "guidare",
-            meaning: "to drive",
-            irregular: true,
-            conjugation: {
-              yo: "conduzco",
-              tú: "conduces",
-              él_ella: "conduce",
-              nosotros: "conducimos",
-              vosotros: "conducís",
-              ellos_ellas: "conducen"
-            }
-          },
-          {
-            spanish: "viajar",
-            italian: "viaggiare",
-            meaning: "to travel",
-            irregular: false
-          },
-          {
-            spanish: "nadar",
-            italian: "nuotare",
-            meaning: "to swim",
-            irregular: false
-          },
-          {
-            spanish: "correr",
-            italian: "correre",
-            meaning: "to run",
-            irregular: false
-          },
-          {
-            spanish: "saltar",
-            italian: "saltare",
-            meaning: "to jump",
-            irregular: false
-          },
-          {
-            spanish: "mirar",
-            italian: "guardare",
-            meaning: "to look/watch",
-            irregular: false
-          },
-          {
-            spanish: "seguir",
-            italian: "seguire",
-            meaning: "to follow",
-            irregular: true,
-            conjugation: {
-              yo: "sigo",
-              tú: "sigues",
-              él_ella: "sigue",
-              nosotros: "seguimos",
-              vosotros: "seguís",
-              ellos_ellas: "siguen"
-            }
-          },
-          {
-            spanish: "soñar",
-            italian: "sognare",
-            meaning: "to dream",
-            irregular: true,
-            conjugation: {
-              yo: "sueño",
-              tú: "sueñas",
-              él_ella: "sueña",
-              nosotros: "soñamos",
-              vosotros: "soñáis",
-              ellos_ellas: "sueñan"
-            }
-          },
-          {
-            spanish: "intentar",
-            italian: "tentare / provare",
-            meaning: "to try",
-            irregular: false
-          },
-          {
-            spanish: "conseguir",
-            italian: "ottenere / riuscire",
-            meaning: "to get/achieve",
-            irregular: true,
-            conjugation: {
-              yo: "consigo",
-              tú: "consigues",
-              él_ella: "consigue",
-              nosotros: "conseguimos",
-              vosotros: "conseguís",
-              ellos_ellas: "consiguen"
-            }
-          }
         ];
 
         function App() {
@@ -1071,7 +1074,7 @@
             const [showStats, setShowStats] = useState(false);
             const [currentIndex, setCurrentIndex] = useState(0);
             const [isFlipped, setIsFlipped] = useState(false);
-            const [scores, setScores] = useState(() => 
+            const [scores, setScores] = useState(() =>
                 JSON.parse(localStorage.getItem('verbeMenteScores') || '{}'))
             const [sessionCards, setSessionCards] = useState(() => {
                 const now = new Date();
@@ -1093,7 +1096,7 @@
             const nextCard = () => {
                 if (isTransitioning) return;
                 setIsTransitioning(true);
-                
+
                 // Immediately flip back if needed and change card
                 setIsFlipped(false);
                 setTimeout(() => {
@@ -1101,11 +1104,11 @@
                     setIsTransitioning(false);
                 }, 300); // Reduced timeout to match flip animation
             };
-            
+
             const prevCard = () => {
                 if (isTransitioning) return;
                 setIsTransitioning(true);
-                
+
                 setIsFlipped(false);
                 setTimeout(() => {
                     setCurrentIndex((prev) => (prev - 1 + sessionCards.length) % sessionCards.length);
@@ -1139,28 +1142,28 @@
             const SM2 = (card, score) => {
                 const now = new Date();
                 let { ease, interval, repetitions } = card;
-                
+
 
                 ease = ease || 2.5;
                 interval = interval || 0;
                 repetitions = repetitions || 0;
-        
+
                 if (score >= 3) {
                     ease = Math.max(1.3, ease + 0.1 - (5 - score) * (0.08 + (5 - score) * 0.02));
-                    
+
                     if (repetitions === 0) interval = 1;
                     else if (repetitions === 1) interval = 6;
                     else interval = Math.round(interval * ease);
-                    
+
                     repetitions++;
                 } else {
                     repetitions = 0;
                     interval = 1;
                     ease = Math.max(1.3, ease - 0.2);
                 }
-        
+
                 const nextReview = new Date(now.getTime() + interval * 86400000); // Days to ms
-        
+
                 return {
                     ease: Number(ease.toFixed(2)),
                     interval,
@@ -1170,40 +1173,40 @@
                 };
             };
             const handleScore = (score) => {
-              setIsFlipped(false);
-              setIsTransitioning(true);
-              
-              setTimeout(() => {
-                  // Update scores after animation
-                  const cardId = sessionCards[currentIndex].spanish;
-                  const currentData = scores[cardId] || {};
-                  
-                  const srsData = SM2({
-                      ease: currentData.ease,
-                      interval: currentData.interval,
-                      repetitions: currentData.repetitions
-                  }, score);
+                setIsFlipped(false);
+                setIsTransitioning(true);
 
-                  const newScores = {
-                      ...scores,
-                      [cardId]: {
-                          ...currentData,
-                          ...srsData,
-                          score,
-                          timesReviewed: (currentData.timesReviewed || 0) + 1
-                      }
-                  };
+                setTimeout(() => {
+                    // Update scores after animation
+                    const cardId = sessionCards[currentIndex].spanish;
+                    const currentData = scores[cardId] || {};
 
-                  setScores(newScores);
-                  localStorage.setItem('verbeMenteScores', JSON.stringify(newScores));
-                  
-                  // Move to next card after 300ms (match flip duration)
-                  setTimeout(() => {
-                      setCurrentIndex(prev => (prev + 1) % sessionCards.length);
-                      setIsTransitioning(false);
-                  }, 300);
-                  
-              }, 300); // Wait for flip animation
+                    const srsData = SM2({
+                        ease: currentData.ease,
+                        interval: currentData.interval,
+                        repetitions: currentData.repetitions
+                    }, score);
+
+                    const newScores = {
+                        ...scores,
+                        [cardId]: {
+                            ...currentData,
+                            ...srsData,
+                            score,
+                            timesReviewed: (currentData.timesReviewed || 0) + 1
+                        }
+                    };
+
+                    setScores(newScores);
+                    localStorage.setItem('verbeMenteScores', JSON.stringify(newScores));
+
+                    // Move to next card after 300ms (match flip duration)
+                    setTimeout(() => {
+                        setCurrentIndex(prev => (prev + 1) % sessionCards.length);
+                        setIsTransitioning(false);
+                    }, 300);
+
+                }, 300); // Wait for flip animation
             };
 
             useEffect(() => {
@@ -1220,7 +1223,7 @@
                         return new Date(cardData.nextReview) <= now;
                     })
                     .slice(0, 20);
-                
+
                 setSessionCards(updatedSessionCards);
             }, [scores]);
 
@@ -1241,14 +1244,14 @@
                     </div>
 
                     <div className="flex justify-center gap-6 mb-8">
-                        <button 
+                        <button
                             className="nav-button p-4 rounded-full text-white shadow-lg hover:shadow-xl text-2xl"
                             onClick={prevCard}
                             disabled={isTransitioning}
                         >
                             ←
                         </button>
-                        <button 
+                        <button
                             className="nav-button p-4 rounded-full text-white shadow-lg hover:shadow-xl text-2xl"
                             onClick={nextCard}
                             disabled={isTransitioning}
@@ -1274,7 +1277,7 @@
                                         {currentCard.spanish}
                                     </h2>
                                     <p className="text-xl text-gray-300 mb-4">{currentCard.meaning}</p>
-                                    
+
                                     {currentCard.irregular && (
                                         <div className="conjugation-table">
                                             <div className="flex justify-center mb-4">
@@ -1316,7 +1319,7 @@
                                     )}
 
                                     <div className="flex gap-3 mt-6 justify-center">
-                                        <button 
+                                        <button
                                             onClick={(e) => {
                                                 e.stopPropagation();
                                                 handleScore(1);
@@ -1326,7 +1329,7 @@
                                         >
                                             Again
                                         </button>
-                                        <button 
+                                        <button
                                             onClick={(e) => {
                                                 e.stopPropagation();
                                                 handleScore(2);
@@ -1336,7 +1339,7 @@
                                         >
                                             Hard
                                         </button>
-                                        <button 
+                                        <button
                                             onClick={(e) => {
                                                 e.stopPropagation();
                                                 handleScore(3);
@@ -1346,7 +1349,7 @@
                                         >
                                             Good
                                         </button>
-                                        <button 
+                                        <button
                                             onClick={(e) => {
                                                 e.stopPropagation();
                                                 handleScore(4);
@@ -1362,58 +1365,53 @@
                         </div>
                     </div>
                     {showStats && <StatisticsPanel />}
-                    <button 
+                    <button
                         className="toggle-stats nav-button p-3 rounded-full text-white shadow-lg hover:shadow-xl"
                         onClick={() => setShowStats(!showStats)}
                     >
                         {showStats ? '×' : '📊'}
                     </button>
+                    <button
+                        onClick={() => setShowDebug(!showDebug)}
+                        className="toggle-debug nav-button p-3 rounded-full text-white shadow-lg hover:shadow-xl fixed bottom-20 right-20"
+                    >
+                        {showDebug ? 'Hide Debug' : 'Show Debug'}
+                    </button>
                     <div className="fixed top-4 right-4 bg-gray-800 p-4 rounded-lg text-xs">
-                      {showDebug && (
-                        <div className="fixed top-4 right-4 bg-gray-800 p-4 rounded-lg text-xs">
-                            <h3 className="text-indigo-400 mb-2 flex justify-between items-center">
-                                SRS Debug
-                                <button 
-                                    onClick={() => setShowDebug(false)}
-                                    className="text-gray-400 hover:text-white ml-4"
+                        {showDebug && (
+                            <div className="fixed top-4 right-4 bg-gray-800 p-4 rounded-lg text-xs">
+                                <h3 className="text-indigo-400 mb-2 flex justify-between items-center">
+                                    SRS Debug
+                                    <button
+                                        onClick={() => setShowDebug(false)}
+                                        className="text-gray-400 hover:text-white ml-4"
+                                    >
+                                        ×
+                                    </button>
+                                </h3>
+                                {currentCard && scores[currentCard.spanish] ? (
+                                    <>
+                                        <div>Ease: {scores[currentCard.spanish].ease}</div>
+                                        <div>Interval: {scores[currentCard.spanish].interval} days</div>
+                                        <div>Repetitions: {scores[currentCard.spanish].repetitions}</div>
+                                        <div>Next Review: {new Date(scores[currentCard.spanish].nextReview).toLocaleDateString()}</div>
+                                    </>
+                                ) : (
+                                    <div className="text-gray-400">No SRS data for this card</div>
+                                )}
+                                <button
+                                    onClick={() => {
+                                        if (window.confirm('Are you sure you want to reset all progress?')) {
+                                            localStorage.removeItem('verbeMenteScores');
+                                            window.location.reload();
+                                        }
+                                    }}
+                                    className="mt-2 px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded-md text-sm transition-colors"
                                 >
-                                    ×
+                                    Reset All Progress
                                 </button>
-                            </h3>
-                            {currentCard && scores[currentCard.spanish] ? (
-                                <>
-                                    <div>Ease: {scores[currentCard.spanish].ease}</div>
-                                    <div>Interval: {scores[currentCard.spanish].interval} days</div>
-                                    <div>Repetitions: {scores[currentCard.spanish].repetitions}</div>
-                                    <div>Next Review: {new Date(scores[currentCard.spanish].nextReview).toLocaleDateString()}</div>
-                                </>
-                            ) : (
-                                <div className="text-gray-400">No SRS data for this card</div>
-                            )}
-                            <button 
-                                onClick={() => {
-                                    if(window.confirm('Are you sure you want to reset all progress?')) {
-                                        localStorage.removeItem('verbeMenteScores');
-                                        window.location.reload();
-                                    }
-                                }}
-                                className="mt-2 px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded-md text-sm transition-colors"
-                            >
-                                Reset All Progress
-                            </button>
-                        </div>
-                      )}
-                        <button 
-                          onClick={() => {
-                              if(window.confirm('Are you sure you want to reset all progress?')) {
-                                  localStorage.removeItem('verbeMenteScores');
-                                  window.location.reload();
-                              }
-                          }}
-                          className="mt-2 px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded-md text-sm transition-colors"
-                        >
-                          Reset All Progress
-                      </button>
+                            </div>
+                        )}
                     </div>
                 </div>
             );
@@ -1426,18 +1424,18 @@
                 easy: [],
                 unrated: []
             });
-    
+
             useEffect(() => {
                 const scores = JSON.parse(localStorage.getItem('verbeMenteScores') || '{}');
                 const ratedVerbs = new Set(Object.keys(scores));
-                
+
                 // Categorize rated verbs
                 const categorized = Object.entries(scores).reduce((acc, [verb, data]) => {
-                    const category = 
+                    const category =
                         data.score === 1 ? 'again' :
-                        data.score === 2 ? 'hard' :
-                        data.score === 3 ? 'good' : 'easy';
-                    
+                            data.score === 2 ? 'hard' :
+                                data.score === 3 ? 'good' : 'easy';
+
                     const verbData = cardsData.find(c => c.spanish === verb);
                     acc[category].push({
                         ...verbData,
@@ -1445,16 +1443,16 @@
                     });
                     return acc;
                 }, { again: [], hard: [], good: [], easy: [] });
-    
+
                 // Find unrated verbs
                 const unrated = cardsData.filter(c => !ratedVerbs.has(c.spanish));
-    
+
                 setStats({
                     ...categorized,
                     unrated
                 });
             }, []);
-    
+
             return (
                 <div className="stats-panel">
                     <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
@@ -1474,7 +1472,7 @@
                                 ))}
                             </div>
                         ))}
-                        
+
                         {/* Unrated Verbs */}
                         <div className="stats-category">
                             <div className="stats-header">
@@ -1496,4 +1494,5 @@
         ReactDOM.render(<App />, document.getElementById('root'));
     </script>
 </body>
+
 </html>
