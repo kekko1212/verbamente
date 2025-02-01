@@ -354,7 +354,13 @@
                         </button>
                     </div>
 
-                    <div className="max-w-2xl mx-auto card-3d" onClick={() => !isTransitioning && setIsFlipped(!isFlipped)}>
+                    <div className="max-w-2xl mx-auto card-3d"
+                        onClick={(e) => {
+                            // Only toggle flip if the container itself was clicked
+                            if (e.target === e.currentTarget && !isTransitioning) {
+                                setIsFlipped(!isFlipped);
+                            }
+                        }}>
                         <div className={`card-inner h-full ${isFlipped ? 'flipped' : ''}`}>
                             <div className="card-face p-8">
                                 <div className="text-center">
