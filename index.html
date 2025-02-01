@@ -168,12 +168,12 @@
     <script type="text/babel">
         const { useState, useEffect } = React;
         function App({ cardsData }) {
-            const [showStats, setShowStats] = useState(false);
-            const [currentIndex, setCurrentIndex] = useState(0);
-            const [isFlipped, setIsFlipped] = useState(false);
-            const [scores, setScores] = useState(() =>
-                JSON.parse(localStorage.getItem('verbeMenteScores') || '{}'));
-            const [sessionCards, setSessionCards] = useState(() => {
+            const [currentIndex, setCurrentIndex] = React.useState(0);
+            const [isFlipped, setIsFlipped] = React.useState(false);
+            const [scores, setScores] = React.useState(
+                () => JSON.parse(localStorage.getItem('verbeMenteScores') || '{}')
+            );
+            const [sessionCards, setSessionCards] = React.useState(() => {
                 const now = new Date();
                 return cardsData
                     .sort((a, b) => {
@@ -188,81 +188,28 @@
                     })
                     .slice(0, 10);
             });
-            const [isTransitioning, setIsTransitioning] = useState(false);
 
-            const transitionDuration = 800; // match CSS 0.8s transition
+            // Remove transition flag and delays for simplicity
 
-            const nextCard = () => {
-                if (isTransitioning) return;
-                setIsTransitioning(true);
-
-                // Flip the card back to the front face if needed.
-                setIsFlipped(false);
-                setTimeout(() => {
-                    setCurrentIndex((prev) => (prev + 1) % sessionCards.length);
-                    setIsTransitioning(false);
-                }, transitionDuration);
-            };
-
-            const prevCard = () => {
-                if (isTransitioning) return;
-                setIsTransitioning(true);
-
-                setIsFlipped(false);
-                setTimeout(() => {
-                    setCurrentIndex((prev) => (prev - 1 + sessionCards.length) % sessionCards.length);
-                    setIsTransitioning(false);
-                }, transitionDuration);
-            };
-
-            useEffect(() => {
-                // Ensure the card is not flipped on index change.
-                setIsFlipped(false);
-            }, [currentIndex]);
-
-            useEffect(() => {
-                const handleKeyPress = (e) => {
-                    if (isTransitioning) return;
-                    if (e.key === 'ArrowRight') {
-                        e.preventDefault();
-                        nextCard();
-                    } else if (e.key === 'ArrowLeft') {
-                        e.preventDefault();
-                        prevCard();
-                    } else if (e.key === ' ') {
-                        e.preventDefault();
-                        setIsFlipped(prev => !prev);
-                    }
-                };
-
-                window.addEventListener('keydown', handleKeyPress);
-                return () => window.removeEventListener('keydown', handleKeyPress);
-            }, [isTransitioning]);
-
+            // SM2 algorithm remains unchanged
             const SM2 = (card, score) => {
                 const now = new Date();
                 let { ease, interval, repetitions } = card;
-
                 ease = ease || 2.5;
                 interval = interval || 0;
                 repetitions = repetitions || 0;
-
                 if (score >= 3) {
                     ease = Math.max(1.3, ease + 0.1 - (5 - score) * (0.08 + (5 - score) * 0.02));
-
                     if (repetitions === 0) interval = 1;
                     else if (repetitions === 1) interval = 6;
                     else interval = Math.round(interval * ease);
-
                     repetitions++;
                 } else {
                     repetitions = 0;
                     interval = 1;
                     ease = Math.max(1.3, ease - 0.2);
                 }
-
                 const nextReview = new Date(now.getTime() + interval * 86400000); // Days to ms
-
                 return {
                     ease: Number(ease.toFixed(2)),
                     interval,
@@ -272,18 +219,16 @@
                 };
             };
 
+            // Simplified grading function – no delays, no extra flipping animation.
             const handleScore = (score) => {
-                if (isTransitioning) return;
-                setIsTransitioning(true);
-
-                const cardId = sessionCards[currentIndex].spanish;
+                const currentCard = sessionCards[currentIndex];
+                const cardId = currentCard.spanish;
                 const currentData = scores[cardId] || {};
                 const srsData = SM2({
                     ease: currentData.ease,
                     interval: currentData.interval,
                     repetitions: currentData.repetitions
                 }, score);
-
                 const newScores = {
                     ...scores,
                     [cardId]: {
@@ -296,16 +241,30 @@
                 setScores(newScores);
                 localStorage.setItem('verbeMenteScores', JSON.stringify(newScores));
 
-                // Make sure the card is showing the front face before transitioning.
+                // Flip card back to front immediately.
                 setIsFlipped(false);
-
-                setTimeout(() => {
-                    setCurrentIndex(prev => (prev + 1) % sessionCards.length);
-                    setIsTransitioning(false);
-                }, transitionDuration);
+                // Load next card immediately.
+                setCurrentIndex(prev => (prev + 1) % sessionCards.length);
             };
 
-            useEffect(() => {
+            // Key press handling remains – space bar toggles flip
+            React.useEffect(() => {
+                const handleKeyPress = (e) => {
+                    if (e.key === 'ArrowRight') {
+                        setCurrentIndex(prev => (prev + 1) % sessionCards.length);
+                    } else if (e.key === 'ArrowLeft') {
+                        setCurrentIndex(prev => (prev - 1 + sessionCards.length) % sessionCards.length);
+                    } else if (e.key === ' ') {
+                        e.preventDefault();
+                        setIsFlipped(prev => !prev);
+                    }
+                };
+                window.addEventListener('keydown', handleKeyPress);
+                return () => window.removeEventListener('keydown', handleKeyPress);
+            }, [sessionCards.length]);
+
+            // Recalculate sessionCards when scores change
+            React.useEffect(() => {
                 const now = new Date();
                 const updatedSessionCards = cardsData
                     .sort((a, b) => {
@@ -319,9 +278,8 @@
                         return new Date(cardData.nextReview) <= now;
                     })
                     .slice(0, 20);
-
                 setSessionCards(updatedSessionCards);
-            }, [scores]);
+            }, [scores, cardsData]);
 
             const currentCard = sessionCards[currentIndex];
             const progress = ((currentIndex + 1) / sessionCards.length) * 100;
@@ -329,9 +287,7 @@
             return (
                 <div className="container mx-auto px-4 py-8">
                     <div className="text-center mb-8">
-                        <h1 className="text-6xl font-bold mb-3 text-indigo-400">
-                            VerbeMente
-                        </h1>
+                        <h1 className="text-6xl font-bold mb-3 text-indigo-400">VerbeMente</h1>
                         <p className="text-gray-400 text-lg mb-4">Italian to Spanish Verbs</p>
                         <div className="progress-bar">
                             <div className="progress-fill" style={{ width: `${progress}%` }}></div>
@@ -341,25 +297,21 @@
 
                     <div className="flex justify-center gap-6 mb-8">
                         <button
-                            className="nav-button p-4 rounded-full text-white shadow-lg hover:shadow-xl text-2xl"
-                            onClick={prevCard}
-                            disabled={isTransitioning}
-                        >
+                            onClick={() => setCurrentIndex(prev => (prev - 1 + sessionCards.length) % sessionCards.length)}
+                            className="nav-button p-4 rounded-full text-white shadow-lg hover:shadow-xl text-2xl">
                             ←
                         </button>
                         <button
-                            className="nav-button p-4 rounded-full text-white shadow-lg hover:shadow-xl text-2xl"
-                            onClick={nextCard}
-                            disabled={isTransitioning}
-                        >
+                            onClick={() => setCurrentIndex(prev => (prev + 1) % sessionCards.length)}
+                            className="nav-button p-4 rounded-full text-white shadow-lg hover:shadow-xl text-2xl">
                             →
                         </button>
                     </div>
 
                     <div className="max-w-2xl mx-auto card-3d"
                         onClick={(e) => {
-                            // Only toggle flip if the container itself was clicked
-                            if (e.target === e.currentTarget && !isTransitioning) {
+                            // When clicking anywhere on the card container (except on the buttons), toggle the flip.
+                            if (e.target === e.currentTarget) {
                                 setIsFlipped(!isFlipped);
                             }
                         }}>
@@ -379,7 +331,6 @@
                                         {currentCard.spanish}
                                     </h2>
                                     <p className="text-xl text-gray-300 mb-4">{currentCard.meaning}</p>
-
                                     {currentCard.irregular && (
                                         <div className="conjugation-table">
                                             <div className="flex justify-center mb-4">
@@ -419,16 +370,14 @@
                                             </div>
                                         </div>
                                     )}
-
                                     <div className="flex gap-3 mt-6 justify-center">
                                         <button
                                             onClick={(e) => {
+                                                // Stop propagation so that the card click does not trigger
                                                 e.stopPropagation();
                                                 handleScore(1);
                                             }}
-                                            className="score-button px-6 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium shadow-md"
-                                            disabled={isTransitioning}
-                                        >
+                                            className="score-button px-6 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium shadow-md">
                                             Again
                                         </button>
                                         <button
@@ -436,9 +385,7 @@
                                                 e.stopPropagation();
                                                 handleScore(2);
                                             }}
-                                            className="score-button px-6 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg font-medium shadow-md"
-                                            disabled={isTransitioning}
-                                        >
+                                            className="score-button px-6 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg font-medium shadow-md">
                                             Hard
                                         </button>
                                         <button
@@ -446,9 +393,7 @@
                                                 e.stopPropagation();
                                                 handleScore(3);
                                             }}
-                                            className="score-button px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-medium shadow-md"
-                                            disabled={isTransitioning}
-                                        >
+                                            className="score-button px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-medium shadow-md">
                                             Good
                                         </button>
                                         <button
@@ -456,9 +401,7 @@
                                                 e.stopPropagation();
                                                 handleScore(4);
                                             }}
-                                            className="score-button px-6 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg font-medium shadow-md"
-                                            disabled={isTransitioning}
-                                        >
+                                            className="score-button px-6 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg font-medium shadow-md">
                                             Easy
                                         </button>
                                     </div>
@@ -466,12 +409,10 @@
                             </div>
                         </div>
                     </div>
-                    {showStats && <StatisticsPanel cardsData={cardsData} />}
                     <div className="fixed top-4 right-4 flex items-center space-x-2">
                         <button
                             className="toggle-stats nav-button p-3 rounded-full text-white shadow-lg hover:shadow-xl"
-                            onClick={() => setShowStats(!showStats)}
-                        >
+                            onClick={() => setShowStats((prev) => !prev)}>
                             {showStats ? '❌' : '📊'}
                         </button>
                         <button
@@ -481,13 +422,13 @@
                                     window.location.reload();
                                 }
                             }}
-                            className="nav-button p-3 rounded-full text-white shadow-lg hover:shadow-xl"
-                        >
+                            className="nav-button p-3 rounded-full text-white shadow-lg hover:shadow-xl">
                             Reset All Progress
                         </button>
                     </div>
+                    {showStats && <StatisticsPanel cardsData={cardsData} />}
                 </div>
-            )
+            );
         }
         function StatisticsPanel({ cardsData, onClose }) {
             const [stats, setStats] = useState({
