@@ -173,6 +173,7 @@
             const [scores, setScores] = React.useState(
                 () => JSON.parse(localStorage.getItem('verbeMenteScores') || '{}')
             );
+            const [showStats, setShowStats] = React.useState(false);
             const [sessionCards, setSessionCards] = React.useState(() => {
                 const now = new Date();
                 return cardsData
@@ -188,8 +189,6 @@
                     })
                     .slice(0, 10);
             });
-
-            // Remove transition flag and delays for simplicity
 
             // SM2 algorithm remains unchanged
             const SM2 = (card, score) => {
@@ -412,7 +411,7 @@
                     <div className="fixed top-4 right-4 flex items-center space-x-2">
                         <button
                             className="toggle-stats nav-button p-3 rounded-full text-white shadow-lg hover:shadow-xl"
-                            onClick={() => setShowStats((prev) => !prev)}>
+                            onClick={() => setShowStats(prev => !prev)}>
                             {showStats ? '❌' : '📊'}
                         </button>
                         <button
@@ -438,8 +437,6 @@
                 easy: [],
                 unrated: []
             });
-
-
 
             useEffect(() => {
                 const scores = JSON.parse(localStorage.getItem('verbeMenteScores') || '{}');
