@@ -190,16 +190,18 @@
             });
             const [isTransitioning, setIsTransitioning] = useState(false);
 
+            const transitionDuration = 800; // match CSS 0.8s transition
+
             const nextCard = () => {
                 if (isTransitioning) return;
                 setIsTransitioning(true);
 
-                // Immediately flip back if needed and change card
+                // Flip the card back to the front face if needed.
                 setIsFlipped(false);
                 setTimeout(() => {
                     setCurrentIndex((prev) => (prev + 1) % sessionCards.length);
                     setIsTransitioning(false);
-                }, 300); // Reduced timeout to match flip animation
+                }, transitionDuration);
             };
 
             const prevCard = () => {
@@ -210,10 +212,11 @@
                 setTimeout(() => {
                     setCurrentIndex((prev) => (prev - 1 + sessionCards.length) % sessionCards.length);
                     setIsTransitioning(false);
-                }, 300);
+                }, transitionDuration);
             };
 
             useEffect(() => {
+                // Ensure the card is not flipped on index change.
                 setIsFlipped(false);
             }, [currentIndex]);
 
@@ -239,7 +242,6 @@
             const SM2 = (card, score) => {
                 const now = new Date();
                 let { ease, interval, repetitions } = card;
-
 
                 ease = ease || 2.5;
                 interval = interval || 0;
@@ -269,6 +271,7 @@
                     lastReviewed: now.toISOString()
                 };
             };
+
             const handleScore = (score) => {
                 if (isTransitioning) return;
                 setIsTransitioning(true);
@@ -293,14 +296,13 @@
                 setScores(newScores);
                 localStorage.setItem('verbeMenteScores', JSON.stringify(newScores));
 
-                // Set the card back to its front state.
+                // Make sure the card is showing the front face before transitioning.
                 setIsFlipped(false);
 
-                // After the flip animation (300ms), advance to the next card.
                 setTimeout(() => {
                     setCurrentIndex(prev => (prev + 1) % sessionCards.length);
                     setIsTransitioning(false);
-                }, 300);
+                }, transitionDuration);
             };
 
             useEffect(() => {
