@@ -270,40 +270,37 @@
                 };
             };
             const handleScore = (score) => {
-                setIsFlipped(false);
+                if (isTransitioning) return;
                 setIsTransitioning(true);
 
+                const cardId = sessionCards[currentIndex].spanish;
+                const currentData = scores[cardId] || {};
+                const srsData = SM2({
+                    ease: currentData.ease,
+                    interval: currentData.interval,
+                    repetitions: currentData.repetitions
+                }, score);
+
+                const newScores = {
+                    ...scores,
+                    [cardId]: {
+                        ...currentData,
+                        ...srsData,
+                        score,
+                        timesReviewed: (currentData.timesReviewed || 0) + 1
+                    }
+                };
+                setScores(newScores);
+                localStorage.setItem('verbeMenteScores', JSON.stringify(newScores));
+
+                // Set the card back to its front state.
+                setIsFlipped(false);
+
+                // After the flip animation (300ms), advance to the next card.
                 setTimeout(() => {
-                    // Update scores after animation
-                    const cardId = sessionCards[currentIndex].spanish;
-                    const currentData = scores[cardId] || {};
-
-                    const srsData = SM2({
-                        ease: currentData.ease,
-                        interval: currentData.interval,
-                        repetitions: currentData.repetitions
-                    }, score);
-
-                    const newScores = {
-                        ...scores,
-                        [cardId]: {
-                            ...currentData,
-                            ...srsData,
-                            score,
-                            timesReviewed: (currentData.timesReviewed || 0) + 1
-                        }
-                    };
-
-                    setScores(newScores);
-                    localStorage.setItem('verbeMenteScores', JSON.stringify(newScores));
-
-                    // Move to next card after 300ms (match flip duration)
-                    setTimeout(() => {
-                        setCurrentIndex(prev => (prev + 1) % sessionCards.length);
-                        setIsTransitioning(false);
-                    }, 300);
-
-                }, 300); // Wait for flip animation
+                    setCurrentIndex(prev => (prev + 1) % sessionCards.length);
+                    setIsTransitioning(false);
+                }, 300);
             };
 
             useEffect(() => {
