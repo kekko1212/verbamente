@@ -182,12 +182,12 @@
     }
     
     .custom-select {
-      min-width: 350px;
+      min-width: 300px;
       position: relative;
       display: flex;
       justify-content: center;
-      justify-content: center;
       align-items: center;
+      margin: 30px auto;
     }
     
     .custom-select select {
@@ -215,7 +215,6 @@
 
     const { useState, useEffect } = React;
     function App({ cardsData }) {
-      // New state for language pair selection (using unified data fields)
       const [langPair, setLangPair] = useState({ from: "italian", to: "spanish" });
       const [currentIndex, setCurrentIndex] = useState(0);
       const [isFlipped, setIsFlipped] = useState(false);
@@ -336,11 +335,11 @@
       const progress = ((currentIndex + 1) / sessionCards.length) * 100;
 
       return (
-        <div className="container mx-auto px-4 py-8">
+        <div className="container mx-auto px-4 py-8 w-1/4">
           <div className="text-center mb-8">
             <h1 className="text-6xl font-bold mb-3 text-indigo-400">VerbeMente</h1>
             <p className="text-gray-400 text-lg mb-4">Italian to Spanish Verbs</p>
-            <div className="mb-4 custom-select">
+            <div className="mb-4 w-3/4 custom-select">
               <label className="mr-2 text-lg font-medium">Language Pair:</label>
               <select value={`${langPair.from}_${langPair.to}`} onChange={handleLangPairChange} className="text-indigo-400">
                 <option value="italian_spanish">Italian → Spanish</option>
