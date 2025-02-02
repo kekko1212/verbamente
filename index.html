@@ -12,9 +12,9 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
   <style>
     body {
-      background: #1e293b;
+      background: #1E2935;
       min-height: 100vh;
-      color: #ffffff;
+      color: #dddddd;
     }
 
     .stats-item {
@@ -338,7 +338,7 @@
         <div className="container mx-auto px-4 py-8 w-1/4">
           <div className="text-center mb-8">
             <h1 className="text-6xl font-bold mb-3 text-indigo-400">VerbeMente</h1>
-            <p className="text-gray-400 text-lg mb-4">Italian to Spanish Verbs</p>
+            <p className="text-gray-400 text-lg mb-4">VerbaMente - Italian ↔️ Spanish ↔️ English</p>
             <div className="mb-4 w-3/4 custom-select">
               <label className="mr-2 text-lg font-medium">Language Pair:</label>
               <select value={`${langPair.from}_${langPair.to}`} onChange={handleLangPairChange} className="text-indigo-400">
