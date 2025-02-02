@@ -5,6 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>VerbeMente - Italian to Spanish</title>
+  <!-- Material Icons from Google -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
@@ -106,9 +107,8 @@
     }
 
     .conjugation-row {
-      display: grid;
-      grid-template-columns: 100px 1fr;
-      align-items: center;
+      display: flex;
+      justify-content: space-between;
       margin-bottom: 0.5rem;
     }
 
@@ -173,6 +173,8 @@
 
     const { useState, useEffect } = React;
     function App({ cardsData }) {
+      // New state for language pair selection (using unified data fields)
+      const [langPair, setLangPair] = useState({ from: "italian", to: "spanish" });
       const [currentIndex, setCurrentIndex] = useState(0);
       const [isFlipped, setIsFlipped] = useState(false);
       const [scores, setScores] = useState(() => JSON.parse(localStorage.getItem('verbeMenteScores') || '{}'));
@@ -251,6 +253,11 @@
         }, 800);
       };
 
+      const handleLangPairChange = (e) => {
+        const [from, to] = e.target.value.split("_");
+        setLangPair({ from, to });
+      };
+
       useEffect(() => {
         const handleKeyPress = (e) => {
           if (e.key === 'ArrowRight') {
@@ -291,6 +298,18 @@
           <div className="text-center mb-8">
             <h1 className="text-6xl font-bold mb-3 text-indigo-400">VerbeMente</h1>
             <p className="text-gray-400 text-lg mb-4">Italian to Spanish Verbs</p>
+            {/* Language pair selector for the main flashcards */}
+            <div className="mb-4">
+              <label className="mr-2">Language Pair:</label>
+              <select value={`${langPair.from}_${langPair.to}`} onChange={handleLangPairChange} className="text-black">
+                <option value="italian_spanish">Italian → Spanish</option>
+                <option value="english_spanish">English → Spanish</option>
+                <option value="spanish_english">Spanish → English</option>
+                <option value="spanish_italian">Spanish → Italian</option>
+                <option value="english_italian">English → Italian</option>
+                <option value="italian_english">Italian → English</option>
+              </select>
+            </div>
             <div className="progress-bar">
               <div className="progress-fill" style={{ width: `${progress}%` }}></div>
             </div>
@@ -322,52 +341,52 @@
               <div className={`card-inner h-full ${isFlipped ? 'flipped' : ''}`}>
                 <div className="card-face p-8">
                   <div className="text-center">
-                    <h2 className="text-6xl font-bold mb-6 text-indigo-400">{currentCard.italian}</h2>
-                    <p className="text-gray-400">Click to reveal Spanish translation</p>
+                    {/* Use the "from" language field */}
+                    <h2 className="text-6xl font-bold mb-6 text-indigo-400">{currentCard && currentCard[langPair.from]}</h2>
+                    <p className="text-gray-400">Click to reveal {langPair.to.charAt(0).toUpperCase() + langPair.to.slice(1)} translation</p>
                   </div>
                 </div>
 
                 <div className="card-face card-back p-8">
                   <div className="text-center">
-                    <h2 className="text-4xl font-bold mb-2 text-indigo-400">{currentCard.spanish}</h2>
-                    <p className="text-xl text-gray-300 mb-4">{currentCard.meaning}</p>
-                    {currentCard.irregular && (
+                    {/* Use the "to" language field */}
+                    <h2 className="text-4xl font-bold mb-2 text-indigo-400">{currentCard && currentCard[langPair.to]}</h2>
+                    {/* Optionally, you can still display a meaning field if desired:
+                        <p className="text-xl text-gray-300 mb-4">{currentCard.meaning}</p>
+                    */}
+                    {currentCard && currentCard.irregular && currentCard.conjugation && currentCard.conjugation[langPair.to] && (
                       <div className="conjugation-table">
                         <div className="flex justify-center mb-4">
                           <span className="px-4 py-1 bg-red-500 text-white text-sm rounded-full font-medium">
                             Irregular Verb
                           </span>
                         </div>
-                        <div className="grid grid-cols-2 gap-8">
-                          <div>
-                            <div className="conjugation-row">
-                              <span className="subject">yo</span>
-                              <span className="conjugation">{currentCard.conjugation.yo}</span>
+                        {(() => {
+                          const entries = Object.entries(currentCard.conjugation[langPair.to]);
+                          const mid = Math.ceil(entries.length / 2);
+                          const left = entries.slice(0, mid);
+                          const right = entries.slice(mid);
+                          return (
+                            <div className="grid grid-cols-2 gap-8">
+                              <div>
+                                {left.map(([subject, form]) => (
+                                  <div key={subject} className="conjugation-row">
+                                    <span className="subject">{subject}</span>
+                                    <span className="conjugation">{form}</span>
+                                  </div>
+                                ))}
+                              </div>
+                              <div>
+                                {right.map(([subject, form]) => (
+                                  <div key={subject} className="conjugation-row">
+                                    <span className="subject">{subject}</span>
+                                    <span className="conjugation">{form}</span>
+                                  </div>
+                                ))}
+                              </div>
                             </div>
-                            <div className="conjugation-row">
-                              <span className="subject">tú</span>
-                              <span className="conjugation">{currentCard.conjugation.tú}</span>
-                            </div>
-                            <div className="conjugation-row">
-                              <span className="subject">él/ella</span>
-                              <span className="conjugation">{currentCard.conjugation.él_ella}</span>
-                            </div>
-                          </div>
-                          <div>
-                            <div className="conjugation-row">
-                              <span className="subject">nosotros</span>
-                              <span className="conjugation">{currentCard.conjugation.nosotros}</span>
-                            </div>
-                            <div className="conjugation-row">
-                              <span className="subject">vosotros</span>
-                              <span className="conjugation">{currentCard.conjugation.vosotros}</span>
-                            </div>
-                            <div className="conjugation-row">
-                              <span className="subject">ellos/ellas</span>
-                              <span className="conjugation">{currentCard.conjugation.ellos_ellas}</span>
-                            </div>
-                          </div>
-                        </div>
+                          );
+                        })()}
                       </div>
                     )}
                     <div className="flex gap-3 mt-6 justify-center">
@@ -424,6 +443,8 @@
     }
 
     function StatisticsPanel({ cardsData, onClose }) {
+      // New state for stats language pair selection
+      const [statsLangPair, setStatsLangPair] = useState({ from: "italian", to: "spanish" });
       const [stats, setStats] = useState({
         again: [],
         hard: [],
@@ -431,6 +452,11 @@
         easy: [],
         unrated: []
       });
+
+      const handleStatsLangPairChange = (e) => {
+        const [from, to] = e.target.value.split("_");
+        setStatsLangPair({ from, to });
+      };
 
       useEffect(() => {
         const scores = JSON.parse(localStorage.getItem('verbeMenteScores') || '{}');
@@ -456,6 +482,18 @@
 
       return (
         <div className="stats-panel">
+          {/* Language pair selector for stats */}
+          <div className="mb-4">
+            <label className="mr-2">Stats Language Pair:</label>
+            <select value={`${statsLangPair.from}_${statsLangPair.to}`} onChange={handleStatsLangPairChange} className="text-black">
+              <option value="italian_spanish">Italian → Spanish</option>
+              <option value="english_spanish">English → Spanish</option>
+              <option value="spanish_english">Spanish → English</option>
+              <option value="spanish_italian">Spanish → Italian</option>
+              <option value="english_italian">English → Italian</option>
+              <option value="italian_english">Italian → English</option>
+            </select>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
             {['again', 'hard', 'good', 'easy'].map(category => (
               <div key={category} className="stats-category">
@@ -464,7 +502,8 @@
                 </div>
                 {stats[category].map(verb => (
                   <div key={verb.spanish} className="stats-item">
-                    <span>{verb.italian}</span>
+                    {/* Use the stats language pair "from" field */}
+                    <span>{verb[statsLangPair.from]}</span>
                     <span className="text-indigo-400">{verb.timesReviewed}x</span>
                   </div>
                 ))}
@@ -476,8 +515,8 @@
               </div>
               {stats.unrated.map(verb => (
                 <div key={verb.spanish} className="stats-item">
-                  <span>{verb.italian}</span>
-                  <span className="text-gray-400">{verb.spanish}</span>
+                  <span>{verb[statsLangPair.from]}</span>
+                  <span className="text-gray-400">{verb[statsLangPair.to]}</span>
                 </div>
               ))}
             </div>
