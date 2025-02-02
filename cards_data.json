@@ -2,907 +2,801 @@
   {
     "spanish": "ser",
     "italian": "essere",
-    "meaning": "to be (permanent)",
+    "english": "to be",
+    "meaning": "to be",
     "irregular": true,
     "conjugation": {
-      "yo": "soy",
-      "tú": "eres",
-      "él_ella": "es",
-      "nosotros": "somos",
-      "vosotros": "sois",
-      "ellos_ellas": "son"
+      "spanish": {
+        "yo": "soy",
+        "tú": "eres",
+        "él/ella": "es",
+        "nosotros": "somos",
+        "vosotros": "sois",
+        "ellos/ellas": "son"
+      },
+      "italian": {
+        "io": "sono",
+        "tu": "sei",
+        "lui/lei": "è",
+        "noi": "siamo",
+        "voi": "siete",
+        "loro": "sono"
+      },
+      "english": {
+        "I": "am",
+        "you": "are",
+        "he/she": "is",
+        "we": "are",
+        "you(pl.)": "are",
+        "they": "are"
+      }
     }
   },
   {
     "spanish": "estar",
-    "italian": "essere / stare",
-    "meaning": "to be (temporary/location)",
+    "italian": "stare",
+    "english": "to be (temporary)",
+    "meaning": "to be (temporary state)",
     "irregular": true,
     "conjugation": {
-      "yo": "estoy",
-      "tú": "estás",
-      "él_ella": "está",
-      "nosotros": "estamos",
-      "vosotros": "estáis",
-      "ellos_ellas": "están"
-    }
-  },
-  {
-    "spanish": "haber",
-    "italian": "avere",
-    "meaning": "to have (auxiliary)",
-    "irregular": true,
-    "conjugation": {
-      "yo": "he",
-      "tú": "has",
-      "él_ella": "ha",
-      "nosotros": "hemos",
-      "vosotros": "habéis",
-      "ellos_ellas": "han"
+      "spanish": {
+        "yo": "estoy",
+        "tú": "estás",
+        "él/ella": "está",
+        "nosotros": "estamos",
+        "vosotros": "estáis",
+        "ellos/ellas": "están"
+      },
+      "italian": {
+        "io": "sto",
+        "tu": "stai",
+        "lui/lei": "sta",
+        "noi": "stiamo",
+        "voi": "state",
+        "loro": "stanno"
+      },
+      "english": {
+        "I": "am",
+        "you": "are",
+        "he/she": "is",
+        "we": "are",
+        "you(pl.)": "are",
+        "they": "are"
+      }
     }
   },
   {
     "spanish": "tener",
-    "italian": "avere / tenere",
-    "meaning": "to have/possess",
+    "italian": "avere",
+    "english": "to have",
+    "meaning": "to have",
     "irregular": true,
     "conjugation": {
-      "yo": "tengo",
-      "tú": "tienes",
-      "él_ella": "tiene",
-      "nosotros": "tenemos",
-      "vosotros": "tenéis",
-      "ellos_ellas": "tienen"
+      "spanish": {
+        "yo": "tengo",
+        "tú": "tienes",
+        "él/ella": "tiene",
+        "nosotros": "tenemos",
+        "vosotros": "tenéis",
+        "ellos/ellas": "tienen"
+      },
+      "italian": {
+        "io": "ho",
+        "tu": "hai",
+        "lui/lei": "ha",
+        "noi": "abbiamo",
+        "voi": "avete",
+        "loro": "hanno"
+      },
+      "english": {
+        "I": "have",
+        "you": "have",
+        "he/she": "has",
+        "we": "have",
+        "you(pl.)": "have",
+        "they": "have"
+      }
     }
   },
   {
     "spanish": "hacer",
     "italian": "fare",
-    "meaning": "to do/make",
+    "english": "to do, to make",
+    "meaning": "to do, to make",
     "irregular": true,
     "conjugation": {
-      "yo": "hago",
-      "tú": "haces",
-      "él_ella": "hace",
-      "nosotros": "hacemos",
-      "vosotros": "hacéis",
-      "ellos_ellas": "hacen"
-    }
-  },
-  {
-    "spanish": "decir",
-    "italian": "dire",
-    "meaning": "to say/tell",
-    "irregular": true,
-    "conjugation": {
-      "yo": "digo",
-      "tú": "dices",
-      "él_ella": "dice",
-      "nosotros": "decimos",
-      "vosotros": "decís",
-      "ellos_ellas": "dicen"
-    }
-  },
-  {
-    "spanish": "ir",
-    "italian": "andare",
-    "meaning": "to go",
-    "irregular": true,
-    "conjugation": {
-      "yo": "voy",
-      "tú": "vas",
-      "él_ella": "va",
-      "nosotros": "vamos",
-      "vosotros": "vais",
-      "ellos_ellas": "van"
-    }
-  },
-  {
-    "spanish": "ver",
-    "italian": "vedere",
-    "meaning": "to see",
-    "irregular": true,
-    "conjugation": {
-      "yo": "veo",
-      "tú": "ves",
-      "él_ella": "ve",
-      "nosotros": "vemos",
-      "vosotros": "veis",
-      "ellos_ellas": "ven"
-    }
-  },
-  {
-    "spanish": "dar",
-    "italian": "dare",
-    "meaning": "to give",
-    "irregular": true,
-    "conjugation": {
-      "yo": "doy",
-      "tú": "das",
-      "él_ella": "da",
-      "nosotros": "damos",
-      "vosotros": "dais",
-      "ellos_ellas": "dan"
-    }
-  },
-  {
-    "spanish": "saber",
-    "italian": "sapere",
-    "meaning": "to know (facts)",
-    "irregular": true,
-    "conjugation": {
-      "yo": "sé",
-      "tú": "sabes",
-      "él_ella": "sabe",
-      "nosotros": "sabemos",
-      "vosotros": "sabéis",
-      "ellos_ellas": "saben"
-    }
-  },
-  {
-    "spanish": "querer",
-    "italian": "volere",
-    "meaning": "to want",
-    "irregular": true,
-    "conjugation": {
-      "yo": "quiero",
-      "tú": "quieres",
-      "él_ella": "quiere",
-      "nosotros": "queremos",
-      "vosotros": "queréis",
-      "ellos_ellas": "quieren"
+      "spanish": {
+        "yo": "hago",
+        "tú": "haces",
+        "él/ella": "hace",
+        "nosotros": "hacemos",
+        "vosotros": "hacéis",
+        "ellos/ellas": "hacen"
+      },
+      "italian": {
+        "io": "faccio",
+        "tu": "fai",
+        "lui/lei": "fa",
+        "noi": "facciamo",
+        "voi": "fate",
+        "loro": "fanno"
+      },
+      "english": {
+        "I": "do",
+        "you": "do",
+        "he/she": "does",
+        "we": "do",
+        "you(pl.)": "do",
+        "they": "do"
+      }
     }
   },
   {
     "spanish": "poder",
     "italian": "potere",
-    "meaning": "can/to be able to",
+    "english": "to be able to",
+    "meaning": "to be able to",
     "irregular": true,
     "conjugation": {
-      "yo": "puedo",
-      "tú": "puedes",
-      "él_ella": "puede",
-      "nosotros": "podemos",
-      "vosotros": "podéis",
-      "ellos_ellas": "pueden"
+      "spanish": {
+        "yo": "puedo",
+        "tú": "puedes",
+        "él/ella": "puede",
+        "nosotros": "podemos",
+        "vosotros": "podéis",
+        "ellos/ellas": "pueden"
+      },
+      "italian": {
+        "io": "posso",
+        "tu": "puoi",
+        "lui/lei": "può",
+        "noi": "possiamo",
+        "voi": "potete",
+        "loro": "possono"
+      },
+      "english": {
+        "I": "can",
+        "you": "can",
+        "he/she": "can",
+        "we": "can",
+        "you(pl.)": "can",
+        "they": "can"
+      }
     }
+  },
+  {
+    "spanish": "decir",
+    "italian": "dire",
+    "english": "to say, to tell",
+    "meaning": "to say, to tell",
+    "irregular": true,
+    "conjugation": {
+      "spanish": {
+        "yo": "digo",
+        "tú": "dices",
+        "él/ella": "dice",
+        "nosotros": "decimos",
+        "vosotros": "decís",
+        "ellos/ellas": "dicen"
+      },
+      "italian": {
+        "io": "dico",
+        "tu": "dici",
+        "lui/lei": "dice",
+        "noi": "diciamo",
+        "voi": "dite",
+        "loro": "dicono"
+      },
+      "english": {
+        "I": "say",
+        "you": "say",
+        "he/she": "says",
+        "we": "say",
+        "you(pl.)": "say",
+        "they": "say"
+      }
+    }
+  },
+  {
+    "spanish": "ir",
+    "italian": "andare",
+    "english": "to go",
+    "meaning": "to go",
+    "irregular": true,
+    "conjugation": {
+      "spanish": {
+        "yo": "voy",
+        "tú": "vas",
+        "él/ella": "va",
+        "nosotros": "vamos",
+        "vosotros": "vais",
+        "ellos/ellas": "van"
+      },
+      "italian": {
+        "io": "vado",
+        "tu": "vai",
+        "lui/lei": "va",
+        "noi": "andiamo",
+        "voi": "andate",
+        "loro": "vanno"
+      },
+      "english": {
+        "I": "go",
+        "you": "go",
+        "he/she": "goes",
+        "we": "go",
+        "you(pl.)": "go",
+        "they": "go"
+      }
+    }
+  },
+  {
+    "spanish": "ver",
+    "italian": "vedere",
+    "english": "to see",
+    "meaning": "to see",
+    "irregular": true,
+    "conjugation": {
+      "spanish": {
+        "yo": "veo",
+        "tú": "ves",
+        "él/ella": "ve",
+        "nosotros": "vemos",
+        "vosotros": "veis",
+        "ellos/ellas": "ven"
+      },
+      "italian": {
+        "io": "vedo",
+        "tu": "vedi",
+        "lui/lei": "vede",
+        "noi": "vediamo",
+        "voi": "vedete",
+        "loro": "vedono"
+      },
+      "english": {
+        "I": "see",
+        "you": "see",
+        "he/she": "sees",
+        "we": "see",
+        "you(pl.)": "see",
+        "they": "see"
+      }
+    }
+  },
+  {
+    "spanish": "dar",
+    "italian": "dare",
+    "english": "to give",
+    "meaning": "to give",
+    "irregular": true,
+    "conjugation": {
+      "spanish": {
+        "yo": "doy",
+        "tú": "das",
+        "él/ella": "da",
+        "nosotros": "damos",
+        "vosotros": "dais",
+        "ellos/ellas": "dan"
+      },
+      "italian": {
+        "io": "do",
+        "tu": "dai",
+        "lui/lei": "dà",
+        "noi": "diamo",
+        "voi": "date",
+        "loro": "danno"
+      },
+      "english": {
+        "I": "give",
+        "you": "give",
+        "he/she": "gives",
+        "we": "give",
+        "you(pl.)": "give",
+        "they": "give"
+      }
+    }
+  },
+  {
+    "spanish": "saber",
+    "italian": "sapere",
+    "english": "to know",
+    "meaning": "to know (facts)",
+    "irregular": true,
+    "conjugation": {
+      "spanish": {
+        "yo": "sé",
+        "tú": "sabes",
+        "él/ella": "sabe",
+        "nosotros": "sabemos",
+        "vosotros": "sabéis",
+        "ellos/ellas": "saben"
+      },
+      "italian": {
+        "io": "so",
+        "tu": "sai",
+        "lui/lei": "sa",
+        "noi": "sappiamo",
+        "voi": "sapete",
+        "loro": "sanno"
+      },
+      "english": {
+        "I": "know",
+        "you": "know",
+        "he/she": "knows",
+        "we": "know",
+        "you(pl.)": "know",
+        "they": "know"
+      }
+    }
+  },
+  {
+    "spanish": "querer",
+    "italian": "volere",
+    "english": "to want",
+    "meaning": "to want",
+    "irregular": true,
+    "conjugation": {
+      "spanish": {
+        "yo": "quiero",
+        "tú": "quieres",
+        "él/ella": "quiere",
+        "nosotros": "queremos",
+        "vosotros": "queréis",
+        "ellos/ellas": "quieren"
+      },
+      "italian": {
+        "io": "voglio",
+        "tu": "vuoi",
+        "lui/lei": "vuole",
+        "noi": "vogliamo",
+        "voi": "volete",
+        "loro": "vogliono"
+      },
+      "english": {
+        "I": "want",
+        "you": "want",
+        "he/she": "wants",
+        "we": "want",
+        "you(pl.)": "want",
+        "they": "want"
+      }
+    }
+  },
+  {
+    "spanish": "llegar",
+    "italian": "arrivare",
+    "english": "to arrive",
+    "meaning": "to arrive",
+    "irregular": false
+  },
+  {
+    "spanish": "pasar",
+    "italian": "passare",
+    "english": "to pass, to happen",
+    "meaning": "to pass, to happen",
+    "irregular": false
   },
   {
     "spanish": "deber",
     "italian": "dovere",
-    "meaning": "must/should",
+    "english": "to must, should",
+    "meaning": "to owe; should",
     "irregular": false
   },
   {
-    "spanish": "esperar",
-    "italian": "sperare / aspettare",
-    "meaning": "to hope / to wait",
-    "irregular": false
-  },
-  {
-    "spanish": "quedar",
-    "italian": "restare / rimanere / appuntarsi",
-    "meaning": "to stay / to remain / to meet up",
-    "irregular": false
-  },
-  {
-    "spanish": "dejar",
-    "italian": "lasciare / permettere",
-    "meaning": "to leave / to let",
-    "irregular": false
-  },
-  {
-    "spanish": "tocar",
-    "italian": "toccare / suonare",
-    "meaning": "to touch / to play (instrument)",
-    "irregular": false
-  },
-  {
-    "spanish": "pedir",
-    "italian": "chiedere / ordinare",
-    "meaning": "to ask for / to order",
+    "spanish": "poner",
+    "italian": "mettere",
+    "english": "to put",
+    "meaning": "to put",
     "irregular": true,
     "conjugation": {
-      "yo": "pido",
-      "tú": "pides",
-      "él_ella": "pide",
-      "nosotros": "pedimos",
-      "vosotros": "pedís",
-      "ellos_ellas": "piden"
-    }
-  },
-  {
-    "spanish": "sentir",
-    "italian": "sentire / dispiacere",
-    "meaning": "to feel / to be sorry",
-    "irregular": true,
-    "conjugation": {
-      "yo": "siento",
-      "tú": "sientes",
-      "él_ella": "siente",
-      "nosotros": "sentimos",
-      "vosotros": "sentís",
-      "ellos_ellas": "sienten"
+      "spanish": {
+        "yo": "pongo",
+        "tú": "pones",
+        "él/ella": "pone",
+        "nosotros": "ponemos",
+        "vosotros": "ponéis",
+        "ellos/ellas": "ponen"
+      },
+      "italian": {
+        "io": "metto",
+        "tu": "metti",
+        "lui/lei": "mette",
+        "noi": "mettiamo",
+        "voi": "mettete",
+        "loro": "mettono"
+      },
+      "english": {
+        "I": "put",
+        "you": "put",
+        "he/she": "puts",
+        "we": "put",
+        "you(pl.)": "put",
+        "they": "put"
+      }
     }
   },
   {
     "spanish": "parecer",
-    "italian": "sembrare / apparire",
-    "meaning": "to seem / to appear",
-    "irregular": true,
-    "conjugation": {
-      "yo": "parezco",
-      "tú": "pareces",
-      "él_ella": "parece",
-      "nosotros": "parecemos",
-      "vosotros": "parecéis",
-      "ellos_ellas": "parecen"
-    }
-  },
-  {
-    "spanish": "hablar",
-    "italian": "parlare",
-    "meaning": "to speak",
+    "italian": "sembrare",
+    "english": "to seem",
+    "meaning": "to seem",
     "irregular": false
   },
   {
-    "spanish": "comer",
-    "italian": "mangiare",
-    "meaning": "to eat",
-    "irregular": false
-  },
-  {
-    "spanish": "vivir",
-    "italian": "vivere",
-    "meaning": "to live",
-    "irregular": false
-  },
-  {
-    "spanish": "beber",
-    "italian": "bere",
-    "meaning": "to drink",
-    "irregular": false
-  },
-  {
-    "spanish": "trabajar",
-    "italian": "lavorare",
-    "meaning": "to work",
-    "irregular": false
-  },
-  {
-    "spanish": "estudiar",
-    "italian": "studiare",
-    "meaning": "to study",
-    "irregular": false
-  },
-  {
-    "spanish": "escribir",
-    "italian": "scrivere",
-    "meaning": "to write",
-    "irregular": false
-  },
-  {
-    "spanish": "leer",
-    "italian": "leggere",
-    "meaning": "to read",
-    "irregular": false
-  },
-  {
-    "spanish": "dormir",
-    "italian": "dormire",
-    "meaning": "to sleep",
-    "irregular": true,
-    "conjugation": {
-      "yo": "duermo",
-      "tú": "duermes",
-      "él_ella": "duerme",
-      "nosotros": "dormimos",
-      "vosotros": "dormís",
-      "ellos_ellas": "duermen"
-    }
-  },
-  {
-    "spanish": "pensar",
-    "italian": "pensare",
-    "meaning": "to think",
-    "irregular": true,
-    "conjugation": {
-      "yo": "pienso",
-      "tú": "piensas",
-      "él_ella": "piensa",
-      "nosotros": "pensamos",
-      "vosotros": "pensáis",
-      "ellos_ellas": "piensan"
-    }
-  },
-  {
-    "spanish": "venir",
-    "italian": "venire",
-    "meaning": "to come",
-    "irregular": true,
-    "conjugation": {
-      "yo": "vengo",
-      "tú": "vienes",
-      "él_ella": "viene",
-      "nosotros": "venimos",
-      "vosotros": "venís",
-      "ellos_ellas": "vienen"
-    }
-  },
-  {
-    "spanish": "salir",
-    "italian": "uscire",
-    "meaning": "to leave/go out",
-    "irregular": true,
-    "conjugation": {
-      "yo": "salgo",
-      "tú": "sales",
-      "él_ella": "sale",
-      "nosotros": "salimos",
-      "vosotros": "salís",
-      "ellos_ellas": "salen"
-    }
-  },
-  {
-    "spanish": "entrar",
-    "italian": "entrare",
-    "meaning": "to enter",
-    "irregular": false
-  },
-  {
-    "spanish": "subir",
-    "italian": "salire",
-    "meaning": "to go up",
-    "irregular": false
-  },
-  {
-    "spanish": "bajar",
-    "italian": "scendere",
-    "meaning": "to go down",
-    "irregular": false
-  },
-  {
-    "spanish": "caminar",
-    "italian": "camminare",
-    "meaning": "to walk",
-    "irregular": false
-  },
-  {
-    "spanish": "amar",
-    "italian": "amare",
-    "meaning": "to love",
+    "spanish": "quedar",
+    "italian": "rimanere",
+    "english": "to remain",
+    "meaning": "to remain",
     "irregular": false
   },
   {
     "spanish": "creer",
     "italian": "credere",
+    "english": "to believe",
     "meaning": "to believe",
     "irregular": false
   },
   {
-    "spanish": "recordar",
-    "italian": "ricordare",
-    "meaning": "to remember",
-    "irregular": true,
-    "conjugation": {
-      "yo": "recuerdo",
-      "tú": "recuerdas",
-      "él_ella": "recuerda",
-      "nosotros": "recordamos",
-      "vosotros": "recordáis",
-      "ellos_ellas": "recuerdan"
-    }
-  },
-  {
-    "spanish": "olvidar",
-    "italian": "dimenticare",
-    "meaning": "to forget",
+    "spanish": "hablar",
+    "italian": "parlare",
+    "english": "to speak",
+    "meaning": "to speak",
     "irregular": false
-  },
-  {
-    "spanish": "necesitar",
-    "italian": "necessitare",
-    "meaning": "to need",
-    "irregular": false
-  },
-  {
-    "spanish": "preferir",
-    "italian": "preferire",
-    "meaning": "to prefer",
-    "irregular": true,
-    "conjugation": {
-      "yo": "prefiero",
-      "tú": "prefieres",
-      "él_ella": "prefiere",
-      "nosotros": "preferimos",
-      "vosotros": "preferís",
-      "ellos_ellas": "prefieren"
-    }
-  },
-  {
-    "spanish": "llamar",
-    "italian": "chiamare",
-    "meaning": "to call",
-    "irregular": false
-  },
-  {
-    "spanish": "preguntar",
-    "italian": "domandare",
-    "meaning": "to ask",
-    "irregular": false
-  },
-  {
-    "spanish": "responder",
-    "italian": "rispondere",
-    "meaning": "to answer",
-    "irregular": false
-  },
-  {
-    "spanish": "explicar",
-    "italian": "spiegare",
-    "meaning": "to explain",
-    "irregular": false
-  },
-  {
-    "spanish": "escuchar",
-    "italian": "ascoltare",
-    "meaning": "to listen",
-    "irregular": false
-  },
-  {
-    "spanish": "abrir",
-    "italian": "aprire",
-    "meaning": "to open",
-    "irregular": false
-  },
-  {
-    "spanish": "cerrar",
-    "italian": "chiudere",
-    "meaning": "to close",
-    "irregular": true,
-    "conjugation": {
-      "yo": "cierro",
-      "tú": "cierras",
-      "él_ella": "cierra",
-      "nosotros": "cerramos",
-      "vosotros": "cerráis",
-      "ellos_ellas": "cierran"
-    }
-  },
-  {
-    "spanish": "comprar",
-    "italian": "comprare",
-    "meaning": "to buy",
-    "irregular": false
-  },
-  {
-    "spanish": "vender",
-    "italian": "vendere",
-    "meaning": "to sell",
-    "irregular": false
-  },
-  {
-    "spanish": "pagar",
-    "italian": "pagare",
-    "meaning": "to pay",
-    "irregular": false
-  },
-  {
-    "spanish": "buscar",
-    "italian": "cercare / trovare",
-    "meaning": "to look for / to find",
-    "irregular": false
-  },
-  {
-    "spanish": "encontrar",
-    "italian": "trovare",
-    "meaning": "to find",
-    "irregular": true,
-    "conjugation": {
-      "yo": "encuentro",
-      "tú": "encuentras",
-      "él_ella": "encuentra",
-      "nosotros": "encontramos",
-      "vosotros": "encontráis",
-      "ellos_ellas": "encuentran"
-    }
-  },
-  {
-    "spanish": "perder",
-    "italian": "perdere",
-    "meaning": "to lose",
-    "irregular": true,
-    "conjugation": {
-      "yo": "pierdo",
-      "tú": "pierdes",
-      "él_ella": "pierde",
-      "nosotros": "perdemos",
-      "vosotros": "perdéis",
-      "ellos_ellas": "pierden"
-    }
-  },
-  {
-    "spanish": "ganar",
-    "italian": "guadagnare / vincere",
-    "meaning": "to win/earn",
-    "irregular": false
-  },
-  {
-    "spanish": "usar",
-    "italian": "usare",
-    "meaning": "to use",
-    "irregular": false
-  },
-  {
-    "spanish": "empezar",
-    "italian": "cominciare",
-    "meaning": "to begin",
-    "irregular": true,
-    "conjugation": {
-      "yo": "empiezo",
-      "tú": "empiezas",
-      "él_ella": "empieza",
-      "nosotros": "empezamos",
-      "vosotros": "empezáis",
-      "ellos_ellas": "empiezan"
-    }
-  },
-  {
-    "spanish": "terminar",
-    "italian": "terminare",
-    "meaning": "to end/finish",
-    "irregular": false
-  },
-  {
-    "spanish": "continuar",
-    "italian": "continuare",
-    "meaning": "to continue",
-    "irregular": true,
-    "conjugation": {
-      "yo": "continúo",
-      "tú": "continúas",
-      "él_ella": "continúa",
-      "nosotros": "continuamos",
-      "vosotros": "continuáis",
-      "ellos_ellas": "continúan"
-    }
-  },
-  {
-    "spanish": "durar",
-    "italian": "durare",
-    "meaning": "to last",
-    "irregular": false
-  },
-  {
-    "spanish": "cambiar",
-    "italian": "cambiare",
-    "meaning": "to change",
-    "irregular": false
-  },
-  {
-    "spanish": "aprender",
-    "italian": "apprendere",
-    "meaning": "to learn",
-    "irregular": false
-  },
-  {
-    "spanish": "enseñar",
-    "italian": "insegnare",
-    "meaning": "to teach",
-    "irregular": false
-  },
-  {
-    "spanish": "entender",
-    "italian": "capire / intendere",
-    "meaning": "to understand",
-    "irregular": true,
-    "conjugation": {
-      "yo": "entiendo",
-      "tú": "entiendes",
-      "él_ella": "entiende",
-      "nosotros": "entendemos",
-      "vosotros": "entendéis",
-      "ellos_ellas": "entienden"
-    }
-  },
-  {
-    "spanish": "conocer",
-    "italian": "conoscere / sapere",
-    "meaning": "to know (people/places)",
-    "irregular": true,
-    "conjugation": {
-      "yo": "conozco",
-      "tú": "conoces",
-      "él_ella": "conoce",
-      "nosotros": "conocemos",
-      "vosotros": "conocéis",
-      "ellos_ellas": "conocen"
-    }
-  },
-  {
-    "spanish": "decidir",
-    "italian": "decidere",
-    "meaning": "to decide",
-    "irregular": false
-  },
-  {
-    "spanish": "mover",
-    "italian": "muovere",
-    "meaning": "to move",
-    "irregular": true,
-    "conjugation": {
-      "yo": "muevo",
-      "tú": "mueves",
-      "él_ella": "mueve",
-      "nosotros": "movemos",
-      "vosotros": "movéis",
-      "ellos_ellas": "mueven"
-    }
   },
   {
     "spanish": "llevar",
-    "italian": "portare / indossare",
-    "meaning": "to carry/wear",
-    "irregular": false
-  },
-  {
-    "spanish": "traer",
     "italian": "portare",
-    "meaning": "to bring",
-    "irregular": true,
-    "conjugation": {
-      "yo": "traigo",
-      "tú": "traes",
-      "él_ella": "trae",
-      "nosotros": "traemos",
-      "vosotros": "traéis",
-      "ellos_ellas": "traen"
-    }
-  },
-  {
-    "spanish": "crear",
-    "italian": "creare",
-    "meaning": "to create",
+    "english": "to carry, to wear",
+    "meaning": "to carry, to wear",
     "irregular": false
   },
   {
-    "spanish": "construir",
-    "italian": "costruire",
-    "meaning": "to build",
-    "irregular": true,
-    "conjugation": {
-      "yo": "construyo",
-      "tú": "construyes",
-      "él_ella": "construye",
-      "nosotros": "construimos",
-      "vosotros": "construís",
-      "ellos_ellas": "construyen"
-    }
-  },
-  {
-    "spanish": "destruir",
-    "italian": "distruggere",
-    "meaning": "to destroy",
-    "irregular": true,
-    "conjugation": {
-      "yo": "destruyo",
-      "tú": "destruyes",
-      "él_ella": "destruye",
-      "nosotros": "destruimos",
-      "vosotros": "destruís",
-      "ellos_ellas": "destruyen"
-    }
-  },
-  {
-    "spanish": "romper",
-    "italian": "rompere",
-    "meaning": "to break",
-    "irregular": false
-  },
-  {
-    "spanish": "lavar",
-    "italian": "lavare",
-    "meaning": "to wash",
-    "irregular": false
-  },
-  {
-    "spanish": "bañar",
-    "italian": "fare il bagno",
-    "meaning": "to bathe",
-    "irregular": false
-  },
-  {
-    "spanish": "vestir",
-    "italian": "vestire",
-    "meaning": "to dress",
-    "irregular": true,
-    "conjugation": {
-      "yo": "visto",
-      "tú": "vistes",
-      "él_ella": "viste",
-      "nosotros": "vestimos",
-      "vosotros": "vestís",
-      "ellos_ellas": "visten"
-    }
-  },
-  {
-    "spanish": "peinar",
-    "italian": "pettinare",
-    "meaning": "to comb",
-    "irregular": false
-  },
-  {
-    "spanish": "maquillar",
-    "italian": "truccare",
-    "meaning": "to put on makeup",
-    "irregular": false
-  },
-  {
-    "spanish": "ayudar",
-    "italian": "aiutare",
-    "meaning": "to help",
-    "irregular": false
-  },
-  {
-    "spanish": "ofrecer",
-    "italian": "offrire",
-    "meaning": "to offer",
-    "irregular": true,
-    "conjugation": {
-      "yo": "ofrezco",
-      "tú": "ofreces",
-      "él_ella": "ofrece",
-      "nosotros": "ofrecemos",
-      "vosotros": "ofrecéis",
-      "ellos_ellas": "ofrecen"
-    }
-  },
-  {
-    "spanish": "recibir",
-    "italian": "ricevere",
-    "meaning": "to receive",
-    "irregular": false
-  },
-  {
-    "spanish": "invitar",
-    "italian": "invitare",
-    "meaning": "to invite",
-    "irregular": false
-  },
-  {
-    "spanish": "jugar",
-    "italian": "giocare",
-    "meaning": "to play",
-    "irregular": true,
-    "conjugation": {
-      "yo": "juego",
-      "tú": "juegas",
-      "él_ella": "juega",
-      "nosotros": "jugamos",
-      "vosotros": "jugáis",
-      "ellos_ellas": "juegan"
-    }
-  },
-  {
-    "spanish": "cantar",
-    "italian": "cantare",
-    "meaning": "to sing",
-    "irregular": false
-  },
-  {
-    "spanish": "bailar",
-    "italian": "ballare",
-    "meaning": "to dance",
-    "irregular": false
-  },
-  {
-    "spanish": "cocinar",
-    "italian": "cucinare",
-    "meaning": "to cook",
-    "irregular": false
-  },
-  {
-    "spanish": "pintar",
-    "italian": "dipingere",
-    "meaning": "to paint",
-    "irregular": false
-  },
-  {
-    "spanish": "dibujar",
-    "italian": "disegnare",
-    "meaning": "to draw",
-    "irregular": false
-  },
-  {
-    "spanish": "conducir",
-    "italian": "guidare",
-    "meaning": "to drive",
-    "irregular": true,
-    "conjugation": {
-      "yo": "conduzco",
-      "tú": "conduces",
-      "él_ella": "conduce",
-      "nosotros": "conducimos",
-      "vosotros": "conducís",
-      "ellos_ellas": "conducen"
-    }
-  },
-  {
-    "spanish": "viajar",
-    "italian": "viaggiare",
-    "meaning": "to travel",
-    "irregular": false
-  },
-  {
-    "spanish": "nadar",
-    "italian": "nuotare",
-    "meaning": "to swim",
-    "irregular": false
-  },
-  {
-    "spanish": "correr",
-    "italian": "correre",
-    "meaning": "to run",
-    "irregular": false
-  },
-  {
-    "spanish": "saltar",
-    "italian": "saltare",
-    "meaning": "to jump",
-    "irregular": false
-  },
-  {
-    "spanish": "mirar",
-    "italian": "guardare",
-    "meaning": "to look/watch",
+    "spanish": "dejar",
+    "italian": "lasciare",
+    "english": "to leave, to let",
+    "meaning": "to leave, to let",
     "irregular": false
   },
   {
     "spanish": "seguir",
     "italian": "seguire",
-    "meaning": "to follow",
+    "english": "to follow, to continue",
+    "meaning": "to follow, to continue",
     "irregular": true,
     "conjugation": {
-      "yo": "sigo",
-      "tú": "sigues",
-      "él_ella": "sigue",
-      "nosotros": "seguimos",
-      "vosotros": "seguís",
-      "ellos_ellas": "siguen"
+      "spanish": {
+        "yo": "sigo",
+        "tú": "sigues",
+        "él/ella": "sigue",
+        "nosotros": "seguimos",
+        "vosotros": "seguís",
+        "ellos/ellas": "siguen"
+      },
+      "italian": {
+        "io": "seguo",
+        "tu": "segui",
+        "lui/lei": "segue",
+        "noi": "seguiamo",
+        "voi": "seguite",
+        "loro": "seguono"
+      },
+      "english": {
+        "I": "follow",
+        "you": "follow",
+        "he/she": "follows",
+        "we": "follow",
+        "you(pl.)": "follow",
+        "they": "follow"
+      }
     }
   },
   {
-    "spanish": "soñar",
-    "italian": "sognare",
-    "meaning": "to dream",
-    "irregular": true,
-    "conjugation": {
-      "yo": "sueño",
-      "tú": "sueñas",
-      "él_ella": "sueña",
-      "nosotros": "soñamos",
-      "vosotros": "soñáis",
-      "ellos_ellas": "sueñan"
-    }
-  },
-  {
-    "spanish": "intentar",
-    "italian": "tentare / provare",
-    "meaning": "to try",
+    "spanish": "encontrar",
+    "italian": "trovare",
+    "english": "to find",
+    "meaning": "to find",
     "irregular": false
   },
   {
-    "spanish": "conseguir",
-    "italian": "ottenere / riuscire",
-    "meaning": "to get/achieve",
+    "spanish": "llamar",
+    "italian": "chiamare",
+    "english": "to call",
+    "meaning": "to call",
+    "irregular": false
+  },
+  {
+    "spanish": "venir",
+    "italian": "venire",
+    "english": "to come",
+    "meaning": "to come",
     "irregular": true,
     "conjugation": {
-      "yo": "consigo",
-      "tú": "consigues",
-      "él_ella": "consigue",
-      "nosotros": "conseguimos",
-      "vosotros": "conseguís",
-      "ellos_ellas": "consiguen"
+      "spanish": {
+        "yo": "vengo",
+        "tú": "vienes",
+        "él/ella": "viene",
+        "nosotros": "venimos",
+        "vosotros": "venís",
+        "ellos/ellas": "vienen"
+      },
+      "italian": {
+        "io": "vengo",
+        "tu": "vieni",
+        "lui/lei": "viene",
+        "noi": "veniamo",
+        "voi": "venite",
+        "loro": "vengono"
+      },
+      "english": {
+        "I": "come",
+        "you": "come",
+        "he/she": "comes",
+        "we": "come",
+        "you(pl.)": "come",
+        "they": "come"
+      }
     }
+  },
+  {
+    "spanish": "pensar",
+    "italian": "pensare",
+    "english": "to think",
+    "meaning": "to think",
+    "irregular": true,
+    "conjugation": {
+      "spanish": {
+        "yo": "pienso",
+        "tú": "piensas",
+        "él/ella": "piensa",
+        "nosotros": "pensamos",
+        "vosotros": "pensáis",
+        "ellos/ellas": "piensan"
+      },
+      "italian": {
+        "io": "penso",
+        "tu": "pensi",
+        "lui/lei": "pensa",
+        "noi": "pensiamo",
+        "voi": "pensate",
+        "loro": "pensano"
+      },
+      "english": {
+        "I": "think",
+        "you": "think",
+        "he/she": "thinks",
+        "we": "think",
+        "you(pl.)": "think",
+        "they": "think"
+      }
+    }
+  },
+  {
+    "spanish": "salir",
+    "italian": "uscire",
+    "english": "to leave, to go out",
+    "meaning": "to leave, to go out",
+    "irregular": true,
+    "conjugation": {
+      "spanish": {
+        "yo": "salgo",
+        "tú": "sales",
+        "él/ella": "sale",
+        "nosotros": "salimos",
+        "vosotros": "salís",
+        "ellos/ellas": "salen"
+      },
+      "italian": {
+        "io": "esco",
+        "tu": "esci",
+        "lui/lei": "esce",
+        "noi": "usciamo",
+        "voi": "uscite",
+        "loro": "escono"
+      },
+      "english": {
+        "I": "leave",
+        "you": "leave",
+        "he/she": "leaves",
+        "we": "leave",
+        "you(pl.)": "leave",
+        "they": "leave"
+      }
+    }
+  },
+  {
+    "spanish": "volver",
+    "italian": "tornare",
+    "english": "to return",
+    "meaning": "to return",
+    "irregular": true,
+    "conjugation": {
+      "spanish": {
+        "yo": "vuelvo",
+        "tú": "vuelves",
+        "él/ella": "vuelve",
+        "nosotros": "volvemos",
+        "vosotros": "volvéis",
+        "ellos/ellas": "vuelven"
+      },
+      "italian": {
+        "io": "torno",
+        "tu": "torni",
+        "lui/lei": "torna",
+        "noi": "torniamo",
+        "voi": "tornate",
+        "loro": "tornano"
+      },
+      "english": {
+        "I": "return",
+        "you": "return",
+        "he/she": "returns",
+        "we": "return",
+        "you(pl.)": "return",
+        "they": "return"
+      }
+    }
+  },
+  {
+    "spanish": "tomar",
+    "italian": "prendere",
+    "english": "to take",
+    "meaning": "to take",
+    "irregular": false
+  },
+  {
+    "spanish": "conocer",
+    "italian": "conoscere",
+    "english": "to know (be familiar with)",
+    "meaning": "to know (be familiar with)",
+    "irregular": true,
+    "conjugation": {
+      "spanish": {
+        "yo": "conozco",
+        "tú": "conoces",
+        "él/ella": "conoce",
+        "nosotros": "conocemos",
+        "vosotros": "conocéis",
+        "ellos/ellas": "conocen"
+      },
+      "italian": {
+        "io": "conosco",
+        "tu": "conosci",
+        "lui/lei": "conosce",
+        "noi": "conosciamo",
+        "voi": "conoscete",
+        "loro": "conoscono"
+      },
+      "english": {
+        "I": "know",
+        "you": "know",
+        "he/she": "knows",
+        "we": "know",
+        "you(pl.)": "know",
+        "they": "know"
+      }
+    }
+  },
+  {
+    "spanish": "vivir",
+    "italian": "vivere",
+    "english": "to live",
+    "meaning": "to live",
+    "irregular": false
+  },
+  {
+    "spanish": "sentir",
+    "italian": "sentire",
+    "english": "to feel",
+    "meaning": "to feel",
+    "irregular": true,
+    "conjugation": {
+      "spanish": {
+        "yo": "siento",
+        "tú": "sientes",
+        "él/ella": "siente",
+        "nosotros": "sentimos",
+        "vosotros": "sentís",
+        "ellos/ellas": "sienten"
+      },
+      "italian": {
+        "io": "sento",
+        "tu": "senti",
+        "lui/lei": "sente",
+        "noi": "sentiamo",
+        "voi": "sentite",
+        "loro": "sentono"
+      },
+      "english": {
+        "I": "feel",
+        "you": "feel",
+        "he/she": "feels",
+        "we": "feel",
+        "you(pl.)": "feel",
+        "they": "feel"
+      }
+    }
+  },
+  {
+    "spanish": "tratar",
+    "italian": "trattare",
+    "english": "to try, to treat",
+    "meaning": "to try, to treat",
+    "irregular": false
+  },
+  {
+    "spanish": "mirar",
+    "italian": "guardare",
+    "english": "to look at",
+    "meaning": "to look at",
+    "irregular": false
+  },
+  {
+    "spanish": "contar",
+    "italian": "contare",
+    "english": "to count, to tell",
+    "meaning": "to count, to tell",
+    "irregular": false
+  },
+  {
+    "spanish": "empezar",
+    "italian": "cominciare",
+    "english": "to begin",
+    "meaning": "to begin",
+    "irregular": true,
+    "conjugation": {
+      "spanish": {
+        "yo": "empiezo",
+        "tú": "empiezas",
+        "él/ella": "empieza",
+        "nosotros": "empezamos",
+        "vosotros": "empezáis",
+        "ellos/ellas": "empiezan"
+      },
+      "italian": {
+        "io": "comincio",
+        "tu": "cominci",
+        "lui/lei": "comincia",
+        "noi": "cominciamo",
+        "voi": "cominciate",
+        "loro": "cominciano"
+      },
+      "english": {
+        "I": "begin",
+        "you": "begin",
+        "he/she": "begins",
+        "we": "begin",
+        "you(pl.)": "begin",
+        "they": "begin"
+      }
+    }
+  },
+  {
+    "spanish": "esperar",
+    "italian": "aspettare",
+    "english": "to wait, to hope",
+    "meaning": "to wait, to hope",
+    "irregular": false
+  },
+  {
+    "spanish": "buscar",
+    "italian": "cercare",
+    "english": "to search, to look for",
+    "meaning": "to search, to look for",
+    "irregular": false
+  },
+  {
+    "spanish": "existir",
+    "italian": "esistere",
+    "english": "to exist",
+    "meaning": "to exist",
+    "irregular": false
+  },
+  {
+    "spanish": "entrar",
+    "italian": "entrare",
+    "english": "to enter",
+    "meaning": "to enter",
+    "irregular": false
   }
 ]
