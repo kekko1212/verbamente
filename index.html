@@ -49,6 +49,14 @@
       justify-content: center;
     }
 
+    .material-icons {
+      overflow-y: hidden;
+    }
+
+    .material-icons-red {
+      color: red;
+    }
+
     .card-back {
       transform: rotateY(180deg);
     }
@@ -384,7 +392,7 @@
               className="nav-button p-3 rounded-full text-white shadow-lg hover:shadow-xl"
               onClick={() => setShowStats(prev => !prev)}>
               {showStats ? (
-                <span className="material-icons">close</span>
+                <span className="material-icons material-icons-red">close</span>
               ) : (
                 <span className="material-icons">bar_chart</span>
               )}
