@@ -218,7 +218,7 @@
       const [langPair, setLangPair] = useState({ from: "italian", to: "spanish" });
       const [currentIndex, setCurrentIndex] = useState(0);
       const [isFlipped, setIsFlipped] = useState(false);
-      const [scores, setScores] = useState(() => JSON.parse(localStorage.getItem('verbeMenteScores') || '{}'));
+      const [scores, setScores] = useState(() => JSON.parse(localStorage.getItem('verbaMenteScores') || '{}'));
       const [showStats, setShowStats] = useState(false);
       const [showPlaceholder, setShowPlaceholder] = useState(false);
 
@@ -284,7 +284,7 @@
           }
         };
         setScores(newScores);
-        localStorage.setItem('verbeMenteScores', JSON.stringify(newScores));
+        localStorage.setItem('verbaMenteScores', JSON.stringify(newScores));
 
         setIsFlipped(false);
         setShowPlaceholder(true);
@@ -337,7 +337,7 @@
       return (
         <div className="container mx-auto px-4 py-8 w-1/4">
           <div className="text-center mb-8">
-            <h1 className="text-6xl font-bold mb-3 text-indigo-400">VerbeMente</h1>
+            <h1 className="text-6xl font-bold mb-3 text-indigo-400">VerbaMente</h1>
             <p className="text-gray-400 text-lg mb-4">VerbaMente - Italian ↔️ Spanish ↔️ English</p>
             <div className="mb-4 w-3/4 custom-select">
               <label className="mr-2 text-lg font-medium">Language Pair:</label>
@@ -469,7 +469,7 @@
             <button
               onClick={() => {
                 if (window.confirm('Are you sure you want to reset all progress?')) {
-                  localStorage.removeItem('verbeMenteScores');
+                  localStorage.removeItem('verbaMenteScores');
                   window.location.reload();
                 }
               }}
@@ -499,7 +499,7 @@
       };
 
       useEffect(() => {
-        const scores = JSON.parse(localStorage.getItem('verbeMenteScores') || '{}');
+        const scores = JSON.parse(localStorage.getItem('verbaMenteScores') || '{}');
         const ratedVerbs = new Set(Object.keys(scores));
         const categorized = Object.entries(scores).reduce((acc, [verb, data]) => {
           const category =
