@@ -5,10 +5,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>VerbeMente - Italian to Spanish</title>
+  <!-- Load Material Icons from Google -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
   <style>
     body {
       background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
@@ -52,7 +54,6 @@
       transform: rotateY(180deg);
     }
 
-    /* New style for the placeholder card */
     .card-placeholder {
       width: 100%;
       height: 100%;
@@ -140,30 +141,6 @@
       border-top: 2px solid #818cf8;
       z-index: 0;
     }
-
-    .stats-category {
-      margin-bottom: 1.5rem;
-    }
-
-    .stats-item {
-      display: flex;
-      justify-content: space-between;
-      padding: 0.25rem 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .stats-header {
-      color: #818cf8;
-      font-weight: bold;
-      margin-bottom: 0.5rem;
-    }
-
-    .toggle-stats {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      z-index: 1001;
-    }
   </style>
 </head>
 
@@ -183,7 +160,6 @@
       const [isFlipped, setIsFlipped] = useState(false);
       const [scores, setScores] = useState(() => JSON.parse(localStorage.getItem('verbeMenteScores') || '{}'));
       const [showStats, setShowStats] = useState(false);
-      // New state to control the placeholder display during transitions
       const [showPlaceholder, setShowPlaceholder] = useState(false);
 
       const [sessionCards, setSessionCards] = useState(() => {
@@ -202,7 +178,6 @@
           .slice(0, 10);
       });
 
-      // SM2 algorithm remains unchanged
       const SM2 = (card, score) => {
         const now = new Date();
         let { ease, interval, repetitions } = card;
@@ -220,7 +195,7 @@
           interval = 1;
           ease = Math.max(1.3, ease - 0.2);
         }
-        const nextReview = new Date(now.getTime() + interval * 86400000); // Days to ms
+        const nextReview = new Date(now.getTime() + interval * 86400000);
         return {
           ease: Number(ease.toFixed(2)),
           interval,
@@ -230,7 +205,6 @@
         };
       };
 
-      // Modified grading function that uses a placeholder during transition.
       const handleScore = (score) => {
         const currentCard = sessionCards[currentIndex];
         const cardId = currentCard.spanish;
@@ -252,17 +226,14 @@
         setScores(newScores);
         localStorage.setItem('verbeMenteScores', JSON.stringify(newScores));
 
-        // Reset flip and show placeholder before moving to the next card
         setIsFlipped(false);
         setShowPlaceholder(true);
-        // Delay (800ms) to match the flip animation duration before switching cards
         setTimeout(() => {
           setCurrentIndex(prev => (prev + 1) % sessionCards.length);
           setShowPlaceholder(false);
         }, 800);
       };
 
-      // Key press handling remains – space bar toggles flip
       useEffect(() => {
         const handleKeyPress = (e) => {
           if (e.key === 'ArrowRight') {
@@ -278,7 +249,6 @@
         return () => window.removeEventListener('keydown', handleKeyPress);
       }, [sessionCards.length]);
 
-      // Recalculate sessionCards when scores change
       useEffect(() => {
         const now = new Date();
         const updatedSessionCards = cardsData
@@ -323,10 +293,8 @@
             </button>
           </div>
 
-          {/* Card container */}
           <div className="max-w-2xl mx-auto card-3d" onClick={() => setIsFlipped(!isFlipped)}>
             {showPlaceholder ? (
-              // Render the generic blurred placeholder during transition
               <div className="card-placeholder h-full flex items-center justify-center">
                 <div className="text-center filter blur-sm">
                   <h2 className="text-6xl font-bold mb-6 text-indigo-400">Card</h2>
@@ -334,7 +302,6 @@
                 </div>
               </div>
             ) : (
-              // Render the actual flipping card when not transitioning
               <div className={`card-inner h-full ${isFlipped ? 'flipped' : ''}`}>
                 <div className="card-face p-8">
                   <div className="text-center">
@@ -413,15 +380,16 @@
               </div>
             )}
           </div>
-          <div
-            className="fixed top-4 right-4 flex items-center space-x-2"
-            style={{ zIndex: 1100 }}
-          >
+          <!-- Container for the toggle stats and reset buttons with a high z-index -->
+          <div className="fixed top-4 right-4 flex items-center space-x-2" style={{ zIndex: 1100 }}>
             <button
               className="nav-button p-3 rounded-full text-white shadow-lg hover:shadow-xl"
-              onClick={() => setShowStats(prev => !prev)}
-            >
-              {showStats ? '❌' : '📊'}
+              onClick={() => setShowStats(prev => !prev)}>
+              {showStats ? (
+                <span className="material-icons">close</span>
+              ) : (
+                <span className="material-icons">bar_chart</span>
+              )}
             </button>
             <button
               onClick={() => {
@@ -430,8 +398,7 @@
                   window.location.reload();
                 }
               }}
-              className="nav-button p-3 rounded-full text-white shadow-lg hover:shadow-xl"
-            >
+              className="nav-button p-3 rounded-full text-white shadow-lg hover:shadow-xl">
               Reset All Progress
             </button>
           </div>
@@ -452,14 +419,11 @@
       useEffect(() => {
         const scores = JSON.parse(localStorage.getItem('verbeMenteScores') || '{}');
         const ratedVerbs = new Set(Object.keys(scores));
-
-        // Categorize rated verbs
         const categorized = Object.entries(scores).reduce((acc, [verb, data]) => {
           const category =
             data.score === 1 ? 'again' :
-              data.score === 2 ? 'hard' :
-                data.score === 3 ? 'good' : 'easy';
-
+            data.score === 2 ? 'hard' :
+            data.score === 3 ? 'good' : 'easy';
           const verbData = cardsData.find(c => c.spanish === verb);
           if (verbData) {
             acc[category].push({
@@ -470,13 +434,8 @@
           return acc;
         }, { again: [], hard: [], good: [], easy: [] });
 
-        // Find unrated verbs
         const unrated = cardsData.filter(c => !ratedVerbs.has(c.spanish));
-
-        setStats({
-          ...categorized,
-          unrated
-        });
+        setStats({ ...categorized, unrated });
       }, [cardsData]);
 
       return (
@@ -490,14 +449,11 @@
                 {stats[category].map(verb => (
                   <div key={verb.spanish} className="stats-item">
                     <span>{verb.italian}</span>
-                    <span className="text-indigo-400">
-                      {verb.timesReviewed}x
-                    </span>
+                    <span className="text-indigo-400">{verb.timesReviewed}x</span>
                   </div>
                 ))}
               </div>
             ))}
-
             <div className="stats-category">
               <div className="stats-header">
                 Unrated ({stats.unrated.length})
@@ -505,9 +461,7 @@
               {stats.unrated.map(verb => (
                 <div key={verb.spanish} className="stats-item">
                   <span>{verb.italian}</span>
-                  <span className="text-gray-400">
-                    {verb.spanish}
-                  </span>
+                  <span className="text-gray-400">{verb.spanish}</span>
                 </div>
               ))}
             </div>
