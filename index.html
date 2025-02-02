@@ -413,10 +413,14 @@
               </div>
             )}
           </div>
-          <div className="fixed top-4 right-4 flex items-center space-x-2">
+          <div
+            className="fixed top-4 right-4 flex items-center space-x-2"
+            style={{ zIndex: 1100 }}
+          >
             <button
-              className="toggle-stats nav-button p-3 rounded-full text-white shadow-lg hover:shadow-xl"
-              onClick={() => setShowStats(prev => !prev)}>
+              className="nav-button p-3 rounded-full text-white shadow-lg hover:shadow-xl"
+              onClick={() => setShowStats(prev => !prev)}
+            >
               {showStats ? '❌' : '📊'}
             </button>
             <button
@@ -426,7 +430,8 @@
                   window.location.reload();
                 }
               }}
-              className="nav-button p-3 rounded-full text-white shadow-lg hover:shadow-xl">
+              className="nav-button p-3 rounded-full text-white shadow-lg hover:shadow-xl"
+            >
               Reset All Progress
             </button>
           </div>
