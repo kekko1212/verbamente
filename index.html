@@ -280,7 +280,7 @@
       const [sessionCards, setSessionCards] = useState([]);
       const [isLoading, setIsLoading] = useState(true);
 
-      // Initialize session cards
+      // Initialize session cards - only on initial mount, not when scores change
       useEffect(() => {
         const now = new Date();
         const updatedSessionCards = cardsData
@@ -298,7 +298,8 @@
         
         setSessionCards(updatedSessionCards);
         setIsLoading(false);
-      }, [scores, cardsData]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, [/* Only run on mount, remove dependency on scores */]);
 
       const SM2 = (card, score) => {
         const now = new Date();
@@ -328,7 +329,7 @@
       };
 
       const handleScore = useCallback((score) => {
-        if (sessionCards.length === 0) return;
+        if (sessionCards.length === 0 || currentIndex >= sessionCards.length) return;
         
         const currentCard = sessionCards[currentIndex];
         const cardId = currentCard.spanish;
@@ -339,6 +340,7 @@
           repetitions: currentData.repetitions
         }, score);
         
+        // Update scores in localStorage without affecting the current session cards
         setScores(prevScores => {
           const newScores = {
             ...prevScores,
@@ -364,10 +366,8 @@
         setShowPlaceholder(true);
         
         setTimeout(() => {
-          setCurrentIndex(prev => {
-            if (sessionCards.length === 0) return 0;
-            return (prev + 1) % sessionCards.length;
-          });
+          // Always move to the next card in sequence, don't reorder
+          setCurrentIndex(prev => prev + 1);
           setShowPlaceholder(false);
         }, 800);
       }, [sessionCards, currentIndex, scores]);
@@ -402,6 +402,9 @@
             setCurrentIndex(0);
             setIsFlipped(false);
             setShowPlaceholder(false);
+            
+            // Reload the page to completely reset the session
+            window.location.reload();
           } catch (e) {
             console.error('Error resetting progress:', e);
           }
@@ -428,6 +431,14 @@
         window.addEventListener('keydown', handleKeyPress);
         return () => window.removeEventListener('keydown', handleKeyPress);
       }, [goToNextCard, goToPrevCard, toggleCardFlip, handleScore, isFlipped, sessionCards.length]);
+
+      // Create a new session when all cards have been reviewed
+      useEffect(() => {
+        if (!isLoading && sessionCards.length > 0 && currentIndex >= sessionCards.length) {
+          // Session is complete, start a new session or reset index
+          setCurrentIndex(0);
+        }
+      }, [currentIndex, sessionCards.length, isLoading]);
 
       // Safe access to current card
       const currentCard = sessionCards.length > 0 && currentIndex < sessionCards.length
