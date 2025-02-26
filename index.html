@@ -155,7 +155,7 @@
       max-height: 50vh;
       overflow-y: auto;
       border-top: 2px solid #818cf8;
-      z-index: 0;
+      z-index: 100;
     }
 
     .custom-select::before,
@@ -200,34 +200,93 @@
       border-radius: 0.25rem;
       cursor: pointer;
     }
+
+    @media (max-width: 768px) {
+      .custom-select {
+        min-width: auto;
+        width: 100%;
+      }
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 2rem;
+      color: #818cf8;
+    }
   </style>
 </head>
 
 <body>
   <div id="root"></div>
   <script type="text/babel">
-    fetch('cards_data.json')
-      .then(response => response.json())
-      .then(data => {
-        ReactDOM.render(<App cardsData={data} />, document.getElementById('root'));
-      })
-      .catch(error => console.error('Error loading words:', error));
+    // Fetch cards data with error handling
+    const fetchCardsData = async () => {
+      try {
+        const response = await fetch('cards_data.json');
+        if (!response.ok) {
+          throw new Error(`Failed to fetch cards data: ${response.status}`);
+        }
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.error('Error loading words:', error);
+        return [];
+      }
+    };
 
-    const { useState, useEffect } = React;
+    // Render app once data is fetched
+    fetchCardsData()
+      .then(data => {
+        if (data && data.length > 0) {
+          ReactDOM.render(<App cardsData={data} />, document.getElementById('root'));
+        } else {
+          ReactDOM.render(<ErrorState />, document.getElementById('root'));
+        }
+      });
+
+    const ErrorState = () => (
+      <div className="container mx-auto px-4 py-8">
+        <div className="text-center">
+          <h1 className="text-6xl font-bold mb-3 text-indigo-400">VerbaMente</h1>
+          <p className="text-xl text-red-500 mt-8">
+            Failed to load flashcards data. Please check your connection and try again.
+          </p>
+          <button 
+            onClick={() => window.location.reload()}
+            className="mt-4 px-6 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg font-medium shadow-md"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+
+    const { useState, useEffect, useCallback } = React;
+
     function App({ cardsData }) {
       const [langPair, setLangPair] = useState({ from: "italian", to: "spanish" });
       const [currentIndex, setCurrentIndex] = useState(0);
       const [isFlipped, setIsFlipped] = useState(false);
-      const [scores, setScores] = useState(() => JSON.parse(localStorage.getItem('verbaMenteScores') || '{}'));
+      const [scores, setScores] = useState(() => {
+        try {
+          return JSON.parse(localStorage.getItem('verbaMenteScores') || '{}');
+        } catch (e) {
+          console.error('Error parsing scores from localStorage:', e);
+          return {};
+        }
+      });
       const [showStats, setShowStats] = useState(false);
       const [showPlaceholder, setShowPlaceholder] = useState(false);
+      const [sessionCards, setSessionCards] = useState([]);
+      const [isLoading, setIsLoading] = useState(true);
 
-      const [sessionCards, setSessionCards] = useState(() => {
+      // Initialize session cards
+      useEffect(() => {
         const now = new Date();
-        return cardsData
+        const updatedSessionCards = cardsData
           .sort((a, b) => {
-            const aScore = scores[a.spanish] || { nextReview: new Date(0) };
-            const bScore = scores[b.spanish] || { nextReview: new Date(0) };
+            const aScore = scores[a.spanish] || { nextReview: new Date(0).toISOString() };
+            const bScore = scores[b.spanish] || { nextReview: new Date(0).toISOString() };
             return new Date(aScore.nextReview) - new Date(bScore.nextReview);
           })
           .filter(c => {
@@ -235,8 +294,11 @@
             if (!cardData) return true;
             return new Date(cardData.nextReview) <= now;
           })
-          .slice(0, 10);
-      });
+          .slice(0, 20);
+        
+        setSessionCards(updatedSessionCards);
+        setIsLoading(false);
+      }, [scores, cardsData]);
 
       const SM2 = (card, score) => {
         const now = new Date();
@@ -265,7 +327,9 @@
         };
       };
 
-      const handleScore = (score) => {
+      const handleScore = useCallback((score) => {
+        if (sessionCards.length === 0) return;
+        
         const currentCard = sessionCards[currentIndex];
         const cardId = currentCard.spanish;
         const currentData = scores[cardId] || {};
@@ -274,74 +338,128 @@
           interval: currentData.interval,
           repetitions: currentData.repetitions
         }, score);
-        const newScores = {
-          ...scores,
-          [cardId]: {
-            ...currentData,
-            ...srsData,
-            score,
-            timesReviewed: (currentData.timesReviewed || 0) + 1
+        
+        setScores(prevScores => {
+          const newScores = {
+            ...prevScores,
+            [cardId]: {
+              ...currentData,
+              ...srsData,
+              score,
+              timesReviewed: (currentData.timesReviewed || 0) + 1
+            }
+          };
+          
+          // Save to localStorage
+          try {
+            localStorage.setItem('verbaMenteScores', JSON.stringify(newScores));
+          } catch (e) {
+            console.error('Error saving to localStorage:', e);
           }
-        };
-        setScores(newScores);
-        localStorage.setItem('verbaMenteScores', JSON.stringify(newScores));
+          
+          return newScores;
+        });
 
         setIsFlipped(false);
         setShowPlaceholder(true);
+        
         setTimeout(() => {
-          setCurrentIndex(prev => (prev + 1) % sessionCards.length);
+          setCurrentIndex(prev => {
+            if (sessionCards.length === 0) return 0;
+            return (prev + 1) % sessionCards.length;
+          });
           setShowPlaceholder(false);
         }, 800);
-      };
+      }, [sessionCards, currentIndex, scores]);
 
       const handleLangPairChange = (e) => {
         const [from, to] = e.target.value.split("_");
         setLangPair({ from, to });
       };
 
+      const goToNextCard = useCallback(() => {
+        if (sessionCards.length === 0) return;
+        setIsFlipped(false);
+        setCurrentIndex(prev => (prev + 1) % sessionCards.length);
+      }, [sessionCards]);
+
+      const goToPrevCard = useCallback(() => {
+        if (sessionCards.length === 0) return;
+        setIsFlipped(false);
+        setCurrentIndex(prev => (prev - 1 + sessionCards.length) % sessionCards.length);
+      }, [sessionCards]);
+
+      const toggleCardFlip = useCallback(() => {
+        if (sessionCards.length === 0) return;
+        setIsFlipped(prev => !prev);
+      }, [sessionCards]);
+
+      const resetProgress = useCallback(() => {
+        if (window.confirm('Are you sure you want to reset all progress?')) {
+          try {
+            localStorage.removeItem('verbaMenteScores');
+            setScores({});
+            setCurrentIndex(0);
+            setIsFlipped(false);
+            setShowPlaceholder(false);
+          } catch (e) {
+            console.error('Error resetting progress:', e);
+          }
+        }
+      }, []);
+
       useEffect(() => {
         const handleKeyPress = (e) => {
-          if (e.key === 'ArrowRight') {
-            setCurrentIndex(prev => (prev + 1) % sessionCards.length);
-          } else if (e.key === 'ArrowLeft') {
-            setCurrentIndex(prev => (prev - 1 + sessionCards.length) % sessionCards.length);
-          } else if (e.key === ' ') {
+          if (e.key === 'ArrowRight' && sessionCards.length > 0) {
             e.preventDefault();
-            setIsFlipped(prev => !prev);
+            goToNextCard();
+          } else if (e.key === 'ArrowLeft' && sessionCards.length > 0) {
+            e.preventDefault();
+            goToPrevCard();
+          } else if (e.key === ' ' && sessionCards.length > 0) {
+            e.preventDefault();
+            toggleCardFlip();
+          } else if (e.key >= '1' && e.key <= '4' && isFlipped && sessionCards.length > 0) {
+            // Score with number keys 1-4
+            handleScore(parseInt(e.key));
           }
         };
+        
         window.addEventListener('keydown', handleKeyPress);
         return () => window.removeEventListener('keydown', handleKeyPress);
-      }, [sessionCards.length]);
+      }, [goToNextCard, goToPrevCard, toggleCardFlip, handleScore, isFlipped, sessionCards.length]);
 
-      useEffect(() => {
-        const now = new Date();
-        const updatedSessionCards = cardsData
-          .sort((a, b) => {
-            const aScore = scores[a.spanish] || { nextReview: new Date(0) };
-            const bScore = scores[b.spanish] || { nextReview: new Date(0) };
-            return new Date(aScore.nextReview) - new Date(bScore.nextReview);
-          })
-          .filter(c => {
-            const cardData = scores[c.spanish];
-            if (!cardData) return true;
-            return new Date(cardData.nextReview) <= now;
-          })
-          .slice(0, 20);
-        setSessionCards(updatedSessionCards);
-      }, [scores, cardsData]);
+      // Safe access to current card
+      const currentCard = sessionCards.length > 0 && currentIndex < sessionCards.length
+        ? sessionCards[currentIndex]
+        : null;
+      
+      const progress = sessionCards.length > 0
+        ? ((currentIndex + 1) / sessionCards.length) * 100
+        : 0;
 
-      const currentCard = sessionCards[currentIndex];
-      const progress = ((currentIndex + 1) / sessionCards.length) * 100;
+      if (isLoading) {
+        return (
+          <div className="container mx-auto px-4 py-8">
+            <div className="text-center">
+              <h1 className="text-6xl font-bold mb-3 text-indigo-400">VerbaMente</h1>
+              <p className="text-gray-400 text-lg mb-4">Loading flashcards...</p>
+            </div>
+          </div>
+        );
+      }
 
       return (
-        <div className="container mx-auto px-4 py-8 w-1/4">
+        <div className="container mx-auto px-4 py-8 md:w-3/4 lg:w-2/3 xl:w-1/2 2xl:w-1/3">
           <div className="text-center mb-8">
             <h1 className="text-6xl font-bold mb-3 text-indigo-400">VerbaMente</h1>
-            <p className="text-gray-400 text-lg mb-4">VerbaMente - Italian ↔️ Spanish ↔️ English</p>
-            <div className="mb-4 w-3/4 custom-select">
-              <label className="mr-2 text-lg font-medium">Language Pair:</label>
-              <select value={`${langPair.from}_${langPair.to}`} onChange={handleLangPairChange} className="text-indigo-400">
+            <p className="text-gray-400 text-lg mb-4">Italian ↔️ Spanish ↔️ English</p>
+            <div className="mb-4 custom-select mx-auto w-full max-w-md">
+              <select 
+                value={`${langPair.from}_${langPair.to}`} 
+                onChange={handleLangPairChange} 
+                className="text-indigo-400 w-full"
+              >
                 <option value="italian_spanish">Italian → Spanish</option>
                 <option value="english_spanish">English → Spanish</option>
                 <option value="spanish_english">Spanish → English</option>
@@ -353,110 +471,145 @@
             <div className="progress-bar">
               <div className="progress-fill" style={{ width: `${progress}%` }}></div>
             </div>
-            <p className="session-info">Card {currentIndex + 1} of {sessionCards.length}</p>
-          </div>
-
-          <div className="flex justify-center gap-6 mb-8">
-            <button
-              onClick={() => setCurrentIndex(prev => (prev - 1 + sessionCards.length) % sessionCards.length)}
-              className="nav-button p-4 rounded-full text-white shadow-lg hover:shadow-xl text-2xl">
-              ←
-            </button>
-            <button
-              onClick={() => setCurrentIndex(prev => (prev + 1) % sessionCards.length)}
-              className="nav-button p-4 rounded-full text-white shadow-lg hover:shadow-xl text-2xl">
-              →
-            </button>
-          </div>
-
-          <div className="max-w-2xl mx-auto card-3d" onClick={() => setIsFlipped(!isFlipped)}>
-            {showPlaceholder ? (
-              <div className="card-placeholder h-full flex items-center justify-center">
-                <div className="text-center filter blur-sm">
-                  <h2 className="text-6xl font-bold mb-6 text-indigo-400">Card</h2>
-                  <p className="text-gray-400">Loading...</p>
-                </div>
-              </div>
+            {sessionCards.length > 0 ? (
+              <p className="session-info">Card {currentIndex + 1} of {sessionCards.length}</p>
             ) : (
-              <div className={`card-inner h-full ${isFlipped ? 'flipped' : ''}`}>
-                <div className="card-face p-8">
-                  <div className="text-center">
-                    {/* Use the "from" language field */}
-                    <h2 className="text-6xl font-bold mb-6 text-indigo-400">{currentCard && currentCard[langPair.from]}</h2>
-                    <p className="text-gray-400">Click to reveal {langPair.to.charAt(0).toUpperCase() + langPair.to.slice(1)} translation</p>
-                  </div>
-                </div>
-
-                <div className="card-face card-back p-8">
-                  <div className="text-center">
-                    {/* Use the "to" language field */}
-                    <h2 className="text-4xl font-bold mb-2 text-indigo-400">{currentCard && currentCard[langPair.to]}</h2>
-                    {/* Optionally, you can still display a meaning field if desired:
-                        <p className="text-xl text-gray-300 mb-4">{currentCard.meaning}</p>
-                    */}
-                    {currentCard && currentCard.irregular && currentCard.conjugation && currentCard.conjugation[langPair.to] && (
-                      <div className="conjugation-table">
-                        <div className="flex justify-center mb-4">
-                          <span className="px-4 py-1 bg-red-500 text-white text-sm rounded-full font-medium">
-                            Irregular Verb
-                          </span>
-                        </div>
-                        {(() => {
-                          const entries = Object.entries(currentCard.conjugation[langPair.to]);
-                          const mid = Math.ceil(entries.length / 2);
-                          const left = entries.slice(0, mid);
-                          const right = entries.slice(mid);
-                          return (
-                            <div className="grid grid-cols-2 gap-8">
-                              <div>
-                                {left.map(([subject, form]) => (
-                                  <div key={subject} className="conjugation-row">
-                                    <span className="subject">{subject}</span>
-                                    <span className="conjugation">{form}</span>
-                                  </div>
-                                ))}
-                              </div>
-                              <div>
-                                {right.map(([subject, form]) => (
-                                  <div key={subject} className="conjugation-row">
-                                    <span className="subject">{subject}</span>
-                                    <span className="conjugation">{form}</span>
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          );
-                        })()}
-                      </div>
-                    )}
-                    <div className="flex gap-3 mt-6 justify-center">
-                      <button
-                        onClick={(e) => { e.stopPropagation(); handleScore(1); }}
-                        className="score-button px-6 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium shadow-md">
-                        Again
-                      </button>
-                      <button
-                        onClick={(e) => { e.stopPropagation(); handleScore(2); }}
-                        className="score-button px-6 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg font-medium shadow-md">
-                        Hard
-                      </button>
-                      <button
-                        onClick={(e) => { e.stopPropagation(); handleScore(3); }}
-                        className="score-button px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-medium shadow-md">
-                        Good
-                      </button>
-                      <button
-                        onClick={(e) => { e.stopPropagation(); handleScore(4); }}
-                        className="score-button px-6 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg font-medium shadow-md">
-                        Easy
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <p className="session-info">No cards due for review! 🎉</p>
             )}
           </div>
-          <div className="fixed top-4 right-4 flex items-center space-x-2" style={{ zIndex: 1100 }}>
+
+          {sessionCards.length > 0 ? (
+            <>
+              <div className="flex justify-center gap-6 mb-8">
+                <button
+                  onClick={goToPrevCard}
+                  className="nav-button p-4 rounded-full text-white shadow-lg hover:shadow-xl text-2xl">
+                  ←
+                </button>
+                <button
+                  onClick={goToNextCard}
+                  className="nav-button p-4 rounded-full text-white shadow-lg hover:shadow-xl text-2xl">
+                  →
+                </button>
+              </div>
+
+              <div className="max-w-2xl mx-auto card-3d" onClick={toggleCardFlip}>
+                {showPlaceholder ? (
+                  <div className="card-placeholder h-full flex items-center justify-center">
+                    <div className="text-center filter blur-sm">
+                      <h2 className="text-6xl font-bold mb-6 text-indigo-400">Card</h2>
+                      <p className="text-gray-400">Loading...</p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className={`card-inner h-full ${isFlipped ? 'flipped' : ''}`}>
+                    <div className="card-face p-8">
+                      <div className="text-center">
+                        {currentCard && currentCard[langPair.from] && (
+                          <h2 className="text-6xl font-bold mb-6 text-indigo-400">{currentCard[langPair.from]}</h2>
+                        )}
+                        <p className="text-gray-400">Click to reveal {langPair.to.charAt(0).toUpperCase() + langPair.to.slice(1)} translation</p>
+                      </div>
+                    </div>
+
+                    <div className="card-face card-back p-8">
+                      <div className="text-center">
+                        {currentCard && currentCard[langPair.to] && (
+                          <h2 className="text-4xl font-bold mb-2 text-indigo-400">{currentCard[langPair.to]}</h2>
+                        )}
+                        {currentCard && currentCard.meaning && (
+                          <p className="text-xl text-gray-300 mb-4">{currentCard.meaning}</p>
+                        )}
+                        {currentCard && currentCard.irregular && currentCard.conjugation && 
+                         currentCard.conjugation[langPair.to] && (
+                          <div className="conjugation-table">
+                            <div className="flex justify-center mb-4">
+                              <span className="px-4 py-1 bg-red-500 text-white text-sm rounded-full font-medium">
+                                Irregular Verb
+                              </span>
+                            </div>
+                            {(() => {
+                              const entries = Object.entries(currentCard.conjugation[langPair.to]);
+                              const mid = Math.ceil(entries.length / 2);
+                              const left = entries.slice(0, mid);
+                              const right = entries.slice(mid);
+                              return (
+                                <div className="grid grid-cols-2 gap-8">
+                                  <div>
+                                    {left.map(([subject, form]) => (
+                                      <div key={subject} className="conjugation-row">
+                                        <span className="subject">{subject}</span>
+                                        <span className="conjugation">{form}</span>
+                                      </div>
+                                    ))}
+                                  </div>
+                                  <div>
+                                    {right.map(([subject, form]) => (
+                                      <div key={subject} className="conjugation-row">
+                                        <span className="subject">{subject}</span>
+                                        <span className="conjugation">{form}</span>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              );
+                            })()}
+                          </div>
+                        )}
+                        <div className="flex flex-wrap gap-3 mt-6 justify-center">
+                          <button
+                            onClick={(e) => { e.stopPropagation(); handleScore(1); }}
+                            className="score-button px-6 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium shadow-md">
+                            Again
+                          </button>
+                          <button
+                            onClick={(e) => { e.stopPropagation(); handleScore(2); }}
+                            className="score-button px-6 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg font-medium shadow-md">
+                            Hard
+                          </button>
+                          <button
+                            onClick={(e) => { e.stopPropagation(); handleScore(3); }}
+                            className="score-button px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-medium shadow-md">
+                            Good
+                          </button>
+                          <button
+                            onClick={(e) => { e.stopPropagation(); handleScore(4); }}
+                            className="score-button px-6 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg font-medium shadow-md">
+                            Easy
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </>
+          ) : (
+            <div className="empty-state">
+              <h2 className="text-2xl font-bold mb-4">All caught up!</h2>
+              <p className="mb-4">You've reviewed all your cards for now. Check back later for more reviews.</p>
+              <button
+                onClick={() => {
+                  const now = new Date();
+                  // Force all cards to be due for review
+                  const newScores = {...scores};
+                  Object.keys(newScores).forEach(key => {
+                    newScores[key] = {
+                      ...newScores[key],
+                      nextReview: now.toISOString()
+                    };
+                  });
+                  setScores(newScores);
+                  localStorage.setItem('verbaMenteScores', JSON.stringify(newScores));
+                }}
+                className="px-6 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg font-medium shadow-md"
+              >
+                Study Anyway
+              </button>
+            </div>
+          )}
+          
+          <div className="fixed top-4 right-4 flex items-center space-x-2 z-50">
             <button
               className="nav-button p-3 rounded-full text-white shadow-lg hover:shadow-xl"
               onClick={() => setShowStats(prev => !prev)}>
@@ -467,23 +620,18 @@
               )}
             </button>
             <button
-              onClick={() => {
-                if (window.confirm('Are you sure you want to reset all progress?')) {
-                  localStorage.removeItem('verbaMenteScores');
-                  window.location.reload();
-                }
-              }}
+              onClick={resetProgress}
               className="nav-button p-3 rounded-full text-white shadow-lg hover:shadow-xl">
-              Reset All Progress
+              <span className="material-icons">restart_alt</span>
             </button>
           </div>
-          {showStats && <StatisticsPanel cardsData={cardsData} />}
+          
+          {showStats && <StatisticsPanel cardsData={cardsData} scores={scores} />}
         </div>
       );
     }
 
-    function StatisticsPanel({ cardsData, onClose }) {
-      // New state for stats language pair selection
+    function StatisticsPanel({ cardsData, scores }) {
       const [statsLangPair, setStatsLangPair] = useState({ from: "italian", to: "spanish" });
       const [stats, setStats] = useState({
         again: [],
@@ -499,67 +647,83 @@
       };
 
       useEffect(() => {
-        const scores = JSON.parse(localStorage.getItem('verbaMenteScores') || '{}');
-        const ratedVerbs = new Set(Object.keys(scores));
-        const categorized = Object.entries(scores).reduce((acc, [verb, data]) => {
-          const category =
-            data.score === 1 ? 'again' :
-            data.score === 2 ? 'hard' :
-            data.score === 3 ? 'good' : 'easy';
-          const verbData = cardsData.find(c => c.spanish === verb);
-          if (verbData) {
-            acc[category].push({
-              ...verbData,
-              timesReviewed: data.timesReviewed || 0
-            });
-          }
-          return acc;
-        }, { again: [], hard: [], good: [], easy: [] });
+        // Calculate stats whenever they change
+        const calculateStats = () => {
+          const ratedVerbs = new Set(Object.keys(scores));
+          const categorized = {
+            again: [],
+            hard: [],
+            good: [],
+            easy: []
+          };
 
-        const unrated = cardsData.filter(c => !ratedVerbs.has(c.spanish));
-        setStats({ ...categorized, unrated });
-      }, [cardsData]);
+          Object.entries(scores).forEach(([verb, data]) => {
+            const category =
+              data.score === 1 ? 'again' :
+              data.score === 2 ? 'hard' :
+              data.score === 3 ? 'good' : 'easy';
+            
+            const verbData = cardsData.find(c => c.spanish === verb);
+            if (verbData) {
+              categorized[category].push({
+                ...verbData,
+                timesReviewed: data.timesReviewed || 0,
+                nextReview: new Date(data.nextReview).toLocaleDateString()
+              });
+            }
+          });
+
+          const unrated = cardsData.filter(c => !ratedVerbs.has(c.spanish));
+          setStats({ ...categorized, unrated });
+        };
+
+        calculateStats();
+      }, [cardsData, scores, statsLangPair]);
 
       return (
         <div className="stats-panel">
-          {/* Language pair selector for stats */}
-          <div className="mb-4">
-            <label className="mr-2">Stats Language Pair:</label>
-            <select value={`${statsLangPair.from}_${statsLangPair.to}`} onChange={handleStatsLangPairChange} className="text-black">
-              <option value="italian_spanish">Italian → Spanish</option>
-              <option value="english_spanish">English → Spanish</option>
-              <option value="spanish_english">Spanish → English</option>
-              <option value="spanish_italian">Spanish → Italian</option>
-              <option value="english_italian">English → Italian</option>
-              <option value="italian_english">Italian → English</option>
-            </select>
+          <div className="mb-4 flex flex-col md:flex-row justify-between items-center">
+            <h2 className="text-xl font-bold mb-2 md:mb-0">Statistics</h2>
+            <div className="flex items-center">
+              <label className="mr-2">Stats Language Pair:</label>
+              <select 
+                value={`${statsLangPair.from}_${statsLangPair.to}`} 
+                onChange={handleStatsLangPairChange}
+                className="bg-gray-800 text-white p-1 rounded"
+              >
+                <option value="italian_spanish">Italian → Spanish</option>
+                <option value="english_spanish">English → Spanish</option>
+                <option value="spanish_english">Spanish → English</option>
+                <option value="spanish_italian">Spanish → Italian</option>
+                <option value="english_italian">English → Italian</option>
+                <option value="italian_english">Italian → English</option>
+              </select>
+            </div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-            {['again', 'hard', 'good', 'easy'].map(category => (
-              <div key={category} className="stats-category">
-                <div className="stats-header">
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+            {['again', 'hard', 'good', 'easy', 'unrated'].map(category => (
+              <div key={category} className="stats-category bg-gray-800 p-3 rounded">
+                <div className="stats-header font-bold mb-2 pb-2 border-b border-gray-700">
                   {category.charAt(0).toUpperCase() + category.slice(1)} ({stats[category].length})
                 </div>
-                {stats[category].map(verb => (
-                  <div key={verb.spanish} className="stats-item">
-                    {/* Use the stats language pair "from" field */}
-                    <span>{verb[statsLangPair.from]}</span>
-                    <span className="text-indigo-400">{verb.timesReviewed}x</span>
-                  </div>
-                ))}
+                <div className="max-h-40 overflow-y-auto">
+                  {stats[category].map(verb => (
+                    <div key={verb.spanish} className="stats-item py-1 border-b border-gray-700 text-sm">
+                      <span>{verb[statsLangPair.from]}</span>
+                      {category !== 'unrated' ? (
+                        <span className="text-indigo-400">{verb.timesReviewed}x</span>
+                      ) : (
+                        <span className="text-gray-400">{verb[statsLangPair.to]}</span>
+                      )}
+                    </div>
+                  ))}
+                  {stats[category].length === 0 && (
+                    <div className="text-gray-500 text-center py-2">No verbs</div>
+                  )}
+                </div>
               </div>
             ))}
-            <div className="stats-category">
-              <div className="stats-header">
-                Unrated ({stats.unrated.length})
-              </div>
-              {stats.unrated.map(verb => (
-                <div key={verb.spanish} className="stats-item">
-                  <span>{verb[statsLangPair.from]}</span>
-                  <span className="text-gray-400">{verb[statsLangPair.to]}</span>
-                </div>
-              ))}
-            </div>
           </div>
         </div>
       );
